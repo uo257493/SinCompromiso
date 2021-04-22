@@ -9,7 +9,7 @@ const Person = require("./model/Person")
 /**
  * Presents a popup and logs the user in
  */
-export async function login(){
+async function login(){
     await auth.popupLogin({ popupUri: "./solid/popupLogin.html" });
 }
 
@@ -52,4 +52,21 @@ async function track(success, failure){
         }else
             success()
     })
+}
+
+
+async function doLogin() {
+    await login();
+    var user = await getUser();
+    if(user.id != null && user.id.toString().trim()!="")
+        window.location.href = "http://localhost:8081/app/SinCompromiso.html";
+}
+
+module.exports = {
+    login,
+    logout,
+    getSession,
+    track,
+    getUser,
+    doLogin
 }
