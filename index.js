@@ -4,3 +4,7 @@ const session = require("./src/solidLogin/Session");
 $("#login").click(async () => {
     session.doLogin();
 })
+
+export function getSesion() {
+    return session;
+}

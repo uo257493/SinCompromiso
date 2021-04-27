@@ -25,3 +25,7 @@ body{margin:40px;}
     border-radius: 35px;
     border-color: transparent;
 }
+
+.botonColorized{
+    background: #ffde00;
+}
