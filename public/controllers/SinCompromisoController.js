@@ -1,10 +1,14 @@
-// Button listeners
+$(document).ready(function () {
+    window.addEventListener("load", function(event) {
 
-$(document).ready(function() {
-    $("#abrePerfil").click(() => {
+    });
+    $("#abrePerfil").click(async () => {
         document.getElementById('abrePerfil').classList.add("botonColorized");
         document.getElementById('abreSistemaEnlaces').classList.remove("botonColorized");
         document.getElementById("abreChat").classList.remove("botonColorized");
+        //document.getElementById("contenedorPrincipal").innerHTML = await (await fetch('./views/registroSC.html')).text();
+
+        //console.log(await (await fetch('./views/registroSC.html')).text());
     });
 
 
@@ -22,4 +26,16 @@ $(document).ready(function() {
         document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
     });
 
+    $("#hazmeLogout").click(async () => {
+       $.ajax({
+            type: "POST",
+            url: "desconectarse",
+            success: function (response) {
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        //console.log(await (await fetch('./views/registroSC.html')).text());
+    });
 });

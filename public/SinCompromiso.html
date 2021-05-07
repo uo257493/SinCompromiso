@@ -1,4 +1,5 @@
-<html lang="en">
+{% extends "base.html" %}
+{% block contenido_plantilla %}
 <head>
     <title>Sin Compromiso </title>
     <meta charset="utf-8"/>
@@ -6,10 +7,10 @@
     <link rel="stylesheet" href="../style/Rounded.css" />
     <link rel="stylesheet" href="../style/HorizontalDiv.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>  
-    <script type="text/javascript" src="../controller/SinCompromisoController.js"></script>  
+    <script type="text/javascript" src="./controllers/SinCompromisoController.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
-
+    {% block scripts %} {% endblock %}
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -48,10 +49,13 @@
 
 
 
-
+<div class="container">
+    <!-- Contenido --> {% block contenido_principal %} <!-- Posible contenido por defecto --> {% endblock %}
+</div>
 
 
 
 
 </body>
-</html>
+
+{% endblock %}

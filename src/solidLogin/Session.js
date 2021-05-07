@@ -3,14 +3,15 @@
  */
 const auth = require("solid-auth-client");
 const query = require("./ldflex-queries");
-const Person = require("./model/Person")
+const Person = require("./model/Person");
 
 
 /**
  * Presents a popup and logs the user in
  */
 async function login(){
-    await auth.popupLogin({ popupUri: "./solid/popupLogin.html" });
+    console.log("Hola");
+    await auth.popupLogin({ popupUri: "https://solidcommunity.net/common/popup.html" });
 }
 
 /**
@@ -26,6 +27,8 @@ async function getSession() {
  * @return {Person} user
  */
 async function getUser(){
+    console.log(await  auth);
+    console.log(await  auth.currentSession());
     var webID = (await auth.currentSession()).webId;
     var name = await query.getName();
     var inbox = await query.getInbox();
@@ -36,7 +39,7 @@ async function getUser(){
  * Close user session
  */
 async function logout() {
-    auth.logout().then(alert("Disconnected"));
+    auth.logout().then(console.log("Disconnected"));
 }
 
 
@@ -55,18 +58,10 @@ async function track(success, failure){
 }
 
 
-async function doLogin() {
-    await login();
-    var user = await getUser();
-    if(user.id != null && user.id.toString().trim()!="")
-        window.location.href = "http://localhost:8081/app/SinCompromiso.html";
-}
-
 module.exports = {
     login,
     logout,
     getSession,
     track,
-    getUser,
-    doLogin
+    getUser
 }
