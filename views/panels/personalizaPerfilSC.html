@@ -1,0 +1,61 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/PersonalizaController.js"></script>
+{% endblock %}
+{% block contenido_principal %}
+<div id="personalizacionSC">
+  <form class="form-horizontal">
+    <div class="form-group">
+      {% set ind = 0 %}
+      {% for foto in perfil.imagenes %}
+      {% set fotoId = "img"+ind+"P"%}
+        {% if foto.toString().trim() == "" && ind!=4 %}
+              <img src="../../media/addPic.png" id="{{fotoId}}" class="userImage" style="margin-right: 3%" width="200" height="200">
+        {% endif%}
+        {% if foto.toString().trim() == "" && ind==4 %}
+              <img src="../../media/addPic.png" id="{{fotoId}}" class="userImage" width="200" height="200">
+        {% endif%}
+      {% if foto.toString().trim() != "" && ind!=4 %}
+              <img src="{{foto}}" id="{{fotoId}}"  style="margin-right: 3%;" width="200" height="200">
+      {% endif%}
+      {% if foto.toString().trim() != "" && ind==4 %}
+               <img src="{{foto}}" id="{{fotoId}}" class="userImage" width="200" height="200">
+      {% endif%}
+      {% set ind = ind+1 %}
+      {% endfor %}
+      <input type="file" id="imgupload" accept="image/*" style="display:none"/>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="scnameop">Nombre:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="scname" id="scnameop"
+               maxlength="15" required="true" value="{{perfil.nombre}}"/>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="scbiografiaop">Biografía:</label>
+      <div class="col-sm-10">
+        <textArea rows="4" cols="60" maxlength="500" class="form-control" name="scbiografia" id="scbiografiaop">{{perfil.biografia}}</textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary" name= "registar" id="registrar">Guardar</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div id="modalAviso" class="modal">
+
+  <div class="modal-content">
+    <span id="spanModalP" class="close">&times;</span>
+    <p>Tipo de formato invalido</p>
+  </div>
+
+</div>
+{% endblock %}

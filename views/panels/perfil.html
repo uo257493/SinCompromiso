@@ -1,0 +1,24 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/PerfilController.js"></script>
+{% endblock %}
+{% block contenido_principal %}
+<div id="perfilVSC">
+    <div class="text-center">
+        <img class="roundedImagexxl" src="{{usuario.imagen}}" alt="mainProfileImage"/>
+        <h3><b>{{usuario.nombre}}, {{usuario.edad}}</b></h3>
+    </div>
+    <div class="contenedor">
+        <div class="contenido">
+            <button class="btn-circle btn-xxl" id="abrePreferencias">
+                <i class="fa fa-cog" style="font-size: 2em !important;"></i>
+            </button>
+        </div>
+
+        <div class="contenido">
+            <button class="btn-circle btn-xxl" id="abreEditarPerfil">
+                <i class="far fa-edit" style="font-size: 2em !important;"></i></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

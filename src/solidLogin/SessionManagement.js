@@ -12,4 +12,9 @@ module.exports = function(app, swig, sesion){
         res.send(respuesta);
     });
 
+    app.post('/sesion', function (req, res) {
+        var parsed = req.body;
+        console.log(parsed);
+        res.send(req.body);
+    })
 }

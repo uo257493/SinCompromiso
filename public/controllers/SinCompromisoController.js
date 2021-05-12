@@ -1,14 +1,10 @@
 $(document).ready(function () {
-    window.addEventListener("load", function(event) {
+    window.addEventListener("DOMContentLoaded", function(event) {
+
 
     });
     $("#abrePerfil").click(async () => {
-        document.getElementById('abrePerfil').classList.add("botonColorized");
-        document.getElementById('abreSistemaEnlaces').classList.remove("botonColorized");
-        document.getElementById("abreChat").classList.remove("botonColorized");
-        //document.getElementById("contenedorPrincipal").innerHTML = await (await fetch('./views/registroSC.html')).text();
-
-        //console.log(await (await fetch('./views/registroSC.html')).text());
+        location.href = "/app/perfil";
     });
 
 

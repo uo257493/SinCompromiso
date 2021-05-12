@@ -11,12 +11,13 @@ var fs = require('fs');
 var https = require('https');
 const path = require ('path')
 var solidSession = require('./src/solidLogin/Session');
-
+const auth = require("solid-auth-client");
 
 
 
 var app = express();
 app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.json());
 app.use(expressSession({
     secret: 'abcdefg',
     resave: true,
@@ -24,15 +25,24 @@ app.use(expressSession({
 }));
 app.set('port', 8081);
 
-
+var currentSession = null;
 
 
 gestorBD = null;
 sesManagement(app, swig, solidSession);
 proManagement(app, swig, gestorBD, solidSession);
-app.get('/', function (req, res) {
-    console.log("Hola");
-    res.redirect("/login");
+app.get('/', async function (req, res) {
+    var logged = await auth.currentSession();
+    if(!logged) {
+        console.log('Hello stranger!');
+    }
+    else
+        console.log('Hello '+ (await auth.currentSession()).webId);
+
+    if(!logged)
+        res.redirect("/login");
+    else
+        res.redirect("/app")
 })
 
 app.listen(app.get('port'), function() {

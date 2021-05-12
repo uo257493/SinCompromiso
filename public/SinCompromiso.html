@@ -4,10 +4,12 @@
     <title>Sin Compromiso </title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="../style/Rounded.css" />
-    <link rel="stylesheet" href="../style/HorizontalDiv.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>  
-    <script type="text/javascript" src="./controllers/SinCompromisoController.js"></script>
+    <link rel="stylesheet" href="../style/Rounded.css"/>
+    <link rel="stylesheet" href="../style/HorizontalDiv.css"/>
+    <link rel="stylesheet" href="../style/Modal.css"/>
+    <link rel="stylesheet" href="../style/ImageStyle.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/controllers/SinCompromisoController.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
     {% block scripts %} {% endblock %}
@@ -22,25 +24,36 @@
 
     <div class="text-right">
 
-        <button class="btn-circle btn-lg" id="dameManual"><i class="fa fa-question" style="font-size: 1.1em !important;"></i></button>
-        <button class="btn-circle btn-lg" id="hazmeLogout"><i class="fa fa-sign-out-alt" style="font-size: 1.1em !important;"></i></button>
+        <button class="btn-circle btn-lg" id="dameManual">
+            <i class="fa fa-question" style="font-size: 1.1em !important;"></i>
+        </button>
+
+        <button class="btn-circle btn-lg" id="hazmeLogout">
+            <i class="fa fa-sign-out-alt" style="font-size: 1.1em !important;"></i>
+        </button>
     </div>
 
-        <div class="text-center">
-            <img src="../media/Logo_escala_PresidenciaSC.png" alt="logo"/>
-        </div>
+    <div class="text-center">
+        <img src="../media/Logo_escala_PresidenciaSC.png" alt="logo"/>
+    </div>
     <div class="contenedor">
 
-        <div class = "contenido">
-            <button class="btn-circle btn-xl" id="abrePerfil"><i class="fa fa-user" style="font-size: 1.5em !important;"></i></button>
+        <div class="contenido">
+            <button class="btn-circle btn-xl" id="abrePerfil">
+                <i class="fa fa-user" style="font-size: 1.5em !important;"></i>
+            </button>
         </div>
 
-        <div class = "contenido">
-            <button class="btn-circle btn-xl" id="abreSistemaEnlaces"><i class="fa fa-heart" style="color:red; font-size: 1.5em !important;"></i></button>
+        <div class="contenido text-center">
+            <button class="btn-circle btn-xl" id="abreSistemaEnlaces">
+                <i class="fa fa-heart"  style="color:red; font-size: 1.5em !important;"></i>
+            </button>
         </div>
 
-        <div class = "contenido"  >
-            <button class="btn-circle btn-xl" id="abreChat"><i class="fa fa-comment-dots" style="font-size: 1.5em !important;"></i></button>
+        <div class="contenido text-right ">
+            <button class="btn-circle btn-xl" id="abreChat">
+                <i class="fa fa-comment-dots" style="font-size: 1.5em !important;"></i>
+            </button>
         </div>
 
     </div>
@@ -48,12 +61,9 @@
 </nav>
 
 
-
 <div class="container">
     <!-- Contenido --> {% block contenido_principal %} <!-- Posible contenido por defecto --> {% endblock %}
 </div>
-
-
 
 
 </body>
