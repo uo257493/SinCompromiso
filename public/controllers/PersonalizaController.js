@@ -69,12 +69,12 @@ function ResizeImage() {
                 var height = img.height;
 
                 if (width > height) {
-                    if (width > MAX_WIDTH) {
+                    if (width != MAX_WIDTH) { //Si no cumple redimensiona
                         height *= MAX_WIDTH / width;
                         width = MAX_WIDTH;
                     }
                 } else {
-                    if (height > MAX_HEIGHT) {
+                    if (height != MAX_HEIGHT) { //Si no cumple redimensiona
                         width *= MAX_HEIGHT / height;
                         height = MAX_HEIGHT;
                     }
@@ -85,15 +85,15 @@ function ResizeImage() {
                 ctx.drawImage(img, 0, 0, width, height);
                 console.log(width + " " + height)
                 dataurl = canvas.toDataURL(file.type);
-                if(width > height && width <= 400) { // Si es menor a 200 px calculamos ajuste
-                    var ajuste = 1 /(200 / width)
-                    document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
-                }
-                else if(width <= height && height <= 400) { // Si es menor a 200 px calculamos ajuste
-                    var ajuste = 1 /(200 / height)
-                    document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
-                } //El ajuste es = 100 / ((maxDimDelHTML / maxDimDeImagen)*100)
-                else //Reducelo a la mitad
+                // if(width > height && width <= 400) { // Si es menor a 200 px calculamos ajuste
+                //     var ajuste = 1 /(200 / width)
+                //     document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
+                // }
+                // else if(width <= height && height <= 400) { // Si es menor a 200 px calculamos ajuste
+                //     var ajuste = 1 /(200 / height)
+                //     document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
+                // } //El ajuste es = 100 / ((maxDimDelHTML / maxDimDeImagen)*100)
+                // else //Reducelo a la mitad
                     document.getElementById(indiceOrigen).srcset = dataurl + " 2x";
             }
             reader.readAsDataURL(file);
