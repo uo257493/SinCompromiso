@@ -1,4 +1,4 @@
-module.exports = function(app, swig, gestorBD, session){
+module.exports = function(app, swig, gestorBD, session, sharp){
     app.post('/app/desconectarse', async function (req, res) {
         console.log(await session.getUser());
         session.logout();
@@ -54,8 +54,16 @@ module.exports = function(app, swig, gestorBD, session){
             res.send(respuesta);
         }
 
+     });
 
 
+
+    app.post('/app/trataImagen', function (req, res) {
+        var img = req.body.imageToTreat;
+        console.log(img);
+        sharp(img)
+            .resize({ width: 100 })
+            .toFile('output2.png', (err, info) => { res.send(err + "\n\n"+ info) });
 
     });
 }
