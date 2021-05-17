@@ -10,6 +10,7 @@ module.exports = function(app, swig, sesion){
 
         respuesta = swig.renderFile("public/SinCompromiso.html");
         res.send(respuesta);
+        //res.redirect("/app/perfil");
     });
 
     app.post('/sesion', function (req, res) {

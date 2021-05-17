@@ -1,7 +1,9 @@
 $(document).ready(function () {
+
+
     window.addEventListener("DOMContentLoaded", function(event) {
 
-
+        location.href = "/app/perfil";
     });
     $("#abrePerfil").click(async () => {
         location.href = "/app/perfil";
@@ -10,9 +12,7 @@ $(document).ready(function () {
 
     $("#abreSistemaEnlaces").click(function () {
 
-        document.getElementById('abreSistemaEnlaces').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreChat").classList.remove("botonColorized");
+        location.href = "/app/enlaces";
     });
 
     $("#abreChat").click(function () {

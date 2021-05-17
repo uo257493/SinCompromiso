@@ -12,7 +12,7 @@ var https = require('https');
 const path = require ('path')
 var solidSession = require('./src/solidLogin/Session');
 const auth = require("solid-auth-client");
-const sharp = require('sharp');
+var enlManagement = require("./src/match/MatchManagement");
 
 
 var app = express();
@@ -30,7 +30,8 @@ var currentSession = null;
 
 gestorBD = null;
 sesManagement(app, swig, solidSession);
-proManagement(app, swig, gestorBD, solidSession, sharp);
+proManagement(app, swig, gestorBD, solidSession);
+enlManagement(app, swig, gestorBD, solidSession);
 app.get('/', async function (req, res) {
     var logged = await auth.currentSession();
     if(!logged) {

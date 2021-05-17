@@ -1,0 +1,51 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/VerEnlacesController.js"></script>
+{% endblock %}
+{% block contenido_principal %}
+<div id="personalizacionSC">
+    <div class="text-center">
+      {% set ind = 0 %}
+      <table style="display: none">
+        <tr style="display: none">
+            <td id="cantidadFotosSE" style="display: none">{{enlace.cantidadImagenes}}</td>
+      {% for foto in enlace.imagenes %}
+      {% set fotoId = "enlaceIm"+ind+"E"%}
+          <td id="{{fotoId}}" style="display: none">{{foto}}</td>
+      {% set ind = ind+1 %}
+      {% endfor %}
+        </tr>
+      </table>
+      <button class="btn-circle btn-xl" id="enlacePicAnterior">
+        <i class="fas fa-chevron-left" style="color:white; font-size: 1.75em !important;"></i>
+      </button>
+              <img src="" id="fotoDisplayE" width="400" height="400">
+
+      <button class="btn-circle btn-xl" id="enlacePicSiguiente">
+        <i class="fas fa-chevron-right" style="color:white;font-size: 1.75em  !important;"></i>
+      </button>
+    </div>
+  <h3 style="text-align: center"><b>{{enlace.nombre}}, {{enlace.edad}}</b> A {{enlace.distancia}} km</h3>
+  <div style="text-align: center">
+      <button class="btn-circle btn-xxl" id="pasoB">
+        <i class="fas fa-times" style=" color: red; font-size: 2em !important;"></i>
+      </button>
+      <button class="btn-circle btn-xxl" id="meMolaB">
+        <i class="fas fa-grin-hearts" style="color: yellow; font-size: 2em !important;"></i></button>
+
+
+      <button class="btn-circle btn-xxl" id="meGustaB">
+        <i class="fas fa-thumbs-up" style="color: gold; font-size: 2em !important;"></i></button>
+
+  </div>
+
+  <div style="text-align: center;">
+    <p  id="verBioSSE" style="display:none; margin-right: 50px; margin-left: 50px">{{enlace.biografia}}</p>
+    <button id="seeMoreB" class="btn-semi-rounded btn-xxl">
+      <i id="seeMoreAi" class="fas fa-chevron-down" style="font-size: 2em !important;"></i></button>
+  </div>
+
+
+</div>
+
+{% endblock %}

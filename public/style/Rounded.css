@@ -36,6 +36,16 @@ body{margin:40px;}
     background-color: transparent;
 }
 
+.btn-semi-rounded.btn-xxl {
+    width: 200px;
+    height: 50px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 20px;
+    border-color: lightcyan;
+    background-color: transparent;
+}
+
 .roundedImagexxl {
     width: 350px;
     height: 350px;
