@@ -1,5 +1,7 @@
 module.exports = function(app, swig, gestorBD, session){
+
 app.get('/app/enlaces', function (req, res) {
+    console.log("Estoy here")
     var estaRegistrado = !false; //dao.estaRegistrado();
     var respuesta = null;
     if(!estaRegistrado) {
@@ -7,6 +9,7 @@ app.get('/app/enlaces', function (req, res) {
         return;
     }
     else{
+        var hayAlgo = true;
         var enlace = new Object();
         enlace.nombre = "Luis";
         enlace.edad = 32;
@@ -21,8 +24,15 @@ app.get('/app/enlaces', function (req, res) {
             "mira que trompa, que pedazo de trompa " +
             "trompa, trompa"
         enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
-        enlace.cantidadImagenes = 3;
+        enlace.cantidadImagenes = 0;
+        // enlace.nombre = null;
+        // enlace.edad = null;
+        // enlace.distancia = null;
+        // enlace.biografia= null
+        // enlace.imagenes = null;
+        // enlace.cantidadImagenes = null;
         respuesta = swig.renderFile('views/panels/verEnlacesSC.html',{
+            hayAlgo: hayAlgo,
             enlace: enlace
         });
     }
@@ -31,6 +41,16 @@ app.get('/app/enlaces', function (req, res) {
 
 
 });
+
+    app.post('/app/visitaSSE', function (req, res) {
+        var redirigir = true;
+        if(redirigir)
+            res.redirect('/app/enlaces');
+        else
+            res.send("");
+
+    });
+
 
 
 }

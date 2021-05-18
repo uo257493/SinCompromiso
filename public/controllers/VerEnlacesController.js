@@ -1,6 +1,7 @@
 var numIm;
 var imActual
 var conmutador;
+var hayAlgo;
 $(document).ready(function () {
     window.addEventListener("load",  function() {
         //Indicamos la opcion en que estamos
@@ -9,27 +10,30 @@ $(document).ready(function () {
         document.getElementById('abrePerfil').classList.remove("botonColorized");
         document.getElementById("abreChat").classList.remove("botonColorized");
         ////////////////////////////////////////////////////////////////////////////////////////////////////
-        imActual = 0;
-        //Obtener el numero de imagenes
-        numIm = document.getElementById('cantidadFotosSE').textContent;
-        if(numIm == 0) {
-            document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
+        hayAlgo = document.getElementById('hayAlgo').textContent;
+        if(hayAlgo == "true") {
+            imActual = 0;
+            //Obtener el numero de imagenes
+            numIm = document.getElementById('cantidadFotosSE').textContent;
+            if (numIm == 0) {
+                document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
+                //Desactivar izquierda
+                document.getElementById('enlacePicAnterior').disabled = true;
+                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+                return;
+
+            }
+            conmutador = 1;//Esta contraido
+            var img0 = document.getElementById("enlaceIm0E").textContent;
+
+            document.getElementById('fotoDisplayE').src = img0;
+
+
             //Desactivar izquierda
             document.getElementById('enlacePicAnterior').disabled = true;
-            document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
-            return;
-
+            if (numIm == 1)
+                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
         }
-        conmutador = 1;//Esta contraido
-        var img0 = document.getElementById("enlaceIm0E").textContent;
-
-        document.getElementById('fotoDisplayE').src = img0;
-
-
-        //Desactivar izquierda
-        document.getElementById('enlacePicAnterior').disabled = true;
-        if(numIm == 1)
-            document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
 
     });
     $("#seeMoreB").click(function(){
@@ -67,3 +71,24 @@ $(document).ready(function () {
 
     });
    });
+
+setInterval(function (){
+    manejarSSEnlaces();
+},10000);
+
+function manejarSSEnlaces(){
+    //Leer si hay alguno, ya la peticion redirigira
+    //Si no meter la mask
+    if(hayAlgo=="false") {
+        $.ajax({
+            url: "/app/visitaSSE",
+            type: "POST",
+            success: function (respuesta) {
+                console.log("Visitamos el SSE")
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+}
