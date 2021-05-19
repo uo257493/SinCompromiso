@@ -1,0 +1,12 @@
+.eleganceM {
+    line-height: 1.33;
+    min-width: 100px;
+    border-color: transparent;
+    background-color: lightsteelblue;
+}
+
+.eleganceS{
+    width: 50px;
+    border-color: transparent;
+    color: darkgrey;
+}

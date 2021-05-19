@@ -25,6 +25,8 @@ app.get('/app/enlaces', function (req, res) {
             "trompa, trompa"
         enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
         enlace.cantidadImagenes = 0;
+        enlace.esMeMola = true;
+        enlace.mensajeMeMola= "Hola maja";
         // enlace.nombre = null;
         // enlace.edad = null;
         // enlace.distancia = null;
