@@ -27,12 +27,10 @@ async function getSession() {
  * @return {Person} user
  */
 async function getUser(){
-    console.log(await  auth);
-    console.log(await  auth.currentSession());
-    var webID = (await auth.currentSession()).webId;
-    var name = await query.getName();
-    var inbox = await query.getInbox();
-    return new Person(webID, name, inbox);
+    console.log(await auth.currentSession());
+    // var name = await query.getName();
+    // var inbox = await query.getInbox();
+    // return new Person(webID, name, inbox);
 }
 
 /**

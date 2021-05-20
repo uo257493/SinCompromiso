@@ -51,6 +51,28 @@ body{margin:40px;}
     height: 350px;
     border-radius: 50%;
 }
+
+.roundedImagexxs {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid lightblue;
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    object-fit: none;
+}
+
+.roundedImages {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid black;
+    background-size: 160px 160px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    object-fit: none;
+}
 .botonColorized{
     background: #ffde00;
 }

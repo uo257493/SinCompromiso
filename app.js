@@ -13,6 +13,7 @@ const path = require ('path')
 var solidSession = require('./src/solidLogin/Session');
 const auth = require("solid-auth-client");
 var enlManagement = require("./src/match/MatchManagement");
+var chatManagement = require("./src/chat/ChatManagement");
 
 
 var app = express();
@@ -32,6 +33,7 @@ gestorBD = null;
 sesManagement(app, swig, solidSession);
 proManagement(app, swig, gestorBD, solidSession);
 enlManagement(app, swig, gestorBD, solidSession);
+chatManagement(app, swig, gestorBD, solidSession);
 app.get('/', async function (req, res) {
     var logged = await auth.currentSession();
     if(!logged) {

@@ -1,0 +1,32 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/ChatController.js"></script>
+{% endblock %}
+{% block contenido_principal %}
+
+<div class="text-left" style="display:grid; grid-template-columns: repeat({{conversaciones.pendientes.length}}, 90px); border-bottom: 2px solid lightgrey; overflow-x: auto;" id="conversasNoAbiertasSC">
+    {% for pendiente in conversaciones.pendientes %}
+            <img name="conversaAb" id="{{pendiente.userID}}" class="roundedImagexxs" srcset="{{pendiente.imagenPrincipal}} 5x" style="margin-right: 10px"/>
+      {% endfor %}
+<p style="border-bottom: 10px"></p>
+    </div>
+
+<div class="text-left" style = "margin-top: 10px" id="conversasAbiertasSC">
+    {% for abierta in conversaciones.abiertas %}
+    <div name="conversaAb" id="{{abierta.userID}}" style="border-bottom: 2px solid lightgrey; display:grid; grid-template-columns: 180px 300px 300px; margin-top: 10px; height: 180px">
+        <img  class="roundedImages" srcset="{{abierta.imagenPrincipal}} 2.5x" style="margin-left:20px; margin-right: 20px"/>
+        <h3 style="text-align: center;padding-top: 15%"><b>{{abierta.nombre}}, {{abierta.edad}} </b></h3>
+        {% if abierta.ultimoMensajeSender == "yo" %}
+            <h3 style="text-align: left; padding-top: 15%">▶ {{abierta.ultimoMensaje}}</h3>
+        {% else %}
+            <h3 style="text-align: left; padding-top: 15%">{{abierta.ultimoMensaje}}</h3>
+        {%endif%}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

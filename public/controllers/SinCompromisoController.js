@@ -16,10 +16,7 @@ $(document).ready(function () {
     });
 
     $("#abreChat").click(function () {
-
-        document.getElementById('abreChat').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
+        location.href="/app/chat";
     });
 
     $("#hazmeLogout").click(async () => {

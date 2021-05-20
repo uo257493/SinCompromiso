@@ -46,7 +46,7 @@ module.exports = function(app, swig, gestorBD, session){
         else{
             var perfil = new Object();
             perfil.nombre = "Luis";
-            perfil.imagenes = ["https://upload.wikimedia.org/wikipedia/commons/7/71/Luis_Su%C3%A1rez_Atl%C3%A9tico_Madrid.jpg", "","","",""];
+            perfil.imagenes = ["../../media/suarez.jpg", "","","",""];
             perfil.biografia = "Hola que tal jajajajaj"
             respuesta = swig.renderFile('views/panels/personalizaPerfilSC.html',{
                 perfil: perfil
