@@ -11,19 +11,21 @@ $(document).ready(function () {
     $("[name='conversaAb']").click(function(){
         var indiceOrigen = $(this).attr('id').replace('#', '');
         console.log(indiceOrigen);
-        $.ajax({
-                type: "GET",
-                url: "/app/conversacion",
-                headers:{},
-                data: {"idConversa" : indiceOrigen},
-                dataType: "json",
 
-                success: function (response) {
-                    console.log(response);
-                },
-                error: function (request, status, errorThrown) {
-                    alert(errorThrown);
-                }
-            });
+        location.href = "/app/conversacion/"//+indiceOrigen;
+        // $.ajax({
+        //         type: "GET",
+        //         url: "/app/conversacion",
+        //         headers:{},
+        //         data: {"idConversa" : indiceOrigen},
+        //         dataType: "json",
+        //
+        //         success: function (response) {
+        //             console.log(response);
+        //         },
+        //         error: function (request, status, errorThrown) {
+        //             alert(errorThrown);
+        //         }
+        //     });
     });
 });

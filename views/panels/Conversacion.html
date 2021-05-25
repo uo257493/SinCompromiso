@@ -1,0 +1,21 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/VerConversasController.js"></script>
+{% endblock %}
+{% block contenido_principal %}
+<div>
+
+        {% for mensaje in conversacion.mensajes %}
+
+            {% if mensaje.sender == "yo" %}
+                <div class="sender">
+                        <p class="senderP">{{mensaje.contenido}}</p>
+                </div>
+            {%else%}
+                <div class="receiver">
+                        <p class="receiverP">{{mensaje.contenido}}</p>
+                </div>
+            {%endif%}
+        {% endfor %}
+
+</div>

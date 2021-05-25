@@ -57,17 +57,45 @@ app.get('/app/chat', async function (req, res) {
 
 
     app.get('/app/conversacion', async function (req, res) {
-        var partnerID = req.query.idConversa;
+        var partnerID = req.params.idConversa;
         var estaRegistrado = !false; //dao.estaRegistrado();
         var respuesta = null;
+        var conversacion = new Object();
+
+        var enlace = new Object();
+        enlace.nombre = "Martina";
+        enlace.edad = 25;
+        enlace.imagenPrincipal = "../../media/output.png";
+        enlace.userID = partnerID;
+       var mensajeA = new Object();
+        mensajeA.sender = "yo";
+        mensajeA.contenido = "Hola (Hola)\n" +
+            "No sé si te acuerdas de mí (De mí)\n" +
+            "Hace tiempo no te veo por ahí (Por ahí)\n" +
+            "Soy yo (Soy yo)\n" +
+            "El que siempre le hablaba de ti (-ba de ti)\n" +
+            "A tu mejor amiga pa' que me tire la buena (Buena)\n" +
+            "Hola (Hola)\n" +
+            "No sé si te acuerdas de mí (De mí) (Uh yeh)\n" +
+            "Hace tiempo no te veo por ahí (Por ahí) (Uh yeh)\n" +
+            "Soy yo (Soy yo)\n" +
+            "El que siempre le hablaba de ti (-ba de ti)\n" +
+            "A tu mejor amiga pa' que me tire la buena (Buena) (Uh yeh)\n" +
+            "sadasdasd\n" +
+            "Dime si tú me da' (Uh)lmslkkclsfc\n" +
+            "Una oportunida' (Uh uh)";
+       var mensajeB = new Object();
+        mensajeB.sender = "manolo";
+        mensajeB.contenido = "Hola "
+        conversacion.mensajes = [mensajeA, mensajeB, mensajeA];
         if (!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         } else {
-            console.log(partnerID);
-            respuesta = swig.renderFile('views/panels/ChatSC.html', {
-                conversaciones: null
+            respuesta = swig.renderFile('views/panels/Conversacion.html', {
+                conversacion : conversacion
             });
+            res.send(respuesta);
         }
     });
 }

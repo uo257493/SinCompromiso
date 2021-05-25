@@ -1,0 +1,43 @@
+
+.sender{
+    text-align: right;
+    background: url('../media/sender_ms.png') no-repeat;
+    background-size: 100% 100%;
+    max-width: 40%;
+    margin-left: 60%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    margin-bottom: 0px !important;
+    width: fit-content;
+
+}
+.receiver{
+    text-align: left;
+    background: url('../media/receiver_ms.png') no-repeat;
+    background-size: 100% 100%;
+    max-width: 40%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    margin-bottom: 0px !important;
+    width: fit-content;
+}
+
+.receiverP{
+
+    margin-right: 20px;
+    margin-left: max(10px, 12%);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.senderP{
+
+    margin-right: max(10px, 12%);
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
