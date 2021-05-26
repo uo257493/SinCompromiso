@@ -12,7 +12,7 @@ $(document).ready(function () {
         var indiceOrigen = $(this).attr('id').replace('#', '');
         console.log(indiceOrigen);
 
-        location.href = "/app/conversacion/"//+indiceOrigen;
+        location.href = "/app/conversacion/"+indiceOrigen;
         // $.ajax({
         //         type: "GET",
         //         url: "/app/conversacion",

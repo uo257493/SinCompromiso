@@ -56,8 +56,9 @@ app.get('/app/chat', async function (req, res) {
 });
 
 
-    app.get('/app/conversacion', async function (req, res) {
-        var partnerID = req.params.idConversa;
+    app.get('/app/conversacion/:idConversacion', async function (req, res) {
+        var partnerID = req.params.idConversacion;
+        console.log(partnerID);
         var estaRegistrado = !false; //dao.estaRegistrado();
         var respuesta = null;
         var conversacion = new Object();
@@ -98,5 +99,45 @@ app.get('/app/chat', async function (req, res) {
             });
             res.send(respuesta);
         }
+    });
+
+    app.get('/app/perfil/:idUsuario', async function (req, res) {
+        var partnerID = req.params.idUsuario;
+        var tienenEnlace = true;
+        console.log(partnerID);
+        var estaRegistrado = !false; //dao.estaRegistrado();
+        var respuesta = null;
+        var conversacion = new Object();
+
+        if (!estaRegistrado) {
+            res.redirect("/registro/sinCompromiso");
+            return;
+        }
+        else {
+            if (tienenEnlace) {
+                var enlace = new Object();
+                enlace.nombre = "Luis";
+                enlace.edad = 32;
+                enlace.distancia = 50;
+                enlace.biografia= "One, Two, Three, ah!..." +
+                    "Un niño divertido, graciosín y extrovertido" +
+                    "y a todos suelo enfadar, Shinnosuke nunca para" +
+                    "y no te dejará en paz." +
+                    "Cuando hay que conquistar, soy todo un profesional, " +
+                    "Soy un niño muy ligón, con la fuerza de un ciclón. " +
+                    "Come on, baby. Come on Baby. El pimiento sabe muy mal " +
+                    "mira que trompa, que pedazo de trompa " +
+                    "trompa, trompa"
+                enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
+                enlace.cantidadImagenes = 0;
+                enlace.esMeMola = false;
+                respuesta = swig.renderFile('views/panels/verPerfilSC.html', {
+                    enlace: enlace
+                });
+                res.send(respuesta);
+            }
+        }
+
+
     });
 }

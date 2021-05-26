@@ -1,12 +1,10 @@
 {% extends "../../public/SinCompromiso.html" %}
 {% block scripts %}
-<script type="text/javascript" src="/controllers/VerEnlacesController.js"></script>
+<script type="text/javascript" src="/controllers/VerPerfilSCController.js"></script>
 {% endblock %}
 {% block contenido_principal %}
 
-<div class="text-center" id="verEnlacesSC">
-    <p id="hayAlgo" style="display: none">{{hayAlgo}}</p>
-    {% if hayAlgo %}
+<div class="text-center" id="verPerfilSC">
     <div class="text-center">
       {% set ind = 0 %}
       <table style="display: none">
@@ -70,11 +68,6 @@
     <button id="seeMoreB" class="btn-semi-rounded btn-xxl">
       <i id="seeMoreAi" class="fas fa-chevron-down" style="font-size: 2em !important;"></i></button>
   </div>
-{% else %}
-    <div class="text-center loadingio-spinner-heart-su8qxmundcl"><div class="text-center ldio-dhhtjs8e0aw">
-        <div class="text-center"><div class="text-center"></div></div>
-    </div></div>
-{% endif%}
 </div>
 
 {% endblock %}
