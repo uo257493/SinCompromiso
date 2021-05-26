@@ -19,25 +19,29 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
-<body>
+<body style="height: 100%">
 
 <!-- Barra de Navegación superior -->
-<nav class="navbar navbar-light" style="background-color: #f40b51;">
+<nav class="navbar navbar-light" style="background-color: #f40b51; height: 25% !important;">
 
-    <div class="text-right">
+    <div class="contenedor" style="justify-content: space-between !important; height: 50%">
+        <div class="contenido text-left" style="width: 33%">
+        </div>
+        <div class="contenido text-center" style="width: 33%">
 
-        <button class="btn-circle btn-lg" id="dameManual">
+            <img src="../media/Logo_escala_PresidenciaSC.png" alt="logo"/>
+        </div>
+        <div class="contenido text-right" style="width: 33%">
+        <button class="btn-circle btn-lg" id="dameManual" style="padding-right: 0px !important; padding-left: 0px !important;">
             <i class="fa fa-question" style="font-size: 1.1em !important;"></i>
         </button>
 
-        <button class="btn-circle btn-lg" id="hazmeLogout">
+        <button class="btn-circle btn-lg" id="hazmeLogout" style="padding-right: 0px !important; padding-left: 0px !important;">
             <i class="fa fa-sign-out-alt" style="font-size: 1.1em !important;"></i>
         </button>
     </div>
-
-    <div class="text-center">
-        <img src="../media/Logo_escala_PresidenciaSC.png" alt="logo"/>
     </div>
+
     <div class="contenedor">
 
         <div class="contenido">
@@ -63,7 +67,7 @@
 </nav>
 
 
-<div id="containerG" class="container">
+<div id="containerG" class="container" style="height: 75%; width: 99.5%">
     <!-- Contenido --> {% block contenido_principal %} <!-- Posible contenido por defecto --> {% endblock %}
 </div>
 

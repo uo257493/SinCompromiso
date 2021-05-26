@@ -3,19 +3,44 @@
 <script type="text/javascript" src="/controllers/VerConversasController.js"></script>
 {% endblock %}
 {% block contenido_principal %}
-<div>
+<div name="{{enlace.userID}}" style="background-color: aliceblue; display:grid; grid-template-columns: 45px 20% 85%; margin-bottom: 10px; height: auto">
+    <img class="roundedImagexxs" srcset="{{enlace.imagenPrincipal}} 5x" style="margin-right: 10px"/>
+
+    <h3 style="text-align: center; margin-left: 15%"><b>{{enlace.nombre}}, {{enlace.edad}} </b></h3>
+    <button class="btn-circle btn-xl" id="videoChat" style="text-align: right; margin-left: 80%; margin-top: 5px">
+        <i class="fas fa-video" style="font-size: 1.5em !important;"></i>
+    </button>
+</div>
+
+<div style="margin-top: 15px; overflow-y: auto; height: 65%">
 
         {% for mensaje in conversacion.mensajes %}
 
             {% if mensaje.sender == "yo" %}
+    <div class="container" style="margin-right: 0px !important; padding-left:0px !important">
                 <div class="sender">
-                        <p class="senderP">{{mensaje.contenido}}</p>
+                        <p class="senderP" style="word-break: break-word">{{mensaje.contenido}}</p>
                 </div>
+    </div>
             {%else%}
+    <div class="container" style="margin-left: 0px !important; padding-right:0px !important">
                 <div class="receiver">
-                        <p class="receiverP">{{mensaje.contenido}}</p>
+                        <p class="receiverP" style="word-break: break-word">{{mensaje.contenido}}</p>
                 </div>
+    </div>
             {%endif%}
         {% endfor %}
 
+</div>
+
+<div class="container" style="margin-top: 15px">
+    <div class="col-sm-10">
+        <textArea style="resize: none" rows="2" cols="60" maxlength="500" class="form-control" id="cuadroMensajeC" placeholder="Escribe tu mensaje aqui"></textarea>
+    </div>
+    <div class="contenido text-left" style="margin-top: 3px!important; height: fit-content">
+
+        <button class="btn-circle btn-lg" id="enviaElMsgC" style="padding-right: 2px !important; padding-left: 0px !important; margin-top: 0px; background-color: dodgerblue">
+            <i class="fas fa-location-arrow" style="font-size: 1.1em !important; transform: rotate(45deg)"></i>
+        </button>
+    </div>
 </div>

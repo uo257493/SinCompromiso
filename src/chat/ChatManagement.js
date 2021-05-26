@@ -86,14 +86,15 @@ app.get('/app/chat', async function (req, res) {
             "Una oportunida' (Uh uh)";
        var mensajeB = new Object();
         mensajeB.sender = "manolo";
-        mensajeB.contenido = "Hola "
-        conversacion.mensajes = [mensajeA, mensajeB, mensajeA];
+        mensajeB.contenido = "Hiljhsauihdkjashdklashdlashdflkasfhcscfsdcdshkvdskjvhdsjkvldskhvkjdsjhvkjdsahvkjhasdlkvjh chascnlkasjchashckasjcksajckljasb"
+        conversacion.mensajes = [mensajeA, mensajeB, mensajeA, mensajeA, mensajeB, mensajeA];
         if (!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         } else {
             respuesta = swig.renderFile('views/panels/Conversacion.html', {
-                conversacion : conversacion
+                conversacion : conversacion,
+                enlace:enlace
             });
             res.send(respuesta);
         }

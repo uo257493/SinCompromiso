@@ -9,7 +9,8 @@ $(document).ready(function () {
         document.getElementById('abreChat').classList.add("botonColorized");
         document.getElementById('abrePerfil').classList.remove("botonColorized");
         document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
-        document.getElementById("containerG").style = "width:100%; margin-right:5px !important; margin-left:5px !important;";
+        document.getElementById("containerG").style = "width:99.5%; margin-right:5px !important; margin-left:5px !important; padding-left:0px !important; padding-right:0px !important; height:75%;";
+        document.getElementsByClassName("navbar navbar-light")[0].style = "background-color: #f40b51; margin-bottom: 0px !important; height:25%";
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
