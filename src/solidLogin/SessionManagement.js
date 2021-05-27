@@ -9,8 +9,8 @@ module.exports = function(app, swig, sesion){
     app.get('/app', function (req, res) {
 
         respuesta = swig.renderFile("public/SinCompromiso.html");
-        res.send(respuesta);
-        //res.redirect("/app/perfil");
+        //res.send(respuesta);
+        res.redirect("/app/perfil");
     });
 
     app.post('/sesion', function (req, res) {

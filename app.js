@@ -45,7 +45,7 @@ app.get('/', async function (req, res) {
     if(!logged)
         res.redirect("/login");
     else
-        res.redirect("/app")
+        res.redirect("/app/perfil")
 })
 
 app.listen(app.get('port'), function() {

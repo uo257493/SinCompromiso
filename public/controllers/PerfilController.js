@@ -10,7 +10,7 @@ $(document).ready(function () {
     $("#abrePreferencias").click(async () => {
 
         console.log("Abriendo preferencias");
-        //location.href = "/app/perfil";
+        location.href = "/app/preferencias";
 
     });
     $("#abreEditarPerfil").click(async () => {

@@ -129,7 +129,7 @@ app.get('/app/chat', async function (req, res) {
                     "mira que trompa, que pedazo de trompa " +
                     "trompa, trompa"
                 enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
-                enlace.cantidadImagenes = 0;
+                enlace.cantidadImagenes = 3;
                 enlace.esMeMola = false;
                 respuesta = swig.renderFile('views/panels/verPerfilSC.html', {
                     enlace: enlace

@@ -1,0 +1,86 @@
+{% extends "../../public/SinCompromiso.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/controllers/PreferenciasController.js"></script>
+
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro.min.css">
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-colors.min.css">
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-rtl.min.css">
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-icons.min.css">
+{% endblock %}
+{% block contenido_principal %}
+<div id="preferenciasSC">
+  <form class="form-horizontal">
+
+
+
+      <div class="form-group">
+        <p style="width: 50%; margin-left: 25%; margin-right: 25%"><b>Distancia(km): </b></p>
+        <div style="width: 50%; margin-left: 25%; margin-right: 25%">
+        <input data-role="slider"
+               data-min="1"
+               data-max="150"
+               data-value="20"
+               data-hint-always="true"
+               data-hint-position-min="bottom"
+               data-hint-position-max="top"
+               data-show-min-max="true"
+               data-cls-backside="bg-grey"
+               data-cls-marker="bg-black border-50 custom-marker"
+               data-cls-hint="bg-cyan custom-marker shadow-2"
+               data-cls-complete="bg-cyan"
+               data-cls-min-max="text-bold"/>
+      </div>
+      </div>
+
+    <div class="form-group">
+      <p style="width: 50%; margin-left: 25%; margin-right: 25%"><b>Edad: </b></p>
+      <div style="width: 50%; margin-left: 25%; margin-right: 25%">
+      <input data-role="doubleslider"
+             data-min="18"
+             data-max="65"
+             data-value-min="18"
+             data-value-max="65"
+             data-hint-always="true"
+             data-hint-position-min="bottom"
+             data-hint-position-max="top"
+             data-show-min-max="true"
+             data-cls-backside="bg-grey"
+             data-cls-marker="bg-black border-50 custom-marker"
+             data-cls-hint="bg-cyan custom-marker shadow-2"
+             data-cls-complete="bg-cyan"
+             data-cls-min-max="text-bold"/>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 40px">
+      <p style="width: 50%; margin-left: 25%; margin-right: 25%"><b>Género: </b></p>
+      <div style="width: 50%; margin-left: 25%; margin-right: 25%">
+        <select name="scgenero" id="scgeneroop" class="form-control">
+          <option value="m">Masculino</option>
+          <option value="f">Femenino</option>
+          <option value="t">Todos</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p style="width: 50%; margin-left: 25%; margin-right: 25%"><b>Mostrar distancia: </b></p>
+      <div style="width: 50%; margin-left: 25%; margin-right: 25%">
+      <input type="checkbox" checked data-role="switch" data-on="on">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" style=" margin-left: 10%; margin-right: 25%" class="btn btn-primary" id="guardarPreferencias">Guardar</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+</div>
+
+
+<script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+{% endblock %}

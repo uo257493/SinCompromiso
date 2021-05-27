@@ -56,6 +56,25 @@ module.exports = function(app, swig, gestorBD, session){
 
      });
 
+ app.get('/app/preferencias', function (req, res) {
+        var estaRegistrado = !false; //dao.estaRegistrado();
+        var respuesta = null;
+        if(!estaRegistrado) {
+            res.redirect("/registro/sinCompromiso");
+            return;
+        }
+        else{
+            var perfil = new Object();
+            perfil.nombre = "Luis";
+            perfil.imagenes = ["../../media/suarez.jpg", "","","",""];
+            perfil.biografia = "Hola que tal jajajajaj"
+            respuesta = swig.renderFile('views/panels/personalizaPreferenciasSC.html',{
+            });
+            res.send(respuesta);
+        }
+
+     });
+
 
 
 
