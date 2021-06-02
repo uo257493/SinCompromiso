@@ -1,8 +1,10 @@
 {% extends "../../public/SinCompromiso.html" %}
-
+{% block scripts %}
+<script type="text/javascript" src="/controllers/RegistroSCController.js"></script>
+{% endblock %}
 {% block contenido_principal %}
 <div id="registroSC">
-  <form class="form-horizontal">
+  <div class="form-horizontal">
     <div class="form-group text-center">
       <img src="../../media/addPic.png" id="img0R" style="margin-right: min(3%, 10px)" width="200" height="200">
       <img src="../../media/addPic.png" id="img1R" style="margin-right: min(3%, 10px)" width="200" height="200">
@@ -14,7 +16,7 @@
     <div class="form-group">
       <label class="control-label col-sm-2" for="scnameor">Nombre:</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" name="scname" id="scnameor"
+        <input type="text" class="form-control" name="scname" id="scnameor" minlength="3"
                maxlength="15" required="true" />
       </div>
     </div>
@@ -49,6 +51,6 @@
         <button type="submit" class="btn btn-primary" name= "registar" id="registrar">Guardar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 {% endblock %}

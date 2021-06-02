@@ -1,20 +1,52 @@
-module.exports = function(app, swig, gestorBD, session){
-    app.post('/app/desconectarse', async function (req, res) {
-        console.log(await session.getUser());
-        session.logout();
-        res.redirect("/");
-    });
+const {
+    getSessionFromStorage,
+    getSessionIdFromStorageAll,
+    Session
+} = require("@inrupt/solid-client-authn-node");
+module.exports = function(app, swig, mongoDao, podDao, session, FC){
+
     app.post('/app/verPerfil', function (req, res) {
         res.send("Adeu");
     });
 
-    app.get('/registro/sinCompromiso', function (req, res) {
-        res.send(swig.renderFile('views/panels/registroSC.html'));
+    app.post('/app/registrarse', async function (req, res) {
+
+
+            console.log("*************************************************************")
+            console.log(req.body);
+            console.log("*************************************************************")
+
+        var name = req.body.name;
+        var birth = req.body.birth;
+        var gender = req.body.gender;
+        var bio = req.body.bio;
+
+        mongoDao.addUser(podDao.getUserId(), async function(id) {
+            if (id == null) {
+                res.status(500);
+                res.json({
+                    error : "se ha producido un error"
+                })
+            } else {
+                await podDao.createMySCProfile(name, birth, gender, bio);
+                res.status(200);
+
+                res.send("/app/perfil");
+            }
+
+        });
+    });
+    app.get('/registro/sinCompromiso', async function (req, res) {
+        if(await podDao.isRegistered())
+            res.redirect("/app/perfil")
+        else
+            res.send(swig.renderFile('views/panels/registroSC.html'));
     });
 
 
-    app.get('/app/perfil', function (req, res) {
-        var estaRegistrado = !false; //dao.estaRegistrado();
+    app.get('/app/perfil', async function (req, res) {
+        var estaRegistrado;
+        estaRegistrado = await podDao.isRegistered();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");

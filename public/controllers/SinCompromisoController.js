@@ -22,8 +22,9 @@ $(document).ready(function () {
     $("#hazmeLogout").click(async () => {
        $.ajax({
             type: "POST",
-            url: "desconectarse",
+            url: "/logout",
             success: function (response) {
+                location.href = response;
             },
             error: function (request, status, errorThrown) {
                 alert(errorThrown);

@@ -1,65 +1,37 @@
-/**
- * API for handling SOLID pods
- */
-const auth = require("solid-auth-client");
-const query = require("./ldflex-queries");
-const Person = require("./model/Person");
+const {
+    getSessionFromStorage,
+    getSessionIdFromStorageAll,
+    Session
+} = require("@inrupt/solid-client-authn-node");
+class SessionInSolid {
 
+    constructor(url, sessionId) {
+        this.url = url;
+        this.sessionId = sessionId;
+    }
+   async sessionRedirection(){
+       const session = await getSessionFromStorage(this.sessionId);
+       await session.handleIncomingRedirect('http://localhost:8081'+ this.url);
+       // 5. `session` now contains an authenticated Session instance.
+       if (await this.isLoggedIn()) {
+           console.log(`<p>Logged in with the WebID ${session.info.webId}.</p>`)
+           return "/app/perfil";
+       }
+       else
+           return "/login";
+   }
 
-/**
- * Presents a popup and logs the user in
- */
-async function login(){
-    console.log("Hola");
-    await auth.popupLogin({ popupUri: "https://solidcommunity.net/common/popup.html" });
+    async isLoggedIn(){
+        const session = await getSessionFromStorage(this.sessionId);
+        console.log(session.info.webId)
+        return session.info.isLoggedIn;
+    }
+
+    async logout(){
+        const session = await getSessionFromStorage(this.sessionId);
+        await session.logout();
+    }
+
 }
 
-/**
- * Returns the current session
- * @return {function} currentSession
- */
-async function getSession() {
-    return await auth.currentSession();
-}
-
-/**
- * Returns the authenticated user
- * @return {Person} user
- */
-async function getUser(){
-    console.log(await auth.currentSession());
-    // var name = await query.getName();
-    // var inbox = await query.getInbox();
-    // return new Person(webID, name, inbox);
-}
-
-/**
- * Close user session
- */
-async function logout() {
-    auth.logout().then(console.log("Disconnected"));
-}
-
-
-/**
- * Tracks the session and executes the callback functions depending on the session status
- * @param {function} success
- * @param {function} failure
- */
-async function track(success, failure){
-    auth.trackSession(session => {
-        if (!session){
-            failure()
-        }else
-            success()
-    })
-}
-
-
-module.exports = {
-    login,
-    logout,
-    getSession,
-    track,
-    getUser
-}
+module.exports = SessionInSolid;
