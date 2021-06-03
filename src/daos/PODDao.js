@@ -32,22 +32,28 @@ class PODDao {
     }
 
 
-    async createProfileFile(name, birth, gender, bio){
-        var myProfile = "{ " +
-            "name: "+ name + ", " +
-            "userId: "+ this.userId +", " +
-            "birth: "+ birth +", " +
-            "gender: "+ gender+ ", " +
-            "bio: "+ bio +
-            " }";
-        var route = "https://"+this.userId + "/public/sincompromisocard/profile3.json"
+    async createProfileFile(name, birth, gender, bio, imagenes){
+        var route = "https://"+this.userId + "/public/sincompromisocard/profile.json"
+        for(var i = 0; i < imagenes.length; i++){
+            var imR = "https://"+this.userId + "/public/sincompromisocard/"+ imagenes[i];
+            imagenes[i] = imR;
+        }
+        var myProfile = {
+            "name" : name ,
+            "userId": this.userId ,
+            "birth" : birth ,
+            "gender": gender ,
+            "bio": bio ,
+            "imagenes":  imagenes ,
+             "cantidadImagenes": imagenes.length };
+
         console.log(myProfile);
-        await this.fc.createFile(route, myProfile);
+        await this.fc.createFile(route, JSON.stringify(myProfile));
     }
 
-    async createMySCProfile(name, birth, gender, bio){
+    async createMySCProfile(name, birth, gender, bio, images){
         await this.createProfileFolder();
-        await this.createProfileFile(name, birth, gender, bio);
+        await this.createProfileFile(name, birth, gender, bio, images);
     }
 
     async eliminaTodasCarpetas(){

@@ -3,11 +3,12 @@ var indiceOrigen;
 
 $(document).ready(function () {
 
-    $("#registrar").click(async function(){
+    $("#registrar").click(function(){
         var bio = document.getElementById("scbiografiaor").value;
         var name = document.getElementById("scnameor").value;
         var birth = document.getElementById("scfcnacor").value;
         var gender = document.getElementById("scgeneroor").value;
+
 
         var img0 = document.getElementById("img0R").srcset.split(" ")[0];
         var img1 = document.getElementById("img1R").srcset.split(" ")[0];
@@ -18,6 +19,7 @@ $(document).ready(function () {
 
 
         var images = [];
+        var nameImgs = [];
         for(var i=0; i< prev.length; i++){
             if(prev[i].trim() != "" && prev[i].trim() != "../../media/addPic.png"){
                 var myImData =prev[i].split(',')[0];
@@ -27,6 +29,7 @@ $(document).ready(function () {
                 fullImage.content = myIm;
                 fullImage.name = imageName;
                 images.push(fullImage);
+                nameImgs.push(imageName);
             }
 
         }
@@ -51,9 +54,27 @@ $(document).ready(function () {
                     headers: {
                     "Content-Type": "application/json"
                     },
-                    data: JSON.stringify({"name": name, "gender":gender, "birth": birth, "bio": bio, "images": images}),
+                    data: JSON.stringify({"name": name, "gender":gender, "birth": birth, "bio": bio, "images": nameImgs}),
 
                     success: function (response) {
+                            $.each(images, function (i, image) {
+                                $.ajax({
+                                    url: "/app/subeImagen",
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    data: JSON.stringify({"image": image}),
+
+                                    success: function (response) {
+                                        console.log("Subida foto");
+                                    },
+                                    error: function (request, status, errorThrown) {
+                                        alert(errorThrown);
+                                    }
+                                });
+                            })
+
                         location.href = response;
                     },
                     error: function (request, status, errorThrown) {
@@ -69,7 +90,9 @@ $(document).ready(function () {
         $('#imgupload').trigger('click');
     });
 
-    $("#imgupload").change(function(evt) {
+    $("#imgupload").change(async function(evt) {
+
+
         var files = evt.target.files;
         var file = files[0];
 
@@ -81,6 +104,8 @@ $(document).ready(function () {
             };
             reader.readAsDataURL(file);
         }
+
+
     });
 
 
@@ -148,6 +173,7 @@ function ResizeImage() {
                 // } //El ajuste es = 100 / ((maxDimDelHTML / maxDimDeImagen)*100)
                 // else //Reducelo a la mitad
                 document.getElementById(indiceOrigen).srcset = dataurl + " 2x";
+                checkNude(indiceOrigen);
             }
             reader.readAsDataURL(file);
 
@@ -156,4 +182,16 @@ function ResizeImage() {
     } else {
         alert('The File APIs are not fully supported in this browser.');
     }
+}
+
+async function checkNude(node) {
+   await nude.load(node);
+    // Scan it
+   await nude.scan(function(result){
+        console.log(result);
+        if(result) {
+            alert("No se permiten desnudos");
+            document.getElementById(node).srcset = "../../media/addPic.png 2x"
+        }
+    });
 }

@@ -12,38 +12,40 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
     app.post('/app/registrarse', async function (req, res) {
 
-
-            console.log("*************************************************************")
-            console.log(req.body.images);
-            console.log("*************************************************************")
-
         var name = req.body.name;
         var birth = req.body.birth;
         var gender = req.body.gender;
         var bio = req.body.bio;
         var images = req.body.images;
 
-        for(var i = 0; i < images.length; i++){
-            var thI = Buffer.from(images[i].content, 'base64');
-            await podDao.uploadImage(thI, images[i].name);
 
-        }
+        mongoDao.addUser(podDao.getUserId(), async function(id) {
+            if (id == null) {
+                res.status(500);
+                res.json({
+                    error : "se ha producido un error"
+                })
+            } else {
+                await podDao.createMySCProfile(name, birth, gender, bio, images);
+                res.status(200);
 
-        // mongoDao.addUser(podDao.getUserId(), async function(id) {
-        //     if (id == null) {
-        //         res.status(500);
-        //         res.json({
-        //             error : "se ha producido un error"
-        //         })
-        //     } else {
-        //         await podDao.createMySCProfile(name, birth, gender, bio);
-        //         res.status(200);
-        //
-        //         res.send("/app/perfil");
-        //     }
-        //
-        // });
+                res.send("/app/perfil");
+            }
+
+        });
     });
+
+    app.post('/app/subeImagen', async function (req, res) {
+
+        var image = req.body.image;
+
+            var thI = Buffer.from(image.content, 'base64');
+            await podDao.uploadImage(thI, image.name);
+            res.end();
+
+
+    });
+
     app.get('/registro/sinCompromiso', async function (req, res) {
         if(await podDao.isRegistered())
             res.redirect("/app/perfil")
@@ -55,7 +57,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.get('/app/perfil', async function (req, res) {
         var estaRegistrado;
         estaRegistrado = await podDao.isRegistered();
-      //  await podDao.eliminaTodasCarpetas();
+      //S  await podDao.eliminaTodasCarpetas();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
