@@ -38,6 +38,9 @@ class PODDao {
             var imR = "https://"+this.userId + "/public/sincompromisocard/"+ imagenes[i];
             imagenes[i] = imR;
         }
+        for(var i = imagenes.length; i< 5; i++){
+            imagenes.push("");
+        }
         var myProfile = {
             "name" : name ,
             "userId": this.userId ,
@@ -62,6 +65,14 @@ class PODDao {
 
     async uploadImage(theImage, imageName){
         await this.fc.createFile("https://"+this.userId+"/public/sincompromisocard/"+imageName, theImage, "image/png");
+    }
+
+    async getDatosPerfil(){
+        var route = "https://"+this.userId + "/public/sincompromisocard/profile.json"
+        if( await this.fc.itemExists( route ) ){
+            let content = await this.fc.readFile( route )
+            return JSON.parse(content);
+        }
     }
 }
 

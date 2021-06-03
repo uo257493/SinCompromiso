@@ -33,6 +33,7 @@ $(document).ready(function () {
     });
 
     $("#spanModalP").click(function() {
+        var modal = document.getElementById("modalAviso");
         modal.style.display = "none";
     });
 
@@ -48,6 +49,11 @@ function ResizeImage() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         var filesToUploads = document.getElementById('imgupload').files;
         var file = filesToUploads[0];
+        if(!file.type.includes("image")){
+            document.getElementById(indiceOrigen).srcset = "../../media/addPic.png 2x"
+            document.getElementById("modalAviso").style.display = "block";
+            return;
+        }
         if (file) {
 
             var reader = new FileReader();

@@ -24,7 +24,7 @@ $(document).ready(function () {
             if(prev[i].trim() != "" && prev[i].trim() != "../../media/addPic.png"){
                 var myImData =prev[i].split(',')[0];
                 var myIm = prev[i].replace(myImData+",",'');
-                var imageName = "img"+i+"."+myImData.replace("data:image/", '').replace(';base64','')
+                var imageName = "img"+images.length+"."+myImData.replace("data:image/", '').replace(';base64','')
                 var fullImage = new Object();
                 fullImage.content = myIm;
                 fullImage.name = imageName;
@@ -107,7 +107,17 @@ $(document).ready(function () {
 
 
     });
+    $("#spanModalP").click(function() {
+        var modal = document.getElementById("modalAviso");
+        modal.style.display = "none";
+    });
 
+    window.addEventListener("click", function(event) {
+        var modal = document.getElementById("modalAviso");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
 
 });
 
@@ -128,6 +138,11 @@ function ResizeImage() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         var filesToUploads = document.getElementById('imgupload').files;
         var file = filesToUploads[0];
+        if(!file.type.includes("image")){
+            document.getElementById(indiceOrigen).srcset = "../../media/addPic.png 2x"
+            document.getElementById("modalAviso").style.display = "block";
+            return;
+        }
         if (file) {
 
             var reader = new FileReader();

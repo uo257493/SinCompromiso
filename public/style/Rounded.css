@@ -44,9 +44,10 @@ body{margin:40px;}
 }
 
 .roundedImagexxl {
-    width: 350px;
-    height: 350px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
+    object-fit: none;
 }
 
 .roundedImagexxs {

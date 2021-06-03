@@ -57,17 +57,23 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.get('/app/perfil', async function (req, res) {
         var estaRegistrado;
         estaRegistrado = await podDao.isRegistered();
-      //S  await podDao.eliminaTodasCarpetas();
+      // await podDao.eliminaTodasCarpetas();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         }
         else{
+            var dataGot = await podDao.getDatosPerfil();
+            console.log(dataGot)
             var usuario = new Object();
-            usuario.nombre = "Luis";
-            usuario.edad = 32;
-            usuario.imagen = "https://upload.wikimedia.org/wikipedia/commons/7/71/Luis_Su%C3%A1rez_Atl%C3%A9tico_Madrid.jpg";
+            usuario.nombre = dataGot.name;
+            usuario.edad = getAge(dataGot.birth);
+            if(dataGot.cantidadImagenes >0)
+                usuario.imagen = dataGot.imagenes[0];
+            else
+                usuario.imagen = "../../media/noPic.png";
+
             respuesta = swig.renderFile('views/panels/perfil.html',{
                 usuario: usuario
             });
@@ -79,18 +85,15 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     });
 
 
-    app.get('/app/personaliza', function (req, res) {
-        var estaRegistrado = !false; //dao.estaRegistrado();
+    app.get('/app/personaliza', async function (req, res) {
+        var estaRegistrado = await podDao.isRegistered();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         }
         else{
-            var perfil = new Object();
-            perfil.nombre = "Luis";
-            perfil.imagenes = ["../../media/suarez.jpg", "","","",""];
-            perfil.biografia = "Hola que tal jajajajaj"
+            var perfil = await podDao.getDatosPerfil();
             respuesta = swig.renderFile('views/panels/personalizaPerfilSC.html',{
                 perfil: perfil
             });
@@ -118,7 +121,17 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
      });
 
-
+    function getAge(dateString) {
+        var today = new Date();
+        //var birthDate = new Date(dateString.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1"));
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
 
 
 }
