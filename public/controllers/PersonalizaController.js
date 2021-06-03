@@ -6,8 +6,6 @@ $(document).ready(function () {
         document.getElementById('abreSistemaEnlaces').classList.remove("botonColorized");
         document.getElementById("abreChat").classList.remove("botonColorized");
         ////////////////////////////////////////////////////////////////////////////////////////////////////
-        console.log("{{perfil.nombre}}");
-
     });
     $("img").click(function(){
         indiceOrigen = $(this).attr('id').replace('#', '');

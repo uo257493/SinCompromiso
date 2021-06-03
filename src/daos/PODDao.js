@@ -53,6 +53,10 @@ class PODDao {
     async eliminaTodasCarpetas(){
         await this.fc.deleteFolder("https://personasc1.solidcommunity.net/public/sincompromisocard/");
     }
+
+    async uploadImage(theImage, imageName){
+        await this.fc.createFile("https://"+this.userId+"/public/sincompromisocard/"+imageName, theImage, "image/png");
+    }
 }
 
 module.exports = PODDao;
