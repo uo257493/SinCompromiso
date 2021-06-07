@@ -36,15 +36,15 @@ $(document).ready(function () {
 
 
         if(getAge(birth) <18 ||  birth.trim() == "") {
-            alert("La fecha de nacimiento es obligatoria y debes ser mayor de edad")
+            showModal("La fecha de nacimiento es obligatoria y debes ser mayor de edad")
             return ;
         }
         if( name.length>15 || name.trim().length <3) {
-            alert("El nombre debe contener entre 3 y 15 caracteres");
+            showModal("El nombre debe contener entre 3 y 15 caracteres");
             return;
         }
         if(bio.length > 500) {
-            alert("El tamaño maximo de la biografia es de 500 caracteres")
+            showModal("El tamaño maximo de la biografia es de 500 caracteres")
             return ;
         }
         else{
@@ -90,6 +90,10 @@ $(document).ready(function () {
         $('#imgupload').trigger('click');
     });
 
+    $("[name='fotoR']").on("load" ,function(){
+       checkNude(indiceOrigen);
+    });
+
     $("#imgupload").change(async function(evt) {
 
 
@@ -103,6 +107,7 @@ $(document).ready(function () {
                 ResizeImage();
             };
             reader.readAsDataURL(file);
+
         }
 
 
@@ -140,7 +145,7 @@ function ResizeImage() {
         var file = filesToUploads[0];
         if(!file.type.includes("image")){
             document.getElementById(indiceOrigen).srcset = "../../media/addPic.png 2x"
-            document.getElementById("modalAviso").style.display = "block";
+            showModal("Tipo de formato invalido");
             return;
         }
         if (file) {
@@ -188,8 +193,9 @@ function ResizeImage() {
                 // } //El ajuste es = 100 / ((maxDimDelHTML / maxDimDeImagen)*100)
                 // else //Reducelo a la mitad
                 document.getElementById(indiceOrigen).srcset = dataurl + " 2x";
-                checkNude(indiceOrigen);
+
             }
+
             reader.readAsDataURL(file);
 
         }
@@ -202,11 +208,17 @@ function ResizeImage() {
 async function checkNude(node) {
    await nude.load(node);
     // Scan it
-   await nude.scan(function(result){
+    var result = await nude.scan(function(result){
         console.log(result);
         if(result) {
-            alert("No se permiten desnudos");
             document.getElementById(node).srcset = "../../media/addPic.png 2x"
+
+            showModal("No se permiten desnudos");
         }
-    });
+    } );
+}
+
+function showModal(msg) {
+    document.getElementById("modalAviso").style.display = "block";
+    document.getElementById("modalMsg").innerHTML= msg;
 }

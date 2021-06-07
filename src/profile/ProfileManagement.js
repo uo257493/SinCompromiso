@@ -35,6 +35,32 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         });
     });
 
+    app.post('/app/personalizar', async function (req, res) {
+
+        var name = req.body.name;
+        var bio = req.body.bio;
+        var images = req.body.images;
+
+
+        var dataGot = await podDao.getDatosPerfil();
+        for(var i = 0; i < images.length; i++){
+            var indexOfImagen = parseInt(images[i].replace("img","").split(".")[0],10);
+            if(dataGot.imagenes[indexOfImagen]!=""){
+                await podDao.deletePic(dataGot.imagenes[indexOfImagen])
+                dataGot.imagenes[indexOfImagen] = images[i];
+            }
+            else{
+                dataGot.imagenes[dataGot.cantidadImagenes] = "img"+dataGot.cantidadImagenes+"."+images[i].split(".")[1];
+            }
+        }
+                await podDao.editPerfil(name, bio, dataGot.imagenes);
+                res.status(200);
+
+                res.send("/app/perfil");
+
+
+    });
+
     app.post('/app/subeImagen', async function (req, res) {
 
         var image = req.body.image;
@@ -42,6 +68,30 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
             var thI = Buffer.from(image.content, 'base64');
             await podDao.uploadImage(thI, image.name);
             res.end();
+
+
+    });
+
+    app.post('/app/updateImagen', async function (req, res) {
+
+        var image = req.body.image;
+        var dataGot = await podDao.getDatosPerfil();
+
+        var indiceIm = parseInt(image.name.replace("img","").split(".")[0],10);
+        var cantIm = parseInt(dataGot.cantidadImagenes,10);
+        if(cantIm <= indiceIm){
+            console.log("aqui")
+            image.name = (await podDao.selectNewImageToCreate()).split("/public/sincompromisocard/")[1];
+            var thI = Buffer.from(image.content, 'base64');
+            await podDao.uploadImage(thI, image.name);
+            res.end();
+        }
+        else{
+            var thI = Buffer.from(image.content, 'base64');
+            await podDao.uploadImage(thI, image.name);
+            res.end();
+        }
+
 
 
     });
@@ -123,7 +173,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
     function getAge(dateString) {
         var today = new Date();
-        //var birthDate = new Date(dateString.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1"));
+        var birthDate = new Date(dateString.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1"));
         var birthDate = new Date(dateString);
         var age = today.getFullYear() - birthDate.getFullYear();
         var m = today.getMonth() - birthDate.getMonth();

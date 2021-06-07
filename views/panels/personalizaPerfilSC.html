@@ -4,22 +4,22 @@
 {% endblock %}
 {% block contenido_principal %}
 <div id="personalizacionSC">
-  <form class="form-horizontal">
+  <div class="form-horizontal">
     <div class="form-group text-center">
       {% set ind = 0 %}
       {% for foto in perfil.imagenes %}
       {% set fotoId = "img"+ind+"P"%}
         {% if foto.toString().trim() == "" && ind!=4 %}
-              <img srcset="../../media/addPic.png 2x" id="{{fotoId}}"style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
+              <img srcset="../../media/addPic.png 2x" name="fotoP" id="{{fotoId}}"style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
         {% endif%}
         {% if foto.toString().trim() == "" && ind==4 %}
-              <img srcset="../../media/addPic.png 2x" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
+              <img srcset="../../media/addPic.png 2x" name="fotoP" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
         {% endif%}
       {% if foto.toString().trim() != "" && ind!=4 %}
-              <img srcset="{{foto}} 2x" id="{{fotoId}}"  style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
+              <img srcset="{{foto}} 2x" name="fotoP" id="{{fotoId}}"  style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
       {% endif%}
       {% if foto.toString().trim() != "" && ind==4 %}
-               <img srcset="{{foto}} 2x" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
+               <img srcset="{{foto}} 2x" name="fotoP" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
       {% endif%}
       {% set ind = ind+1 %}
       {% endfor %}
@@ -44,17 +44,17 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" name= "registar" id="registrar">Guardar</button>
+        <button type="submit" class="btn btn-primary" name= "registar" id="guardar">Guardar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 
 <div id="modalAviso" class="modal">
 
   <div class="modal-content">
     <span id="spanModalP" class="close">&times;</span>
-    <p>Tipo de formato invalido</p>
+    <p id="modalMsg"></p>
   </div>
 
 </div>

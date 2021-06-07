@@ -33,10 +33,18 @@ class PODDao {
 
 
     async createProfileFile(name, birth, gender, bio, imagenes){
+        var iniCatImages = 0;
+        for(var i = 0; i< imagenes.length; i++){
+            if(imagenes[i]!="")
+                iniCatImages++;
+        }
+
         var route = "https://"+this.userId + "/public/sincompromisocard/profile.json"
         for(var i = 0; i < imagenes.length; i++){
-            var imR = "https://"+this.userId + "/public/sincompromisocard/"+ imagenes[i];
-            imagenes[i] = imR;
+            if(!imagenes[i].includes("http") && imagenes[i] != "") {
+                var imR = "https://" + this.userId + "/public/sincompromisocard/" + imagenes[i];
+                imagenes[i] = imR;
+            }
         }
         for(var i = imagenes.length; i< 5; i++){
             imagenes.push("");
@@ -48,7 +56,7 @@ class PODDao {
             "gender": gender ,
             "bio": bio ,
             "imagenes":  imagenes ,
-             "cantidadImagenes": imagenes.length };
+             "cantidadImagenes": iniCatImages };
 
         console.log(myProfile);
         await this.fc.createFile(route, JSON.stringify(myProfile));
@@ -72,6 +80,24 @@ class PODDao {
         if( await this.fc.itemExists( route ) ){
             let content = await this.fc.readFile( route )
             return JSON.parse(content);
+        }
+    }
+
+    async editPerfil(name, bio, imagenes){
+        var dataGot = await this.getDatosPerfil();
+        await this.createProfileFile(name, dataGot.birth, dataGot.gender, bio,imagenes)
+    }
+
+    async deletePic(picName){
+        await this.fc.deleteFile(picName);
+    }
+
+    async selectNewImageToCreate(){
+        var dataGot = await this.getDatosPerfil();
+        for(var i = 0; i < dataGot.imagenes.length && dataGot.imagenes[i] != "" ; i++){
+            var checkDir = await this.fc.itemExists( dataGot.imagenes[i])
+            if( !checkDir )
+                return dataGot.imagenes[i]
         }
     }
 }

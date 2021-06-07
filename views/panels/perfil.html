@@ -5,7 +5,7 @@
 {% block contenido_principal %}
 <div id="perfilVSC">
     <div class="text-center">
-        <img class="roundedImagexxl" src="{{usuario.imagen}}" alt="mainProfileImage"/>
+        <img class="roundedImagexxl" srcset="{{usuario.imagen}}  1.33x" alt="mainProfileImage"/>
         <h3><b>{{usuario.nombre}}, {{usuario.edad}}</b></h3>
     </div>
     <div class="contenedor">
