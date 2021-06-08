@@ -28,6 +28,8 @@ $(document).ready(function () {
 
         queModificamos = parseInt(indiceOrigen.replace("img", "").replace("P",""), 10);
 
+        if(imagesModificadas == undefined)
+            imagesModificadas = [false, false, false, false, false];
         imagesModificadas[queModificamos] = true;
 
         if (file) {
@@ -106,10 +108,13 @@ $(document).ready(function () {
                 },
                 data: JSON.stringify({"name": name, "bio": bio, "images": nameImgs}),
 
-                success: function (response) {
+                success:  function (response) {
+                    for(var i = 0; i< response.length; i++){
+                        images[response[i].index].name = response[i].name
+                    }
                     $.each(images, function (i, image) {
                         $.ajax({
-                            url: "/app/updateImagen",
+                            url: "/app/subeImagen",
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -123,10 +128,9 @@ $(document).ready(function () {
                                 alert(errorThrown);
                             }
                         });
-                        location.href = response;
                     })
 
-                    location.href = response;
+                    location.href = "/app/perfil";
                 },
                 error: function (request, status, errorThrown) {
                     alert(errorThrown);

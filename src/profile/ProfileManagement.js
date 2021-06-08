@@ -41,7 +41,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var bio = req.body.bio;
         var images = req.body.images;
 
-
+        var supportList = [];
         var dataGot = await podDao.getDatosPerfil();
         for(var i = 0; i < images.length; i++){
             var indexOfImagen = parseInt(images[i].replace("img","").split(".")[0],10);
@@ -50,13 +50,19 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
                 dataGot.imagenes[indexOfImagen] = images[i];
             }
             else{
-                dataGot.imagenes[dataGot.cantidadImagenes] = "img"+dataGot.cantidadImagenes+"."+images[i].split(".")[1];
+                var supportObject = new Object();
+                supportObject.index = i;
+                supportObject.name = "img"+dataGot.cantidadImagenes+"."+images[i].split(".")[1];
+                supportList.push(supportObject);
+                dataGot.imagenes[dataGot.cantidadImagenes] = supportObject.name;
+                dataGot.cantidadImagenes++;
             }
+
         }
                 await podDao.editPerfil(name, bio, dataGot.imagenes);
                 res.status(200);
 
-                res.send("/app/perfil");
+                res.send(supportList);
 
 
     });
@@ -72,31 +78,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
     });
 
-    app.post('/app/updateImagen', async function (req, res) {
-
-        var image = req.body.image;
-        var dataGot = await podDao.getDatosPerfil();
-
-        var indiceIm = parseInt(image.name.replace("img","").split(".")[0],10);
-        var cantIm = parseInt(dataGot.cantidadImagenes,10);
-        if(cantIm <= indiceIm){
-            console.log("aqui")
-            image.name = (await podDao.selectNewImageToCreate()).split("/public/sincompromisocard/")[1];
-            var thI = Buffer.from(image.content, 'base64');
-            await podDao.uploadImage(thI, image.name);
-            res.end();
-        }
-        else{
-            var thI = Buffer.from(image.content, 'base64');
-            await podDao.uploadImage(thI, image.name);
-            res.end();
-        }
-
-
-
-    });
-
-    app.get('/registro/sinCompromiso', async function (req, res) {
+     app.get('/registro/sinCompromiso', async function (req, res) {
         if(await podDao.isRegistered())
             res.redirect("/app/perfil")
         else
@@ -107,7 +89,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.get('/app/perfil', async function (req, res) {
         var estaRegistrado;
         estaRegistrado = await podDao.isRegistered();
-      // await podDao.eliminaTodasCarpetas();
+       //await podDao.eliminaTodasCarpetas();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
@@ -115,7 +97,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         }
         else{
             var dataGot = await podDao.getDatosPerfil();
-            console.log(dataGot)
+
             var usuario = new Object();
             usuario.nombre = dataGot.name;
             usuario.edad = getAge(dataGot.birth);
