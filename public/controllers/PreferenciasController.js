@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    window.onload = function(event) {
+    $(window).on("load", function(event) {
         //Indicamos la opcion en que estamos
         document.getElementById('abrePerfil').classList.add("botonColorized");
         document.getElementById('abreSistemaEnlaces').classList.remove("botonColorized");
@@ -9,8 +9,44 @@ $(document).ready(function () {
         document.getElementsByClassName("slider-text-min")[0].innerHTML = "1 km"; //Modificamos la etiqueta de distancia a 150km
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    };
-    $("#guardarPreferencias").click(function(){
-        console.log("Holalllll");
+        document.getElementById("scgeneroop").value = document.getElementById("chuletaGen").textContent
+        document.getElementById("mostrarDistanciasPB").checked = ("true" ==document.getElementById("chuletaBoton").textContent);
     });
+    $("#guardarPreferencias").click(function(){
+        var distancia = document.getElementById("sliderDistancia").value
+        var edades = document.getElementById("sliderEdad").value
+        var edadMin = edades.split(", ")[0]
+        var edadMax = edades.split(", ")[1]
+        var generoBusqueda = document.getElementById("scgeneroop").value;
+        var mostrarDistancia = document.getElementById("mostrarDistanciasPB").checked;
+
+        var misPreferencias = new Object();
+        misPreferencias.distancia = distancia;
+        misPreferencias.edadMin = edadMin;
+        misPreferencias.edadMax = edadMax;
+        misPreferencias.generoBusqueda = generoBusqueda;
+        misPreferencias.mostrarDistancia = mostrarDistancia;
+
+        console.log(misPreferencias);
+
+        $.ajax({
+            url: "/app/preferencias",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"preferencias": misPreferencias}),
+
+            success:  function (response) {
+              location.href = "/app/perfil";
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+
+
+    });
+
+
 });

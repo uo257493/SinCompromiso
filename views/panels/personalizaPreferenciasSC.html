@@ -10,7 +10,10 @@
 {% endblock %}
 {% block contenido_principal %}
 <div id="preferenciasSC">
-  <form class="form-horizontal">
+  <div class="form-horizontal">
+
+   <p id="chuletaGen" style="display: none">{{preferencias.generoBusqueda}}</p>
+    <p id="chuletaBoton" style="display: none">{{preferencias.mostrarDistancia}}</p>
 
 
 
@@ -20,16 +23,16 @@
         <input data-role="slider"
                data-min="1"
                data-max="150"
-               data-value="20"
+               data-value="{{preferencias.distancia}}"
                data-hint-always="true"
-               data-hint-position-min="bottom"
-               data-hint-position-max="top"
+               data-hint-position-min="left"
+               data-hint-position-max="right"
                data-show-min-max="true"
                data-cls-backside="bg-grey"
                data-cls-marker="bg-black border-50 custom-marker"
                data-cls-hint="bg-cyan custom-marker shadow-2"
                data-cls-complete="bg-cyan"
-               data-cls-min-max="text-bold"/>
+               data-cls-min-max="text-bold" id="sliderDistancia"/>
       </div>
       </div>
 
@@ -39,17 +42,17 @@
       <input data-role="doubleslider"
              data-min="18"
              data-max="65"
-             data-value-min="18"
-             data-value-max="65"
+             data-value-min="{{preferencias.edadMin}}"
+             data-value-max="{{preferencias.edadMax}}"
              data-hint-always="true"
-             data-hint-position-min="bottom"
-             data-hint-position-max="top"
+             data-hint-position-min="left"
+             data-hint-position-max="right"
              data-show-min-max="true"
              data-cls-backside="bg-grey"
              data-cls-marker="bg-black border-50 custom-marker"
              data-cls-hint="bg-cyan custom-marker shadow-2"
              data-cls-complete="bg-cyan"
-             data-cls-min-max="text-bold"/>
+             data-cls-min-max="text-bold" id="sliderEdad"/>
       </div>
     </div>
 
@@ -67,7 +70,7 @@
     <div class="form-group">
       <p style="width: 50%; margin-left: 25%; margin-right: 25%"><b>Mostrar distancia: </b></p>
       <div style="width: 50%; margin-left: 25%; margin-right: 25%">
-      <input type="checkbox" checked data-role="switch" data-on="on">
+      <input type="checkbox" id="mostrarDistanciasPB" checked data-role="switch" data-on="on">
       </div>
     </div>
 
@@ -76,7 +79,7 @@
         <button type="submit" style=" margin-left: 10%; margin-right: 25%" class="btn btn-primary" id="guardarPreferencias">Guardar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 
 </div>

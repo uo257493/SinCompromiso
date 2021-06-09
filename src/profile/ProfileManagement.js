@@ -35,6 +35,29 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         });
     });
 
+
+    app.post('/app/preferencias', async function (req, res) {
+
+        var preferencias = req.body.preferencias;
+
+        var userA = await podDao.getDatosPerfil();
+        preferencias.gender = userA.gender;
+
+        mongoDao.editPreferences(podDao.getUserId(), preferencias, function(resultado) {
+            if (resultado == null) {
+                res.status(500);
+                res.json({
+                    error : "se ha producido un error"
+                })
+            } else {
+                res.status(200);
+
+                res.send("/app/perfil");
+            }
+
+        });
+    });
+
     app.post('/app/personalizar', async function (req, res) {
 
         var name = req.body.name;
@@ -134,7 +157,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
      });
 
- app.get('/app/preferencias', function (req, res) {
+ app.get('/app/preferencias', async function (req, res) {
         var estaRegistrado = !false; //dao.estaRegistrado();
         var respuesta = null;
         if(!estaRegistrado) {
@@ -142,13 +165,28 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
             return;
         }
         else{
-            var perfil = new Object();
-            perfil.nombre = "Luis";
-            perfil.imagenes = ["../../media/suarez.jpg", "","","",""];
-            perfil.biografia = "Hola que tal jajajajaj"
-            respuesta = swig.renderFile('views/panels/personalizaPreferenciasSC.html',{
-            });
-            res.send(respuesta);
+            mongoDao.leePreferencias(podDao.getUserId(), function (pref) {
+                var ret;
+                console.log("-----------------------------------------------")
+                console.log(pref)
+                console.log("-----------------------------------------------")
+                if(pref == null || pref.length == 0){
+                    ret = {"distancia": 20,
+                        "edadMin": 18,
+                        "edadMax": 65,
+                        "generoBusqueda": "m",
+                        "mostrarDistancia": true
+                    }
+                }
+                else{
+                    ret = pref[0];
+                }
+                respuesta = swig.renderFile('views/panels/personalizaPreferenciasSC.html',{
+                    preferencias: ret
+                });
+                res.send(respuesta);
+            })
+
         }
 
      });
