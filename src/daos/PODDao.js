@@ -83,6 +83,15 @@ class PODDao {
         }
     }
 
+    async geoLocaliza(lat, long){
+        if( await this.isRegistered()) {
+            var myPos = {a: lat, b: long}
+            var route = "https://" + this.userId + "/public/sincompromisocard/pilot3.json"
+            await this.fc.createFile(route, JSON.stringify(myPos))
+        }
+
+    }
+
     async editPerfil(name, bio, imagenes){
         var dataGot = await this.getDatosPerfil();
         await this.createProfileFile(name, dataGot.birth, dataGot.gender, bio,imagenes)

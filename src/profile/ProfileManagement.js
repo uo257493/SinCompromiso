@@ -3,7 +3,27 @@ const {
     getSessionIdFromStorageAll,
     Session
 } = require("@inrupt/solid-client-authn-node");
-var htmlToImage = require('html-to-image');
+var crypto = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'bh58lkif';
+
+function encrypt(text){
+    var cipher = crypto.createCipher(algorithm,password)
+    var crypted = cipher.update(text+"",'utf8','hex')
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
+function decrypt(text){
+    var decipher = crypto.createDecipher(algorithm,password)
+    var dec = decipher.update(text+"",'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+}
+
+
+
+
 module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
     app.post('/app/verPerfil', function (req, res) {
@@ -94,8 +114,26 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
         var image = req.body.image;
 
-            var thI = Buffer.from(image.content, 'base64');
-            await podDao.uploadImage(thI, image.name);
+        var thI = Buffer.from(image.content, 'base64');
+        await podDao.uploadImage(thI, image.name);
+        res.end();
+
+
+    });
+
+    app.post('/app/localiza',  async function (req, res) {
+
+        var lat = encrypt(req.body.latitude);
+        var long = encrypt(req.body.longitude+"");
+
+
+        console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        console.log(req.body.latitude + " " + req.body.longitude);
+        console.log(lat + " " + long);
+        console.log(decrypt(lat) + " "+ decrypt(long))
+        console.log("--------------------------------------------------------------");
+
+            await podDao.geoLocaliza(lat, long);
             res.end();
 
 
@@ -167,9 +205,6 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         else{
             mongoDao.leePreferencias(podDao.getUserId(), function (pref) {
                 var ret;
-                console.log("-----------------------------------------------")
-                console.log(pref)
-                console.log("-----------------------------------------------")
                 if(pref == null || pref.length == 0){
                     ret = {"distancia": 20,
                         "edadMin": 18,

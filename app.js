@@ -54,6 +54,8 @@ app.use(
 app.set('port', 8081);
 var conexiondb = 'mongodb://miSCAdminZZL0L:hjt3iqZXEKbwVMEJ@cluster0-shard-00-00.hputh.mongodb.net:27017,cluster0-shard-00-01.hputh.mongodb.net:27017,cluster0-shard-00-02.hputh.mongodb.net:27017/SinCompromiso?ssl=true&replicaSet=atlas-13f55z-shard-0&authSource=admin&retryWrites=true&w=majority'
 app.set('db',conexiondb);
+app.set('crypto',crypto);
+app.set('clave','abcdefg');
 var myMongoDao = new MongoDAO(app, mongo)
 gestorBD = null;
 
@@ -83,7 +85,7 @@ async function getSession() {
 
 sesManagement(app, swig, myPODDao, FC);
 proManagement(app, swig, myMongoDao, myPODDao, session, FC);
-enlManagement(app, swig, gestorBD, solidSession);
+enlManagement(app, swig, myMongoDao, myPODDao);
 chatManagement(app, swig, gestorBD, solidSession);
 // https.createServer({
 //     key: fs.readFileSync('certificates/alice.key'),
