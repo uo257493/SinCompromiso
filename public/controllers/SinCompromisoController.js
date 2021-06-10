@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $("#abreSistemaEnlaces").click(function () {
 
-        location.href = "/app/enlaces";
+        location.href = "/app/ayudared";
     });
 
     $("#abreChat").click(function () {

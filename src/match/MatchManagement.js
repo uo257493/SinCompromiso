@@ -17,6 +17,9 @@ module.exports = function(app, swig, mongoDao, podDao){
         return dec;
     }
 
+    app.get("/app/ayudared", function (req, res) {
+        res.redirect("/app/enlaces");
+    })
 
     app.get('/app/enlaces', async function (req, res) {
 

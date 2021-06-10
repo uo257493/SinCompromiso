@@ -2,41 +2,43 @@ var numIm;
 var imActual = 0;
 var conmutador;
 var hayAlgo;
-$(document).ready(function () {
-    $(window).on("load", function(event) {
-        //Indicamos la opcion en que estamos
+
+$(window).on("load", function(event) {
+    //Indicamos la opcion en que estamos
 
 
-        document.getElementById('abreSistemaEnlaces').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreChat").classList.remove("botonColorized");
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        hayAlgo = document.getElementById('hayAlgo').textContent;
-        if(hayAlgo == "true") {
-            imActual = 0;
-            //Obtener el numero de imagenes
-            numIm = document.getElementById('cantidadFotosSE').textContent;
-            if (numIm == 0) {
-                document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
-                //Desactivar izquierda
-                document.getElementById('enlacePicAnterior').disabled = true;
-                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
-                return;
-
-            }
-            conmutador = 1;//Esta contraido
-            var img0 = document.getElementById("enlaceIm0E").textContent;
-
-            document.getElementById('fotoDisplayE').src = img0;
-
-
+    document.getElementById('abreSistemaEnlaces').classList.add("botonColorized");
+    document.getElementById('abrePerfil').classList.remove("botonColorized");
+    document.getElementById("abreChat").classList.remove("botonColorized");
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    hayAlgo = document.getElementById('hayAlgo').textContent;
+    if(hayAlgo == "true") {
+        imActual = 0;
+        //Obtener el numero de imagenes
+        numIm = document.getElementById('cantidadFotosSE').textContent;
+        if (numIm == 0) {
+            document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
             //Desactivar izquierda
             document.getElementById('enlacePicAnterior').disabled = true;
-            if (numIm == 1)
-                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
-        }
+            document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+            return;
 
-    });
+        }
+        conmutador = 1;//Esta contraido
+        var img0 = document.getElementById("enlaceIm0E").textContent;
+
+        document.getElementById('fotoDisplayE').src = img0;
+
+
+        //Desactivar izquierda
+        document.getElementById('enlacePicAnterior').disabled = true;
+        if (numIm == 1)
+            document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+    }
+
+});
+$(window).ready(function () {
+
     $("#seeMoreB").click(function(){
         if(conmutador==undefined)
             conmutador = 1;
