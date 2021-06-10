@@ -95,9 +95,9 @@ class MongoDao {
                         collection = db.collection('preferencias');
                         var mongoUserId = usuarios[0]._id;
                         var prefTs = {
-                            "edadMin" : preferencias.edadMin,
-                            "edadMax" : preferencias.edadMax,
-                            "distancia": preferencias.distancia,
+                            "edadMin" : parseInt(preferencias.edadMin, 10),
+                            "edadMax" : parseInt(preferencias.edadMax, 10),
+                            "distancia": parseInt(preferencias.distancia, 10),
                             "generoBusqueda": preferencias.generoBusqueda,
                             "mostrarDistancia": preferencias.mostrarDistancia,
                             "mongoUserId": mongoUserId,
@@ -105,9 +105,9 @@ class MongoDao {
 
                     }
 
-                        var modificaciones = {"edadMin" : preferencias.edadMin,
-                            "edadMax" : preferencias.edadMax,
-                            "distancia": preferencias.distancia,
+                        var modificaciones = {"edadMin" : parseInt(preferencias.edadMin, 10),
+                            "edadMax" : parseInt(preferencias.edadMax, 10),
+                            "distancia": parseInt(preferencias.distancia, 10),
                             "generoBusqueda": preferencias.generoBusqueda,
                             "mostrarDistancia": preferencias.mostrarDistancia
                         }
@@ -158,8 +158,87 @@ class MongoDao {
             }
         });
     }
+    getPods(lista, funcionCallback){
+        console.log(lista[0].toString())
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+        if (err) {
+            funcionCallback(null);
+        } else {
+            var collection = db.collection('usuarios');
+            collection.find({"_id":{ $in: lista }}, {"userId":1, "_id":0}).toArray(function(err, usuarios) {
+                if (err) {
+                    funcionCallback(null);
+                } else {
+                    funcionCallback(usuarios)
+                }
+                db.close();
+            });
+        }
+    });}
+    sistemaDeEnlacesListaP(userID, myAge, myGenderPref, myGender, funcionCallback){
+        var miCriterio;
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var ti = {userId : userID };
+                var collection = db.collection('usuarios');
+                collection.find({"userId": userID}).toArray(function(err, usuarios) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        collection = db.collection('preferencias');
+                        var mongoUserId = usuarios[0]._id;
 
+                        if(myGenderPref == "t"){
+                            miCriterio = { "edadMin": { $lte: myAge},
+                                "edadMax":{$gte: myAge},
+                                "mongoUserId": { $ne: mongoUserId },
+                                $or: [ { "generoBusqueda": myGender }, { "generoBusqueda": "t"} ]
+                            }
+                        }
+                        else{
+                            miCriterio = { "edadMin": { $lte: myAge},
+                                "edadMax":{$gte: myAge},
+                                "genero": myGenderPref,
+                                "mongoUserId": { $ne: mongoUserId },
+                                $or: [ { "generoBusqueda": myGender }, { "generoBusqueda": "t"} ]
+                            }
+                        }
+                        collection.find(miCriterio, {"mongoUserId":1, "_id":0}).toArray(function(err, candidatos) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
 
+                                funcionCallback(candidatos);
+                            }
+                        });
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+    getMyLists(mongouserId, funcionCallback){
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                collection.find({"mongoUserId": mongouserId}).toArray(function(err, historico) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+
+                        funcionCallback(historico[0]);
+
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
 
 }
 

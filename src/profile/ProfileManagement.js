@@ -127,11 +127,6 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var long = encrypt(req.body.longitude+"");
 
 
-        console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        console.log(req.body.latitude + " " + req.body.longitude);
-        console.log(lat + " " + long);
-        console.log(decrypt(lat) + " "+ decrypt(long))
-        console.log("--------------------------------------------------------------");
 
             await podDao.geoLocaliza(lat, long);
             res.end();

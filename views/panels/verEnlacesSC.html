@@ -6,6 +6,7 @@
 
 <div class="text-center" id="verEnlacesSC">
     <p id="hayAlgo" style="display: none">{{hayAlgo}}</p>
+    <p id="idDelPosE" style="display: none">{{enlace.userId}}</p>
     {% if hayAlgo %}
     <div class="text-center">
       {% set ind = 0 %}
@@ -22,7 +23,7 @@
       <button class="btn-circle btn-xl" id="enlacePicAnterior">
         <i class="fas fa-chevron-left" style="color:white; font-size: 1.75em !important;"></i>
       </button>
-              <img src="" id="fotoDisplayE" width="400" height="400">
+              <img src="" id="fotoDisplayE" width="400" height="400" style="object-fit: none;">
 
       <button class="btn-circle btn-xl" id="enlacePicSiguiente">
         <i class="fas fa-chevron-right" style="color:white;font-size: 1.75em  !important;"></i>

@@ -1,45 +1,127 @@
-module.exports = function(app, swig, gestorBD, session){
+var nodemailer = require('nodemailer');
+var linq = require('linqjs');
+var cryptox = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'bh58lkif';
 
-app.get('/app/enlaces', function (req, res) {
-    console.log("Estoy here")
-    var estaRegistrado = !false; //dao.estaRegistrado();
+module.exports = function(app, swig, mongoDao, podDao){
+
+
+
+    function decrypt(text){
+        if(text == undefined)
+            return "";
+        var decipher = cryptox.createDecipher(algorithm,password)
+        var dec = decipher.update(text+"",'hex','utf8')
+        dec += decipher.final('utf8');
+        return dec;
+    }
+
+
+    app.get('/app/enlaces', async function (req, res) {
+
+    var estaRegistrado = await podDao.isRegistered()
     var respuesta = null;
     if(!estaRegistrado) {
         res.redirect("/registro/sinCompromiso");
         return;
     }
     else{
-        var hayAlgo = true;
-        var enlace = new Object();
-        enlace.nombre = "Luis";
-        enlace.edad = 32;
-        enlace.distancia = 50;
-        enlace.biografia= "One, Two, Three, ah!..." +
-            "Un niño divertido, graciosín y extrovertido" +
-            "y a todos suelo enfadar, Shinnosuke nunca para" +
-            "y no te dejará en paz." +
-            "Cuando hay que conquistar, soy todo un profesional, " +
-            "Soy un niño muy ligón, con la fuerza de un ciclón. " +
-            "Come on, baby. Come on Baby. El pimiento sabe muy mal " +
-            "mira que trompa, que pedazo de trompa " +
-            "trompa, trompa"
-        enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
-        enlace.cantidadImagenes = 0;
-        enlace.esMeMola = true;
-        enlace.mensajeMeMola= "Hola maja";
-        // enlace.nombre = null;
-        // enlace.edad = null;
-        // enlace.distancia = null;
-        // enlace.biografia= null
-        // enlace.imagenes = null;
-        // enlace.cantidadImagenes = null;
-        respuesta = swig.renderFile('views/panels/verEnlacesSC.html',{
-            hayAlgo: hayAlgo,
-            enlace: enlace
-        });
-    }
+        var dataGot = await podDao.getDatosPerfil();
+        var preferenciasLeidas;
+        mongoDao.leePreferencias(podDao.getUserId(), function (prefLeidas) {
+            preferenciasLeidas = prefLeidas[0];
+            mongoDao.sistemaDeEnlacesListaP(podDao.getUserId(), getAge(dataGot.birth),preferenciasLeidas.generoBusqueda
+                , preferenciasLeidas.genero, function (lista1) {
+                var limitador;
+                if(lista1.length>=300) // si hay muchos resultados vale con 300
+                    limitador = lista1.subarray(0,300);
+                else
+                    limitador = lista1
+                mongoDao.getMyLists(preferenciasLeidas.mongoUserId, function (historico) {
+                    var arrSol = [];
+                    var meMola = [];
+                    for(var i = 0 ; i < historico.meMola.length; i++)
+                        meMola.push(historico.meMola[i].mongoUserId);
+                    arrSol = historico.meGusta.concat(historico.paso.concat(historico.bloqueos.concat(meMola)))
+                    var contInterList = limitador.except(arrSol);
+                    var newList = contInterList.select(function(t){ return t.mongoUserId });
+                    mongoDao.getPods(newList, async function (lista2) {
 
-    res.send(respuesta);
+                        var distCandi = "X"
+                        var listaFinal = [];
+                        var miLocation = await podDao.getLocationOtroPerfil(dataGot.userId);
+                        var milat;
+                        var milong;
+                        if(miLocation != "") {
+                            milat = parseFloat(decrypt(miLocation.a))
+                            milong = parseFloat(decrypt(miLocation.b))
+                        }
+                        for(var i = 0; i < lista2.length; i++){
+                            var distancia = await podDao.getLocationOtroPerfil(lista2[i].userId);
+                            var latitudOtro;
+                            var longitudOtro
+                            if(distancia!= "" ) {
+                                latitudOtro = parseFloat(decrypt(distancia.a));
+                                longitudOtro = parseFloat(decrypt(distancia.b));
+                            }
+                            var diferenciaDist;
+                            if(distancia == "" || miLocation == ""){
+                                diferenciaDist = 8000;
+                            }
+                            else
+                                diferenciaDist= getKilometros(milat, milong, latitudOtro, longitudOtro);
+
+                            if(parseFloat(preferenciasLeidas.distancia) >= diferenciaDist){
+                                listaFinal.push(lista2[i].userId);
+                                if(listaFinal.length == 1) //Nos quedamos con la del perfil que mostraremos
+                                    distCandi = diferenciaDist;
+                            }
+
+                        }
+
+                        var perfilAMostrar = null;
+                        if(arrSol.length <= 7 && listaFinal.length >0)
+                            perfilAMostrar = listaFinal[0];
+                        else{
+                            if(listaFinal.length >0){ //Si no eres nuevo y te puedo dar alguno sorteamos una cantidad que si esta entre el % de candidatos de da uno
+                                var cantidadAceptable = (listaFinal.length/(limitador.length))*100;
+                                var aleat = Math.random() * (101 - 1) + 1;
+                                if(aleat <= cantidadAceptable)
+                                    perfilAMostrar = listaFinal[0];
+                            }
+                        }
+
+                        //Leemos el perfil que debemos mostrar
+                        var hayAlgo = (perfilAMostrar!=null);
+                        if(hayAlgo){
+                            var otroPod = await podDao.leeOtroPod(perfilAMostrar);
+                            var enlace = new Object();
+                            enlace.nombre = otroPod.name;
+                            enlace.userId = otroPod.userId;
+                            enlace.edad = getAge(otroPod.birth);
+                            enlace.distancia = distCandi;
+                            enlace.biografia= otroPod.bio;
+                            enlace.imagenes = otroPod.imagenes;
+                            enlace.cantidadImagenes = otroPod.cantidadImagenes;
+                            enlace.esMeMola = false;
+
+                        }
+                        respuesta = swig.renderFile('views/panels/verEnlacesSC.html',{
+                            hayAlgo: hayAlgo,
+                            enlace: enlace
+                        });
+                        res.send(respuesta)
+                    })
+
+                    })
+
+
+                })
+        })
+
+
+    }
 
 
 });
@@ -53,6 +135,58 @@ app.get('/app/enlaces', function (req, res) {
 
     });
 
+    app.post('/app/denuncia', function (req, res) {
+
+        var denunciado = req.body.denunciado;
+        var motivo = req.body.motivo;
+
+        var mensa= "Se denuncia a: "+ denunciado +" por el siguiente motivo: " + motivo;
+        var mailOptions = {
+            from: 'denucias.sincompromiso@gmail.com',
+            to: 'admn.sincompromiso@gmail.com',
+            subject: 'Denuncia de perfil',
+            text: mensa
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    });
+
+    function getKilometros(lat1,lon1,lat2,lon2)
+    {
+        rad = function(x) {return x*Math.PI/180;}
+        var R = 6378.137; //Radio de la tierra en km
+        var dLat = rad( lat2 - lat1 );
+        var dLong = rad( lon2 - lon1 );
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c;
+        return d.toFixed(3); //Retorna tres decimales
+    }
+
+    function getAge(dateString) {
+        var today = new Date();
+        var birthDate = new Date(dateString.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1"));
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
 
 
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'denucias.sincompromiso@gmail.com',
+            pass: '200421SCD3nunc1a5'
+        }
+    });
 }

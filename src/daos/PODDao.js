@@ -83,6 +83,23 @@ class PODDao {
         }
     }
 
+    async leeOtroPod(userIdTS){
+        var route = "https://"+ userIdTS + "/public/sincompromisocard/profile.json"
+        if( await this.fc.itemExists( route ) ){
+            let content = await this.fc.readFile( route )
+            return JSON.parse(content);
+        }
+    }
+
+    async getLocationOtroPerfil(rutaOtroPerfil){
+        var route = "https://"+rutaOtroPerfil + "/public/sincompromisocard/pilot3.json"
+        if( await this.fc.itemExists( route ) ){
+            let content = await this.fc.readFile( route )
+            return JSON.parse(content);
+        }
+        return "";
+    }
+
     async geoLocaliza(lat, long){
         if( await this.isRegistered()) {
             var myPos = {a: lat, b: long}

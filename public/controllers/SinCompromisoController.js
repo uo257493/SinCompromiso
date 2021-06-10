@@ -47,7 +47,7 @@ $(document).ready(function () {
                 },
                 data: JSON.stringify(ts),
                 success: function (response) {
-                    location.href = response;
+
                 },
                 error: function (request, status, errorThrown) {
                     alert(errorThrown);

@@ -1,10 +1,11 @@
 var numIm;
-var imActual
+var imActual = 0;
 var conmutador;
 var hayAlgo;
 $(document).ready(function () {
-    window.addEventListener("load",  function() {
+    $(window).on("load", function(event) {
         //Indicamos la opcion en que estamos
+
 
         document.getElementById('abreSistemaEnlaces').classList.add("botonColorized");
         document.getElementById('abrePerfil').classList.remove("botonColorized");
@@ -81,6 +82,29 @@ $(document).ready(function () {
         document.getElementById('fotoDisplayE').src = imgTD;
 
     });
+
+    $("#enviarDenunciaSSE").click(function () {
+        var motivo = document.getElementById("motivoDenunciaSSE").value;
+        var denunciado = document.getElementById("idDelPosE").textContent;
+
+        $.ajax({
+            url: "/app/denuncia",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"motivo": motivo, "denunciado": denunciado}),
+
+            success:  function (response) {
+
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+
+    });
+
     var conmutadorDenuncias;
     $("#denunciarPerfilSSE").click(function(){
         if(conmutadorDenuncias == undefined)
@@ -131,7 +155,7 @@ setInterval(function (){
 function manejarSSEnlaces(){
     //Leer si hay alguno, ya la peticion redirigira
     //Si no meter la mask
-    if(hayAlgo=="false") {
+    if(document.getElementById('hayAlgo').textContent=="false" ) {
         $.ajax({
             url: "/app/visitaSSE",
             type: "POST",
