@@ -50,7 +50,8 @@ class MongoDao {
                     meGusta :[],
                     meMola: [],
                     paso:[],
-                    bloqueos: []
+                    bloqueos: [],
+                    enlaces: []
                 }
                 collection.insert(ti, function(err, result) {
                     if (err) {
@@ -159,7 +160,7 @@ class MongoDao {
         });
     }
     getPods(lista, funcionCallback){
-        console.log(lista[0].toString())
+       
         this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
         if (err) {
             funcionCallback(null);

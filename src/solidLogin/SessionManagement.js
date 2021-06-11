@@ -79,7 +79,6 @@ module.exports = function(app, swig, podDao, FC){
         const sessionN = await getSessionFromStorage(req.session.sessionId)
         console.log(req.session.sessionId);
         await sessionN.logout();
-        console.log(`<p>Logged in with the WebID ${session.info.webId}.</p>`)
         res.clearCookie("key1");
         res.send("/signin");
     });

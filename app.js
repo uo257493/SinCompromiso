@@ -46,7 +46,8 @@ app.use(
         name: "session",
         // These keys are required by cookie-session to sign the cookies.
         keys: [
-            "key1"
+            "key1",
+            "key2"
         ],
         maxAge: 24 * 60 * 60 * 0, // 24 hours
     })

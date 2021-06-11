@@ -17,9 +17,6 @@ module.exports = function(app, swig, mongoDao, podDao){
         return dec;
     }
 
-    app.get("/app/ayudared", function (req, res) {
-        res.redirect("/app/enlaces");
-    })
 
     app.get('/app/enlaces', async function (req, res) {
 
@@ -34,6 +31,14 @@ module.exports = function(app, swig, mongoDao, podDao){
         var preferenciasLeidas;
         mongoDao.leePreferencias(podDao.getUserId(), function (prefLeidas) {
             preferenciasLeidas = prefLeidas[0];
+            if(prefLeidas.length == 0){
+                respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
+                    hayAlgo: false,
+                    enlace: null
+                });
+                res.send(respuesta)
+                return;
+            }
             mongoDao.sistemaDeEnlacesListaP(podDao.getUserId(), getAge(dataGot.birth),preferenciasLeidas.generoBusqueda
                 , preferenciasLeidas.genero, function (lista1) {
                 var limitador;
@@ -51,6 +56,14 @@ module.exports = function(app, swig, mongoDao, podDao){
                     var newList = contInterList.select(function(t){ return t.mongoUserId });
                     mongoDao.getPods(newList, async function (lista2) {
 
+                        if(newList.length ==0){
+                            respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
+                                hayAlgo: hayAlgo,
+                                enlace: enlace
+                            });
+                            res.send(respuesta)
+                            return ;
+                        }
                         var distCandi = "X"
                         var listaFinal = [];
                         var miLocation = await podDao.getLocationOtroPerfil(dataGot.userId);
@@ -98,23 +111,40 @@ module.exports = function(app, swig, mongoDao, podDao){
                         //Leemos el perfil que debemos mostrar
                         var hayAlgo = (perfilAMostrar!=null);
                         if(hayAlgo){
+
                             var otroPod = await podDao.leeOtroPod(perfilAMostrar);
                             var enlace = new Object();
-                            enlace.nombre = otroPod.name;
-                            enlace.userId = otroPod.userId;
-                            enlace.edad = getAge(otroPod.birth);
-                            enlace.distancia = distCandi;
-                            enlace.biografia= otroPod.bio;
-                            enlace.imagenes = otroPod.imagenes;
-                            enlace.cantidadImagenes = otroPod.cantidadImagenes;
-                            enlace.esMeMola = false;
+                            mongoDao.leePreferencias(otroPod.userId, async function (preferencias) {
 
+
+
+                                var enSi = preferencias[0];
+
+                                enlace.nombre = otroPod.name;
+                                enlace.userId = enSi.mongoUserId.toString();
+                                enlace.edad = getAge(otroPod.birth);
+                                if(enSi.mostrarDistancia)
+                                    enlace.distancia = distCandi;
+                                else
+                                    enlace.distancia = "X";
+                                enlace.biografia= otroPod.bio;
+                                enlace.imagenes = otroPod.imagenes;
+                                enlace.cantidadImagenes = otroPod.cantidadImagenes;
+                                enlace.esMeMola = false;
+                                respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
+                                    hayAlgo: hayAlgo,
+                                    enlace: enlace
+                                });
+                                res.send(respuesta)
+                            })
                         }
-                        respuesta = swig.renderFile('views/panels/verEnlacesSC.html',{
-                            hayAlgo: hayAlgo,
-                            enlace: enlace
-                        });
-                        res.send(respuesta)
+                        else {
+                            respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
+                                hayAlgo: hayAlgo,
+                                enlace: enlace
+                            });
+                            res.send(respuesta)
+                        }
                     })
 
                     })

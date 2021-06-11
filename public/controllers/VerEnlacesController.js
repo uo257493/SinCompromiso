@@ -152,21 +152,8 @@ $(window).ready(function () {
 
 setInterval(function (){
     manejarSSEnlaces();
-},10000);
+},45000);
 
 function manejarSSEnlaces(){
-    //Leer si hay alguno, ya la peticion redirigira
-    //Si no meter la mask
-    if(document.getElementById('hayAlgo').textContent=="false" ) {
-        $.ajax({
-            url: "/app/visitaSSE",
-            type: "POST",
-            success: function (respuesta) {
-                console.log("Visitamos el SSE")
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        });
-    }
+    location.reload();
 }
