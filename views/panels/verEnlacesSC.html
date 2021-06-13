@@ -30,7 +30,7 @@
       </button>
     </div>
     {% if enlace.esMeMola%}
-    <p  id="mensajeRecibidoDeMeMola" style="margin-right: 50px; margin-left: 50px; margin-top: 5px">{{enlace.mensajeMeMola}}</p>
+    <p  id="mensajeRecibidoDeMeMola" style=" word-wrap: break-word; margin-right: 50px; margin-left: 50px; margin-top: 5px">{{enlace.mensajeMeMola}}</p>
 
     <h3 style="text-align: center"><b>{{enlace.nombre}}, {{enlace.edad}}</b> A {{enlace.distancia}} km 🥰</h3>
     {% else %}
@@ -51,7 +51,7 @@
 
       <br>
       <div name="cuadroMeMola" style="text-align: center; display: none" >
-          <textarea name="cuadroMeMola" id="mensajeMeMola" style="width: 300px; hight:75px; display: none; margin-right: 35%; margin-left: 35%"></textarea>
+          <textarea name="cuadroMeMola" id="mensajeMeMola" maxlength="300" style="width: 300px; hight:75px; display: none; margin-right: 35%; margin-left: 35%"></textarea>
           <button name="cuadroMeMola" id="enviarMensajeMeMola" class="eleganceS" style=" display: none; margin-top: 3px; margin-right: 40%;  margin-left: 55%" >Enviar</button><br>
       </div>
 

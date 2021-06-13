@@ -140,13 +140,49 @@ $(window).ready(function () {
         for(i = 0; i< botonesADeshabilitar.length; i++)
             botonesADeshabilitar[i].disabled  = true;
         document.getElementById("enviarMensajeMeMola").disabled = false;
+
+
+    });
+
+      $("#pasoB").click(function(){
+        var paso =  document.getElementById("idDelPosE").textContent;
+        $.ajax({
+            url: "/app/paso",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"paso": paso}),
+
+            success: function (response) {
+                if(response)
+                    location.href = "/app/enlaces"
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
     });
 
     $("#enviarMensajeMeMola").click(function(){
-        var textoMensaje = document.getElementById("mensajeMeMola").value;
-        console.log(textoMensaje);
-        //Hacer tramites de envio
-        location.href = "/app/enlaces";
+        var meMola =  document.getElementById("idDelPosE").textContent;
+        var mensaje = document.getElementById("mensajeMeMola").value;
+        $.ajax({
+            url: "/app/meMola",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"meMola": meMola, "mensaje": mensaje}),
+
+            success: function (response) {
+                if(response)
+                    location.href = "/app/enlaces"
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
     });
    });
 
