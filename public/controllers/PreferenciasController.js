@@ -22,8 +22,10 @@ $(document).ready(function () {
 
         var misPreferencias = new Object();
         misPreferencias.distancia = distancia;
-        misPreferencias.edadMin = edadMin;
-        misPreferencias.edadMax = edadMax;
+        if(edadMax == "65")
+            misPreferencias.edadMax = "8000";
+        else
+            misPreferencias.edadMax = edadMax;
         misPreferencias.generoBusqueda = generoBusqueda;
         misPreferencias.mostrarDistancia = mostrarDistancia;
 

@@ -52,7 +52,8 @@ class MongoDao {
                     meMola: [],
                     paso: [],
                     bloqueos: [],
-                    enlaces: []
+                    enlaces: [],
+                    ultimoMeMola: 0
                 }
                 collection.insert(ti, function (err, result) {
                     if (err) {
@@ -365,7 +366,7 @@ class MongoDao {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('historicoEnlaces');
-                collection.update({"mongoUserId": yo}, {$push: {"meMola": meMolaO}}, function (err, resultado) {
+                collection.update({"mongoUserId": yo}, {$set: {"ultimoMeMola": Date.now()}, $push: {"meMola": meMolaO}}, function (err, resultado) {
                     if (err) {
                         funcionCallback(null);
                     } else {

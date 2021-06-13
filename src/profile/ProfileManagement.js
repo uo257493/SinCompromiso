@@ -209,6 +209,8 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
                     }
                 }
                 else{
+                    if(pref[0].edadMax == 8000)
+                        pref[0].edadMax = 65;
                     ret = pref[0];
                 }
                 respuesta = swig.renderFile('views/panels/personalizaPreferenciasSC.html',{

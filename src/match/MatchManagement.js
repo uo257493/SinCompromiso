@@ -20,6 +20,7 @@ module.exports = function(app, swig, mongoDao, podDao){
 
     app.get('/app/enlaces', async function (req, res) {
 
+        var miUltimoMMola;
         var estaRegistrado = await podDao.isRegistered()
         var respuesta = null;
         if(!estaRegistrado) {
@@ -74,6 +75,7 @@ module.exports = function(app, swig, mongoDao, podDao){
                             enlace.cantidadImagenes = meMolaUser.cantidadImagenes;
                             enlace.esMeMola = true;
                             enlace.mensajeMeMola = mensajeMeMola;
+                            enlace.puedoDarMeMola = false;
                             respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
                                 hayAlgo: true,
                                 enlace: enlace
@@ -105,6 +107,7 @@ module.exports = function(app, swig, mongoDao, podDao){
                                         return t.mongoUserId
                                     })
                                     arrSol = historico.meGusta.concat(historico.paso.concat(historico.bloqueos.concat(meMola)))
+                                    miUltimoMMola = historico.ultimoMeMola;
                                     arrSol = arrSol.select(function (t) {
                                         return t.toString()
                                     })
@@ -187,6 +190,10 @@ module.exports = function(app, swig, mongoDao, podDao){
                                                 enlace.imagenes = otroPod.imagenes;
                                                 enlace.cantidadImagenes = otroPod.cantidadImagenes;
                                                 enlace.esMeMola = false;
+                                                if(miUltimoMMola > Date.now()-86400000)
+                                                    enlace.puedoDarMeMola = false;
+                                                else
+                                                    enlace.puedoDarMeMola = true;
                                                 respuesta = swig.renderFile('views/panels/verEnlacesSC.html', {
                                                     hayAlgo: hayAlgo,
                                                     enlace: enlace

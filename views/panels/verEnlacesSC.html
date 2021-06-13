@@ -42,8 +42,11 @@
       <button class="btn-circle btn-xxl" id="pasoB">
         <i class="fas fa-times" style=" color: red; font-size: 2em !important;"></i>
       </button>
+
+      {% if enlace.puedoDarMeMola%}
       <button class="btn-circle btn-xxl" id="meMolaB">
         <i class="fas fa-grin-hearts" style="color: yellow; font-size: 2em !important;"></i></button>
+      {%endif%}
 
 
       <button class="btn-circle btn-xxl" id="meGustaB">
