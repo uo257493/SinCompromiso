@@ -255,9 +255,22 @@ app.post('/app/paso', async function (req, res) {
         var quien = req.body.meMola;
         var mensaje = req.body.mensaje;
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
-            mongoDao.meMola(yo, mongoDao.createMongoId(quien), mensaje,function (resp) {
-                if(resp) res.send(true);
-                else res.send(false);
+            mongoDao.gestorMeMola(yo, quien, function (resultado) {
+                if(!resultado){
+                    mongoDao.meMola(yo, mongoDao.createMongoId(quien), mensaje,function (resp) {
+                        if(resp) res.send(true);
+                        else res.send(false);
+                    })
+                }
+                else{
+                    mongoDao.actualizaTiempoMeMola(yo, function (res) {
+                        if(res != null){
+
+                            console.log("Ahora haz algo con el pod")
+                            res.send(true)
+                        }
+                    })
+                }
             })
         })
 

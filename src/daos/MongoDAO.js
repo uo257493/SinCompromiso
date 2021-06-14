@@ -587,10 +587,6 @@ class MongoDao {
             }
         })
 
-        //mirar quien soy
-        //mirar si legusto o le molo
-        //si no la meto en mg
-        //otro caso nos muevo ambos a enlaces sacandola de donde me tuviera
     }
 
     leMoloOleGusto(yo, quien, funcionCallback){
@@ -661,5 +657,39 @@ class MongoDao {
 
         )}
 
+
+    gestorMeMola(yo, quien, funcionCallback){
+        var me = this;
+
+        quien = me.createMongoId(quien);
+        me.leGusto(yo, quien, function (resultado) {
+            if(!resultado){
+                    funcionCallback(false);
+            }
+            else{
+                me.gestionaGusto(yo,quien, function (res) {
+                    funcionCallback(true);
+                })
+            }
+        })
+
+    }
+
+
+    actualizaTiempoMeMola(yo, funcionCallback){
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                collection.update({mongoUserId: yo}, {$set: {"ultimoMeMola": Date.now()}}, function (err, result) {
+                    if (err) {
+                        funcionCallback(null);
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
 }
 module.exports = MongoDao;

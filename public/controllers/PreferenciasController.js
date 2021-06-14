@@ -27,6 +27,7 @@ $(document).ready(function () {
         else
             misPreferencias.edadMax = edadMax;
         misPreferencias.generoBusqueda = generoBusqueda;
+        misPreferencias.edadMin = edadMin;
         misPreferencias.mostrarDistancia = mostrarDistancia;
 
         console.log(misPreferencias);
