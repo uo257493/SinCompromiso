@@ -485,7 +485,7 @@ class MongoDao {
         });
     }
 
-    gestionaMola(mongoUserId, yo, funcionCallback) {
+    gestionaMola(yo, mongoUserId, funcionCallback) {
         var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
@@ -493,14 +493,16 @@ class MongoDao {
             } else {
                 var collection = db.collection("historicoEnlaces");
                 collection.update({"mongoUserId": mongoUserId}, {
-                    $pull: {"meMola": {"mongoUserId": yo}}
+                    $pull: {"meMola": {"mongoUserId": {$eq: yo}}}
                 }, function (err, resultado) {
                     if (err) {
                         funcionCallback(null);
                     } else {
 
-                        me.meMola(mongoUserId, yo, function (resultado) {
-                            funcionCallback(true)
+                        me.mueveAEnlaces(mongoUserId, yo, function (resultado) {
+                            me.mueveAEnlaces(yo, mongoUserId, function (resultado) {
+                                funcionCallback(true)
+                            })
                         })
 
                     }
