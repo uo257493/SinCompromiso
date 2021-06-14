@@ -382,15 +382,16 @@ class MongoDao {
 
 
     gestionaGusto(yo, mongouserId, funcionCallback) {
+        var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('historicoEnlaces');
                 collection.find({
-                    "mongoUserId": mongoUserId,
-                    "meGusta": {$elemMatch: yo}
-                }).toArray(function (err, resultado) {
+                    "mongoUserId": mongouserId,
+                    "meGusta": {$elemMatch: {$eq: yo}
+                }}).toArray(function (err, resultado) {
                     if (err) {
                         funcionCallback(null);
                     } else {
@@ -398,15 +399,17 @@ class MongoDao {
                         if (resultado.length > 0) {
                             var collection = db.collection("historicoEnlaces");
                             collection.update({
-                                "mongoUserId": mongoUserId,
-                                $pull: {"meGusta": yo}
-                            }, function (err, resultado) {
+                                "mongoUserId": mongouserId},
+                                { $pull: {"meGusta": yo}}
+                            , function (err, resultado) {
                                 if (err) {
                                     funcionCallback(null);
                                 } else {
                                     //Mover a enlaces
-                                    this.mueveAEnlaces(yo, mongouserId, function (resultado) {
-                                        funcionCallback(true)
+                                    me.mueveAEnlaces(mongouserId, yo, function (resultado) {
+                                        me.mueveAEnlaces(yo, mongouserId, function (resultado) {
+                                            funcionCallback(true)
+                                        })
                                     })
 
                                 }
@@ -415,7 +418,6 @@ class MongoDao {
                         }
 
                     }
-                    db.close();
                 });
             }
         });
@@ -483,9 +485,126 @@ class MongoDao {
         });
     }
 
+    gestionaMola(mongoUserId, yo, funcionCallback) {
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": mongoUserId}, {
+                    $pull: {"meMola": {"mongoUserId": yo}}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+
+                        me.meMola(mongoUserId, yo, function (resultado) {
+                            funcionCallback(true)
+                        })
+
+                    }
+                    db.close();
+                });
+            }
+
+        }
+
+    )}
+
+
 
     createMongoId(cadena){
         return this.mongo.ObjectID(cadena);
+    }
+
+
+
+    leMolo(yo, mongouserId, funcionCallback) {
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                //Selecciona los ids Mongo de las personas que tienen en sus MeMola al usuario
+                collection.find({"mongoUserId": mongouserId, "meMola": {$elemMatch: {"mongoUserId": me.createMongoId(yo.toString())}}}).toArray(function (err, historico) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                       funcionCallback(historico.length > 0);
+
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+    leGusto(yo, mongouserId, funcionCallback) {
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                //Selecciona los ids Mongo de las personas que tienen en sus MeMola al usuario
+                collection.find({"mongoUserId": mongouserId, "meGusta": {$elemMatch: {$eq: yo}}}).toArray(function (err, historico) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(historico.length > 0);
+
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+    gestorMeGusta(yo, quien, funcionCallback){
+        var me = this;
+        quien = me.createMongoId(quien);
+        me.leMoloOleGusto(yo, quien, function (resultado) {
+            if(resultado == 0){
+                me.meGusta(yo, quien, function (res2) {
+                    funcionCallback(false);
+                })
+            }
+            else{
+                if(resultado == 1){
+                    me.gestionaGusto(yo, quien, function (res3) {
+                        funcionCallback(true);
+                    })
+                }
+                else{
+                    me.gestionaMola(yo, quien,function (res4) {
+                        funcionCallback(true);
+                    })
+                }
+            }
+        })
+
+        //mirar quien soy
+        //mirar si legusto o le molo
+        //si no la meto en mg
+        //otro caso nos muevo ambos a enlaces sacandola de donde me tuviera
+    }
+
+    leMoloOleGusto(yo, quien, funcionCallback){
+        var me = this;
+        this.leGusto(yo, quien, function (leGusto) {
+            if(leGusto)
+                funcionCallback(1); //Le gusto
+            else{
+                me.leMolo(yo, quien, function (leMolo) {
+                    if(leMolo)
+                        funcionCallback(2); //Le molo
+                    else
+                        funcionCallback(0); //Nada
+                })
+            }
+        })
     }
 }
 module.exports = MongoDao;

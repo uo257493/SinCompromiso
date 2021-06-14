@@ -106,7 +106,7 @@ module.exports = function(app, swig, mongoDao, podDao){
                                     arrMeMola = historico.meMola.select(function (t) {
                                         return t.mongoUserId
                                     })
-                                    arrSol = historico.meGusta.concat(historico.paso.concat(historico.bloqueos.concat(meMola)))
+                                    arrSol = historico.meGusta.concat(historico.paso.concat(historico.bloqueos.concat(meMola.concat(historico.enlaces))))
                                     miUltimoMMola = historico.ultimoMeMola;
                                     arrSol = arrSol.select(function (t) {
                                         return t.toString()
@@ -264,6 +264,21 @@ app.post('/app/paso', async function (req, res) {
 
     });
 
+    app.post('/app/meGusta', async function (req, res) {
+        var quien = req.body.like;
+        mongoDao.getMyself(await podDao.getUserId(), function (yo) {
+           mongoDao.gestorMeGusta(yo, quien , function (resultado) {
+               if(resultado) {
+                   console.log("Ahora hacemos cosas en el POD")
+                   res.send(true)
+               }
+               else
+                   res.send(true);
+           })
+        })
+
+
+    });
 app.post('/app/denuncia', function (req, res) {
 
     var denunciado = req.body.denunciado;

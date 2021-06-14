@@ -164,6 +164,28 @@ $(window).ready(function () {
         });
     });
 
+
+    $("#meGustaB").click(function(){
+        var like =  document.getElementById("idDelPosE").textContent;
+        $.ajax({
+            url: "/app/meGusta",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"like": like}),
+
+            success: function (response) {
+                if(response)
+                    location.href = "/app/enlaces"
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
+
+
     $("#enviarMensajeMeMola").click(function(){
         var meMola =  document.getElementById("idDelPosE").textContent;
         var mensaje = document.getElementById("mensajeMeMola").value;
