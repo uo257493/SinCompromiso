@@ -164,7 +164,25 @@ $(window).ready(function () {
         });
     });
 
+    $("#bloquearPerfilSSE").click(function(){
+        var bloqueo =  document.getElementById("idDelPosE").textContent;
+        $.ajax({
+            url: "/app/bloqueo",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"bloqueo": bloqueo}),
 
+            success: function (response) {
+                if(response)
+                    location.href = "/app/enlaces"
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
     $("#meGustaB").click(function(){
         var like =  document.getElementById("idDelPosE").textContent;
         $.ajax({

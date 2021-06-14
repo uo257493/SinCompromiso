@@ -608,5 +608,58 @@ class MongoDao {
             }
         })
     }
+
+
+    bloqueo(yo, mongouserId, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                collection.update({"mongoUserId": yo}, {$push: {"bloqueos": mongouserId}}, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+
+                        funcionCallback(true);
+
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+
+    gestorBloqueo(yo, mongoUserId, funcionCallback) {
+        mongoUserId = this.createMongoId(mongoUserId);
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+                if (err) {
+                    funcionCallback(null);
+                } else {
+                    var collection = db.collection("historicoEnlaces");
+                    collection.update({"mongoUserId": yo}, {
+                        $pull: {"enlaces": mongoUserId}
+                    }, function (err, resultado) {
+                        if (err) {
+                            funcionCallback(null);
+                        } else {
+
+                            me.bloqueo(yo, mongoUserId, function (res) {
+                                me.bloqueo(mongoUserId, yo, function (res) {
+                                    funcionCallback(true);
+                                })
+                            })
+
+                        }
+                        db.close();
+                    });
+                }
+
+            }
+
+        )}
+
 }
 module.exports = MongoDao;

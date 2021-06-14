@@ -279,6 +279,20 @@ app.post('/app/paso', async function (req, res) {
 
 
     });
+
+    app.post('/app/bloqueo', async function (req, res) {
+        var quien = req.body.bloqueo;
+        mongoDao.getMyself(await podDao.getUserId(), function (yo) {
+            mongoDao.gestorBloqueo(yo, quien , function (resultado) {
+                if(resultado) {
+                    res.send(true)
+                }
+            })
+        })
+
+
+    });
+
 app.post('/app/denuncia', function (req, res) {
 
     var denunciado = req.body.denunciado;
