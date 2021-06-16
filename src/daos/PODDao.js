@@ -207,6 +207,23 @@ class PODDao {
 
         return ACL;
     }
+
+    async getPartChat(yo, userId){
+        var route = "https://"+yo+"/sincompromisochats/"+userId+".json"
+
+        var result = await this.readFile(route);
+        if(result == false)
+            return {"mensajes":[]};
+        else
+            return JSON.parse(result);
+    }
+
+    async getFullChat(userId){
+        var yo = this.getUserId();
+        var l1 = await this.getPartChat(yo, userId);
+        var l2 = await this.getPartChat(userId, yo);
+        return l1.mensajes.concat(l2.mensajes);
+    }
 }
 
 

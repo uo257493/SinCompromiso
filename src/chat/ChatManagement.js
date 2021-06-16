@@ -1,52 +1,55 @@
 const auth = require('solid-auth-client')
+const linq = require("linq");
 
 
-module.exports = function(app, swig, gestorBD, session){
+module.exports = function(app, swig, mongoDao, podDao){
 
 app.get('/app/chat', async function (req, res) {
-    auth.trackSession(session => {
-        if (!session)
-            console.log('The user is not logged in')
-        else
-            console.log(`The user is ${session.webId}`)
-    })
-    var estaRegistrado = !false; //dao.estaRegistrado();
+
+    var estaRegistrado = await podDao.isRegistered()
     var respuesta = null;
     if(!estaRegistrado) {
         res.redirect("/registro/sinCompromiso");
         return;
     }
     else{
+        var enlaces = (await podDao.leeEnlaces()).enlaces;
         var conversaciones = new Object();
-        var enlaceNA1 = new Object();
-        enlaceNA1.nombre = "Maria";
-        enlaceNA1.userID = "10";
-        enlaceNA1.imagenPrincipal = "../../media/output.png"
-        var enlaceNA2 = new Object();
-        enlaceNA2.nombre = "Martina";
-        enlaceNA2.userID = "12";
-        enlaceNA2.imagenPrincipal = "../../media/suarez.jpg"
-        conversaciones.pendientes = [enlaceNA1, enlaceNA2];
-        var enlace3 = new Object();
-        enlace3.userID = "45";
-        enlace3.nombre = "Manolo";
-        enlace3.edad = 45;
-        enlace3.ultimoMensaje = "Hola bb";
-        enlace3.ultimoMensajeSender = "yo";
-        enlace3.imagenPrincipal = "../../media/suarez.jpg";
+        conversaciones.pendientes = [];
+        conversaciones.abiertas = [];
+        for(var i = 0; i< enlaces.length; i++){
+           var temC = await podDao.getFullChat(enlaces[i]);
+           var usuario = await podDao.leeOtroPod(enlaces[i]);
+           var sorted = linq.from(temC).orderBy(function (m) {
+               return m.timestamp;
+           }).toArray();
 
-        var enlace4 = new Object();
-        enlace4.userID = "25";
-        enlace4.nombre = "Jennifer Goland";
-        enlace4.edad = 20;
-        enlace4.ultimoMensaje = "saaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddqdeqwdrwrewfrewfewfeffffffffffffffffffffffffffffffffffffffffffffaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaddddddddddddddddddddddaaaaaaaaaaaaaassssssssssssssss";
-        if(enlace4.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
-            enlace4.ultimoMensaje = enlace4.ultimoMensaje.slice(0, 25) + "...";
+           var miniatura = new Object();
+           miniatura.nombre = usuario.name;
+           miniatura.userID = usuario.userId;
+           if(usuario.cantidadImagenes >0)
+                miniatura.imagenPrincipal = usuario.imagenes[0];
+           else
+               miniatura.imagenPrincipal = "../media/noPic.png"
 
-        enlace4.ultimoMensajeSender = "el";
-        enlace4.imagenPrincipal = "../../media/output.png";
+            if(sorted.length == 0){
+                conversaciones.pendientes.push(miniatura);
+            }
+            else{
+                miniatura.edad = getAge(usuario.birth)
+                miniatura.ultimoMensaje = sorted[sorted.length-1].contenido;
+                if(miniatura.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
+                    miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 25) + "...";
+                if(sorted[sorted.length-1].sender == usuario.userId)
+                    miniatura.ultimoMensajeSender = "el"
+                else
+                    miniatura.ultimoMensajeSender = "yo"
 
-        conversaciones.abiertas = [enlace3, enlace4];
+                conversaciones.abiertas.push(miniatura);
+            }
+
+        }
+
         respuesta = swig.renderFile('views/panels/ChatSC.html',{
             conversaciones: conversaciones
         });
@@ -140,4 +143,17 @@ app.get('/app/chat', async function (req, res) {
 
 
     });
+
+    function getAge(dateString) {
+        var today = new Date();
+        var birthDate = new Date(dateString.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1"));
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
 }
