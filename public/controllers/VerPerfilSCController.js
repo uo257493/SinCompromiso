@@ -1,55 +1,52 @@
 var numIm;
 var imActual
 var conmutador;
-$(document).ready(function () {
-    window.addEventListener("load",  function() {
-        //Indicamos la opcion en que estamos
+$(window).on("load", function(event) {
+    //Indicamos la opcion en que estamos
 
-        document.getElementById('abreChat').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
+    document.getElementById('abreChat').classList.add("botonColorized");
+    document.getElementById('abrePerfil').classList.remove("botonColorized");
+    document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            imActual = 0;
-            //Obtener el numero de imagenes
-            numIm = document.getElementById('cantidadFotosSE').textContent;
-            if (numIm == 0) {
-                document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
-                //Desactivar izquierda
-                document.getElementById('enlacePicAnterior').disabled = true;
-                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
-                return;
+    imActual = 0;
+    //Obtener el numero de imagenes
+    numIm = document.getElementById('cantidadFotosSE').textContent;
+    if (numIm == 0) {
+        document.getElementById('fotoDisplayE').src = "../../media/noPic.png";
+        //Desactivar izquierda
+        document.getElementById('enlacePicAnterior').disabled = true;
+        document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+        return;
 
-            }
-            conmutador = 1;//Esta contraido
-            var img0 = document.getElementById("enlaceIm0E").textContent;
+    }
+    conmutador = 1;//Esta contraido
+    var img0 = document.getElementById("enlaceIm0E").textContent;
 
-            document.getElementById('fotoDisplayE').src = img0;
-
-
-            //Desactivar izquierda
-            document.getElementById('enlacePicAnterior').disabled = true;
-            if (numIm == 1)
-                document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+    document.getElementById('fotoDisplayE').src = img0;
 
 
-    });
+    //Desactivar izquierda
+    document.getElementById('enlacePicAnterior').disabled = true;
+    if (numIm == 1)
+        document.getElementById('enlacePicSiguiente').disabled = true; //Desactivar dcha
+
+
+});
+$(window).ready(function () {
+
     $("#seeMoreB").click(function(){
         if(conmutador==undefined)
             conmutador = 1;
         if(conmutador==1) {
             conmutador = 0;
             document.getElementById('verBioSSE').style.display='block';
-            document.getElementById('denunciarPerfilSSE').style.display='block';
-            document.getElementById('bloquearPerfilSSE').style.display='block';
             document.getElementById('seeMoreAi').classList.remove("fa-chevron-down");
             document.getElementById('seeMoreAi').classList.add("fa-chevron-up");
         }
         else{
             conmutador = 1;
             document.getElementById('verBioSSE').style.display='none';
-            document.getElementById('denunciarPerfilSSE').style.display='none';
-            document.getElementById('bloquearPerfilSSE').style.display='none';
             document.getElementById('seeMoreAi').classList.remove("fa-chevron-up");
             document.getElementById('seeMoreAi').classList.add("fa-chevron-down");
 
@@ -79,23 +76,5 @@ $(document).ready(function () {
         document.getElementById('fotoDisplayE').src = imgTD;
 
     });
-    var conmutadorDenuncias;
-    $("#denunciarPerfilSSE").click(function(){
-        if(conmutadorDenuncias == undefined)
-            conmutadorDenuncias = 1;
-        var elementosAOcultar = document.getElementsByName("cuadroDenunciaSSE");
 
-        if(conmutadorDenuncias ==1){
-            conmutadorDenuncias = 0;
-            var i = 0;
-            for(i = 0; i< elementosAOcultar.length; i++)
-                 elementosAOcultar[i].style.display='block';
-        }
-        else {
-            conmutadorDenuncias = 1;
-            for(i = 0; i< elementosAOcultar.length; i++)
-                elementosAOcultar[i].style.display='none';
-        }
-
-    });
 });

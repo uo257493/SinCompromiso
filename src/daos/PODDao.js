@@ -224,6 +224,11 @@ class PODDao {
         var l2 = await this.getPartChat(userId, yo);
         return l1.mensajes.concat(l2.mensajes);
     }
+
+    async tienenEnlace(userId){
+        var enlaces = await this.leeEnlaces();
+        return enlaces.enlaces.includes(userId);
+    }
 }
 
 

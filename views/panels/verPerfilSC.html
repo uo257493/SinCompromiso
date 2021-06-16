@@ -20,7 +20,7 @@
       <button class="btn-circle btn-xl" id="enlacePicAnterior">
         <i class="fas fa-chevron-left" style="color:white; font-size: 1.75em !important;"></i>
       </button>
-              <img src="" id="fotoDisplayE" width="400" height="400">
+              <img src="" id="fotoDisplayE" width="400" height="400" style="object-fit:none">
 
       <button class="btn-circle btn-xl" id="enlacePicSiguiente">
         <i class="fas fa-chevron-right" style="color:white;font-size: 1.75em  !important;"></i>
@@ -35,33 +35,10 @@
     <h3 style="text-align: center"><b>{{enlace.nombre}}, {{enlace.edad}}</b> A {{enlace.distancia}} km</h3>
 
     {%endif%}
-  <div style="text-align: center">
-      <button class="btn-circle btn-xxl" id="pasoB">
-        <i class="fas fa-times" style=" color: red; font-size: 2em !important;"></i>
-      </button>
-      <button class="btn-circle btn-xxl" id="meMolaB">
-        <i class="fas fa-grin-hearts" style="color: yellow; font-size: 2em !important;"></i></button>
-
-
-      <button class="btn-circle btn-xxl" id="meGustaB">
-        <i class="fas fa-thumbs-up" style="color: gold; font-size: 2em !important;"></i></button>
-
-      <br>
-      <div name="cuadroMeMola" style="text-align: center; display: none" >
-          <textarea name="cuadroMeMola" id="mensajeMeMola" style="width: 300px; hight:75px; display: none; margin-right: 35%; margin-left: 35%"></textarea>
-          <button name="cuadroMeMola" id="enviarMensajeMeMola" class="eleganceS" style=" display: none; margin-top: 3px; margin-right: 40%;  margin-left: 55%" >Enviar</button><br>
-      </div>
-
-  </div>
-
+ 
   <div style="text-align: center;">
     <p  id="verBioSSE" style="display:none; margin-right: 50px; margin-left: 50px">{{enlace.biografia}}</p>
 
-      <div name="cuadroDenunciaSSE" style="text-align: center; display: none" >
-          <textarea name="cuadroDenunciaSSE" id="motivoDenunciaSSE" style="width: 300px; hight:75px; display: none; margin-right: 35%; margin-left: 35%"></textarea>
-          <button name="cuadroDenunciaSSE" id="enviarDenunciaSSE" class="eleganceS" style=" display: none; margin-top: 3px; margin-right: 40%;  margin-left: 55%" >Enviar</button><br>
-      </div>
-      <button id="denunciarPerfilSSE" class="eleganceM" style="display:none; margin-right: 45%; margin-left: 45%" >Denunciar</button><br>
 
 
         <button id="bloquearPerfilSSE" class="eleganceM" style="display:none; margin-right: 45%;  margin-left: 45%" >Bloquear</button><br>

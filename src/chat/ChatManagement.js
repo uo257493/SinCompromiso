@@ -1,5 +1,9 @@
 const auth = require('solid-auth-client')
 const linq = require("linq");
+var linqjs = require('linqjs');
+var cryptox = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'bh58lkif';
 
 
 module.exports = function(app, swig, mongoDao, podDao){
@@ -61,37 +65,31 @@ app.get('/app/chat', async function (req, res) {
 
     app.get('/app/conversacion/:idConversacion', async function (req, res) {
         var partnerID = req.params.idConversacion;
-        console.log(partnerID);
-        var estaRegistrado = !false; //dao.estaRegistrado();
+        var estaRegistrado = await podDao.isRegistered()
         var respuesta = null;
+        var usuario = await podDao.leeOtroPod(partnerID);
+        var temC = await podDao.getFullChat(partnerID);
+        var sorted = linq.from(temC).orderBy(function (m) {
+            return m.timestamp;
+        }).toArray();
+        sorted = sorted.select(function (t) {
+            if(t.sender == partnerID)
+                t.sender = "el"
+            else
+                t.sender = "yo";
+            return t;
+        })
         var conversacion = new Object();
 
         var enlace = new Object();
-        enlace.nombre = "Martina";
-        enlace.edad = 25;
-        enlace.imagenPrincipal = "../../media/output.png";
+        enlace.nombre = usuario.name;
+        enlace.edad = getAge(usuario.birth);
+        if(usuario.cantidadImagenes >0)
+            enlace.imagenPrincipal = usuario.imagenes[0];
+        else
+            enlace.imagenPrincipal = "/media/noPic.png"
         enlace.userID = partnerID;
-       var mensajeA = new Object();
-        mensajeA.sender = "yo";
-        mensajeA.contenido = "Hola (Hola)\n" +
-            "No sé si te acuerdas de mí (De mí)\n" +
-            "Hace tiempo no te veo por ahí (Por ahí)\n" +
-            "Soy yo (Soy yo)\n" +
-            "El que siempre le hablaba de ti (-ba de ti)\n" +
-            "A tu mejor amiga pa' que me tire la buena (Buena)\n" +
-            "Hola (Hola)\n" +
-            "No sé si te acuerdas de mí (De mí) (Uh yeh)\n" +
-            "Hace tiempo no te veo por ahí (Por ahí) (Uh yeh)\n" +
-            "Soy yo (Soy yo)\n" +
-            "El que siempre le hablaba de ti (-ba de ti)\n" +
-            "A tu mejor amiga pa' que me tire la buena (Buena) (Uh yeh)\n" +
-            "sadasdasd\n" +
-            "Dime si tú me da' (Uh)lmslkkclsfc\n" +
-            "Una oportunida' (Uh uh)";
-       var mensajeB = new Object();
-        mensajeB.sender = "manolo";
-        mensajeB.contenido = "Hiljhsauihdkjashdklashdlashdflkasfhcscfsdcdshkvdskjvhdsjkvldskhvkjdsjhvkjdsahvkjhasdlkvjh chascnlkasjchashckasjcksajckljasb"
-        conversacion.mensajes = [mensajeA, mensajeB, mensajeA, mensajeA, mensajeB, mensajeA];
+        conversacion.mensajes = sorted;
         if (!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
@@ -106,39 +104,57 @@ app.get('/app/chat', async function (req, res) {
 
     app.get('/app/perfil/:idUsuario', async function (req, res) {
         var partnerID = req.params.idUsuario;
-        var tienenEnlace = true;
-        console.log(partnerID);
-        var estaRegistrado = !false; //dao.estaRegistrado();
-        var respuesta = null;
-        var conversacion = new Object();
-
+        var estaRegistrado = await podDao.isRegistered()
         if (!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         }
+
+
+
         else {
+            var tienenEnlace = await podDao.tienenEnlace(partnerID);
+
+            var respuesta = null;
+            var conversacion = new Object();
             if (tienenEnlace) {
+                var user  = await podDao.leeOtroPod(partnerID);
                 var enlace = new Object();
-                enlace.nombre = "Luis";
-                enlace.edad = 32;
-                enlace.distancia = 50;
-                enlace.biografia= "One, Two, Three, ah!..." +
-                    "Un niño divertido, graciosín y extrovertido" +
-                    "y a todos suelo enfadar, Shinnosuke nunca para" +
-                    "y no te dejará en paz." +
-                    "Cuando hay que conquistar, soy todo un profesional, " +
-                    "Soy un niño muy ligón, con la fuerza de un ciclón. " +
-                    "Come on, baby. Come on Baby. El pimiento sabe muy mal " +
-                    "mira que trompa, que pedazo de trompa " +
-                    "trompa, trompa"
-                enlace.imagenes = ["../../media/suarez.jpg","../../media/output.png","../../media/addPic.png"];
-                enlace.cantidadImagenes = 3;
-                enlace.esMeMola = false;
+                enlace.nombre = user.name;
+                enlace.edad = getAge(user.birth);
+                var suLoc = podDao.getLocationOtroPerfil(partnerID);
+                var miLocation = await podDao.getLocationOtroPerfil(podDao.getUserId());
+                var milat;
+                var milong;
+                if (miLocation != "") {
+                    milat = parseFloat(decrypt(miLocation.a))
+                    milong = parseFloat(decrypt(miLocation.b))
+                }
+
+                var suLocation = await podDao.getLocationOtroPerfil(partnerID);
+                var sulat;
+                var sulong;
+                if (suLocation != "") {
+                    sulat = parseFloat(decrypt(suLocation.a))
+                    sulong = parseFloat(decrypt(suLocation.b))
+                }
+
+                if(suLocation != "" && miLocation != "")
+                    enlace.distancia = getKilometros(milat, milong, sulat, sulong);
+                else
+                    enlace.distancia = "X";
+
+                enlace.biografia= user.bio;
+                enlace.imagenes = user.imagenes;
+                enlace.cantidadImagenes = user.cantidadImagenes;
+                enlace.esMeMola = false;//Actualmente el mensaje de me mola existe hasta el momento del enlace
                 respuesta = swig.renderFile('views/panels/verPerfilSC.html', {
                     enlace: enlace
                 });
                 res.send(respuesta);
             }
+            else
+                res.redirect("app/chat")
         }
 
 
@@ -156,4 +172,25 @@ app.get('/app/chat', async function (req, res) {
         return age;
     }
 
+    function getKilometros(lat1,lon1,lat2,lon2)
+    {
+        rad = function(x) {return x*Math.PI/180;}
+        var R = 6378.137; //Radio de la tierra en km
+        var dLat = rad( lat2 - lat1 );
+        var dLong = rad( lon2 - lon1 );
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c;
+        return d.toFixed(3); //Retorna tres decimales
+    }
+
+
+    function decrypt(text){
+        if(text == undefined)
+            return "";
+        var decipher = cryptox.createDecipher(algorithm,password)
+        var dec = decipher.update(text+"",'hex','utf8')
+        dec += decipher.final('utf8');
+        return dec;
+    }
 }
