@@ -194,8 +194,10 @@ $(window).ready(function () {
             data: JSON.stringify({"like": like}),
 
             success: function (response) {
-                if(response)
-                    location.href = "/app/enlaces"
+                if(response){
+                    document.getElementById("abreChat").classList.add("matchMade");
+                }
+                location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
                 alert(errorThrown);
@@ -216,7 +218,9 @@ $(window).ready(function () {
             data: JSON.stringify({"meMola": meMola, "mensaje": mensaje}),
 
             success: function (response) {
-                if(response)
+                if(response){
+                    document.getElementById("abreChat").classList.add("matchMade");
+                }
                     location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {

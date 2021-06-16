@@ -162,6 +162,25 @@ class MongoDao {
         });
     }
 
+    getFullMatches(lista, funcionCallback) {
+
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('usuarios');
+                collection.find({"_id": {$in: lista}}).toArray(function (err, usuarios) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(usuarios)
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
     getPods(lista, funcionCallback) {
 
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
@@ -685,6 +704,28 @@ class MongoDao {
                 collection.update({mongoUserId: yo}, {$set: {"ultimoMeMola": Date.now()}}, function (err, result) {
                     if (err) {
                         funcionCallback(null);
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+
+    misEnlaces(yo, funcionCallback) {
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                //Selecciona los ids Mongo de las personas que tienen en sus MeMola al usuario
+                collection.find({"mongoUserId": yo}, {"enlaces": 1, "_id": 0}).toArray(function (err, enlaces) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(enlaces[0].enlaces);
+
                     }
                     db.close();
                 });

@@ -258,16 +258,25 @@ app.post('/app/paso', async function (req, res) {
             mongoDao.gestorMeMola(yo, quien, function (resultado) {
                 if(!resultado){
                     mongoDao.meMola(yo, mongoDao.createMongoId(quien), mensaje,function (resp) {
-                        if(resp) res.send(true);
-                        else res.send(false);
+                        res.send(false)
                     })
                 }
                 else{
                     mongoDao.actualizaTiempoMeMola(yo, function (res) {
                         if(res != null){
+                            mongoDao.misEnlaces(yo, async function (enlaces) {
+                                    mongoDao.getFullMatches(enlaces, async function (fullMatches) {
+                                        var lfmids = fullMatches.select(function (t) {
+                                            return t.userId;
+                                        });
+                                        var l2 = await podDao.leeEnlaces();
+                                        var enlacesACrear = lfmids.except(l2.enlaces);
+                                        await podDao.creaEnlacesConNoCreados(enlacesACrear);
+                                        res.send(true)
+                                    })
 
-                            console.log("Ahora haz algo con el pod")
-                            res.send(true)
+                            })
+
                         }
                     })
                 }
@@ -282,11 +291,21 @@ app.post('/app/paso', async function (req, res) {
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
            mongoDao.gestorMeGusta(yo, quien , function (resultado) {
                if(resultado) {
-                   console.log("Ahora hacemos cosas en el POD")
-                   res.send(true)
+                   mongoDao.misEnlaces(yo, async function (enlaces) {
+                       mongoDao.getFullMatches(enlaces, async function (fullMatches) {
+                           var lfmids = fullMatches.select(function (t) {
+                               return t.userId;
+                           });
+                           var l2 = await podDao.leeEnlaces();
+                           var enlacesACrear = lfmids.except(l2.enlaces);
+                           await podDao.creaEnlacesConNoCreados(enlacesACrear);
+                           res.send(true)
+                       })
+
+                   })
                }
                else
-                   res.send(true);
+                   res.send(false);
            })
         })
 

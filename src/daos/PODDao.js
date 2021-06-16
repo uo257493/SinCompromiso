@@ -18,8 +18,8 @@ class PODDao {
     }
 
     async readFile(route){
-        if( await this.fc.itemExists( "https://personasc1.solidcommunity.net/private/prueba/Ejemplo.md" ) ){
-            let content = await this.fc.readFile( "https://personasc1.solidcommunity.net/private/prueba/Ejemplo.md" )
+        if( await this.fc.itemExists( route ) ){
+            let content = await this.fc.readFile( route )
             return content;
         }
         return false;
@@ -68,7 +68,8 @@ class PODDao {
     }
 
     async eliminaTodasCarpetas(){
-        await this.fc.deleteFolder("https://personasc1.solidcommunity.net/public/sincompromisocard/");
+        await this.fc.deleteFolder("https://loles.inrupt.net/private/sincompromisochats/");
+        await this.fc.deleteFolder("https://loles.inrupt.net/private/sinCompromisoChats/");
     }
 
     async uploadImage(theImage, imageName){
@@ -126,6 +127,87 @@ class PODDao {
                 return dataGot.imagenes[i]
         }
     }
+
+
+    async leeEnlaces(){
+        var archivoEnlaces = "https://" + this.userId +"/sinCompromisoChats/enlaces.json"
+        var carpeta = "https://" + this.userId +"/sinCompromisoChats"
+        if( await this.fc.itemExists( archivoEnlaces ) ){
+            let content = await this.fc.readFile( archivoEnlaces )
+            return JSON.parse(content);
+        }
+        else{
+            await this.fc.createFolder(carpeta)
+            await this.fc.createFile(archivoEnlaces, JSON.stringify({"enlaces": []}))
+
+            return {"enlaces": []};
+        }
+    }
+
+    async leeEnlaces(){
+        var archivoEnlaces = "https://" + this.userId +"/sincompromisochats/enlaces.json"
+        var carpeta = "https://" + this.userId +"/sincompromisochats/"
+        if( await this.fc.itemExists( archivoEnlaces ) ){
+            let content = await this.fc.readFile( archivoEnlaces )
+            return JSON.parse(content);
+        }
+        else{
+            if(! (await this.fc.itemExists( carpeta )) )
+                 await this.fc.createFolder(carpeta)
+            await this.fc.createFile(archivoEnlaces, JSON.stringify({"enlaces": []}))
+
+            return {"enlaces": []};
+        }
+    }
+
+    async creaEnlacesConNoCreados(listaDeElemACrear){
+        var archivoEnlaces = "https://" + this.userId +"/sincompromisochats/enlaces.json"
+        var actual = await this.leeEnlaces();
+        for(var i = 0; i< listaDeElemACrear.length; i++){
+            actual.enlaces.push(listaDeElemACrear[i]);
+            await this.createChatFile(listaDeElemACrear[i]);
+        }
+        this.fc.postFile( archivoEnlaces, JSON.stringify(actual) );
+    }
+
+    async createChatFile(conQuien){
+        var dir = "https://" + this.userId +"/sincompromisochats/"+ conQuien+".json";
+        var archivoACL = "https://" + this.userId +"/sincompromisochats/"+ conQuien+".json.acl";
+
+        await this.fc.createFile( dir, JSON.stringify({"mensajes": []}))
+        await this.fc.createFile(archivoACL, this.generateACL("personasc1.solidcommunity.net", conQuien+".json"), "text/turtle");
+    }
+
+    async pruebaGeneral(){
+        var carpeta = "https://" + this.userId +"/sincompromisochats/"
+        var archivo = "https://" + this.userId +"/prueba7g/prueba7.json"
+       var archivoACL = "https://" + this.userId +"/prueba7g/prueba7.json.acl"
+
+        await this.fc.deleteFolder(carpeta);
+        //await this.fc.createFolder(carpeta)
+        // await this.fc.createFile(archivo, JSON.stringify({"enlaces": []}))
+        // await this.fc.createFile(archivoACL, this.generateACL("personasc1.solidcommunity.net", "prueba7.json"), "text/turtle");
+
+
+    }
+
+    generateACL(partnerID, filename) {
+        var ACL = "@prefix : <#>.\n" +
+            "@prefix n0: <http://www.w3.org/ns/auth/acl#>.\n" +
+            "@prefix c: </profile/card#>.\n" +
+            "@prefix c0: <https://"+partnerID+"/profile/card#>.\n" +
+            "\n" +
+            ":ControlReadWrite\n" +
+            "    a n0:Authorization;\n" +
+            "    n0:accessTo <"+filename+">;\n" +
+            "    n0:agent c:me;\n" +
+            "    n0:mode n0:Control, n0:Read, n0:Write.\n" +
+            ":Read\n" +
+            "a n0:Authorization; n0:accessTo <"+filename+">; n0:agent c0:me; n0:mode n0:Read.\n";
+
+        return ACL;
+    }
 }
+
 
 module.exports = PODDao;

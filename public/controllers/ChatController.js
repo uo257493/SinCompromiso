@@ -1,6 +1,7 @@
 $(document).ready(function () {
     window.addEventListener("load", function (event) {
         //Indicamos la opcion en que estamos
+        document.getElementById("abreChat").classList.remove("botonColorized");
         document.getElementById('abreChat').classList.add("botonColorized");
         document.getElementById('abrePerfil').classList.remove("botonColorized");
         document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
