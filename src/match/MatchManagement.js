@@ -325,6 +325,29 @@ app.post('/app/paso', async function (req, res) {
 
     });
 
+    app.post('/app/chequeaEnlaces', async function (req, res) {
+        mongoDao.getMyself(await podDao.getUserId(), function (yo) {
+        mongoDao.misEnlaces(yo, async function (enlaces) {
+            mongoDao.getFullMatches(enlaces, async function (fullMatches) {
+                var lfmids = fullMatches.select(function (t) {
+                    return t.userId;
+                });
+                var l2 = await podDao.leeEnlaces();
+                var enlacesACrear = lfmids.except(l2.enlaces);
+                if(enlacesACrear.length == 0){
+                    res.send(false);
+                    return;
+                }
+                await podDao.creaEnlacesConNoCreados(enlacesACrear);
+                res.send(true)
+            })
+
+        });
+        })
+
+
+    });
+
 app.post('/app/denuncia', function (req, res) {
 
     var denunciado = req.body.denunciado;

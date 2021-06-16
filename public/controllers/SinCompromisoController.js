@@ -35,6 +35,23 @@ $(document).ready(function () {
 
     setInterval(obtenPos,90000) //Localiza pasado minuto y medio
 
+    setInterval(creaTodosLosEnlacesNecesarios(), 60000); //Mira a ver si hay que crear enlaces cada minutos
+
+    function creaTodosLosEnlacesNecesarios() {
+        $.ajax({
+            type: "POST",
+            url: "/app/chequeaEnlaces",
+
+            success: function (response) {
+                if(response)
+                    document.getElementById("abreChat").classList.add("matchMade");
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
     function obtenPos() {
         navigator.geolocation.getCurrentPosition(function(res){
             var ts = {"latitude": res.coords.latitude,
