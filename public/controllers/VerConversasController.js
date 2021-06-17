@@ -1,8 +1,8 @@
-
+var ultimaRecarga;
 $(document).ready(function () {
     window.addEventListener("load",  function() {
         //Indicamos la opcion en que estamos
-
+    ultimaRecarga = Date.now();
         document.getElementById('abreChat').classList.add("botonColorized");
         document.getElementById('abrePerfil').classList.remove("botonColorized");
         document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
@@ -18,6 +18,35 @@ $(document).ready(function () {
 
         location.href = "/app/perfil/"+indiceOrigen;
     });
+
+
+    $("#enviaElMsgC").click(function(){
+        var mensaje = document.getElementById("cuadroMensajeC").value;
+        if(mensaje.trim() == "")
+            return;
+        document.getElementById("cuadroMensajeC").value = "";
+
+        $.ajax({
+            url: "/app/subeMensaje",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"contenido": mensaje, "receptor":document.getElementsByName("cuadroOtroP")[0].id}),
+
+            success:  function (response) {
+                var newMsg = '<div class="container" style="margin-right: 0px !important; padding-left:0px !important">\n' +
+                    '                <div class="sender">\n' +
+                    '                        <p class="senderP" style="word-break: break-word">'+ mensaje+'</p>\n' +
+                    '                </div>\n' +
+                    '    </div>'
+                $( "#contenedorDeMensajes" ).append(newMsg);
+            },
+            error: function (request, status, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
    });
 
 setInterval(function (){
@@ -27,16 +56,16 @@ setInterval(function (){
 function manejarSSEnlaces(){
     //Leer si hay alguno, ya la peticion redirigira
     //Si no meter la mask
-    if(hayAlgo=="false") {
-        $.ajax({
-            url: "/app/visitaSSE",
-            type: "POST",
-            success: function (respuesta) {
-                console.log("Visitamos el SSE")
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        });
-    }
+    // if(hayAlgo=="false") {
+    //     $.ajax({
+    //         url: "/app/visitaSSE",
+    //         type: "POST",
+    //         success: function (respuesta) {
+    //             console.log("Visitamos el SSE")
+    //         },
+    //         error: function (error) {
+    //             console.log(error)
+    //         }
+    //     });
+    // }
 }

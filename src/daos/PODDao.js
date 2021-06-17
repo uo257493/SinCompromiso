@@ -229,6 +229,19 @@ class PODDao {
         var enlaces = await this.leeEnlaces();
         return enlaces.enlaces.includes(userId);
     }
+
+    async subeMensaje(contenido, receptor){
+        var mensaje = new Object();
+        mensaje.contenido = contenido;
+        mensaje.timestamp = Date.now();
+        mensaje.sender = this.getUserId();
+
+        var miCon = await this.getPartChat(mensaje.sender, receptor);
+
+        miCon.mensajes.push(mensaje);
+
+        this.fc.postFile( "https://" + mensaje.sender +"/sincompromisochats/"+ receptor+".json", JSON.stringify(miCon) );
+    }
 }
 
 

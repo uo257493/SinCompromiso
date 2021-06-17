@@ -8,6 +8,14 @@ var cryptox = require('crypto'),
 
 module.exports = function(app, swig, mongoDao, podDao){
 
+app.put('/app/subeMensaje', async function (req, res) {
+    var contenido = req.body.contenido;
+    var receptor = req.body.receptor;
+
+    await podDao.subeMensaje(contenido, receptor);
+    res.end();
+})
+
 app.get('/app/chat', async function (req, res) {
 
     var estaRegistrado = await podDao.isRegistered()
