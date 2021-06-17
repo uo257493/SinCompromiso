@@ -50,7 +50,7 @@ $(document).ready(function () {
    });
 
 setInterval(function (){
-    manejarSSEnlaces();
+    manejarSSChat();
 },10000);
 
 function manejarSSChat(){
