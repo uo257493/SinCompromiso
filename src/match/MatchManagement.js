@@ -353,7 +353,11 @@ app.post('/app/denuncia', function (req, res) {
     var denunciado = req.body.denunciado;
     var motivo = req.body.motivo;
 
+    if(motivo.length > 300)
+        motivo =  motivo.slice(0, 299);
+
     var mensa= "Se denuncia a: "+ denunciado +" por el siguiente motivo: " + motivo;
+
     var mailOptions = {
         from: 'denucias.sincompromiso@gmail.com',
         to: 'admn.sincompromiso@gmail.com',

@@ -17,7 +17,6 @@ app.put('/app/subeMensaje', async function (req, res) {
 })
 
 app.get('/app/chat', async function (req, res) {
-
     var estaRegistrado = await podDao.isRegistered()
     var respuesta = null;
     if(!estaRegistrado) {
@@ -70,6 +69,16 @@ app.get('/app/chat', async function (req, res) {
     res.send(respuesta);
 });
 
+    app.get('/app/recargaMensajes', async function (req, res) {
+        var momento = parseInt(req.body.momento);
+        var compa = req.body.compa;
+        var susMensajes = await podDao.getPartChat(compa, podDao.getUserId());
+        var mensajes = susMensajes.mensajes.select(function (t) {
+            if(t.timestamp > momento)
+                return t;
+        })
+        
+    })
 
     app.get('/app/conversacion/:idConversacion', async function (req, res) {
         var partnerID = req.params.idConversacion;

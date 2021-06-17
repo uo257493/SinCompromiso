@@ -1,14 +1,15 @@
-$(document).ready(function () {
-    window.addEventListener("load", function (event) {
-        //Indicamos la opcion en que estamos
-        document.getElementById("abreChat").classList.remove("botonColorized");
-        document.getElementById('abreChat').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
-        document.getElementById("containerG").style = "width:100%; margin-right:5px !important; margin-left:5px !important;"
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
+$(window).on("load", function(event) {
+    //Indicamos la opcion en que estamos
+    document.getElementById("abreChat").classList.remove("botonColorized");
+    document.getElementById('abreChat').classList.add("botonColorized");
+    document.getElementById('abrePerfil').classList.remove("botonColorized");
+    document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
+    document.getElementById("containerG").style = "width:100%; margin-right:5px !important; margin-left:5px !important;"
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    });
+});
+$(document).ready(function () {
+
     $("[name='conversaAb']").click(function(){
         var indiceOrigen = $(this).attr('id').replace('#', '');
         console.log(indiceOrigen);

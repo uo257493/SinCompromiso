@@ -17,8 +17,19 @@ class PODDao {
         this.fc = fc;
     }
 
+    async canRead(route){
+        try {
+           var sol = await this.fc.itemExists( route );
+           return sol;
+        } catch (error) {
+            return false;
+        }
+    }
+
     async readFile(route){
-        if( await this.fc.itemExists( route ) ){
+        var canRead = await this.canRead(route);
+
+        if( canRead ){
             let content = await this.fc.readFile( route )
             return content;
         }
@@ -175,7 +186,7 @@ class PODDao {
         var archivoACL = "https://" + this.userId +"/sincompromisochats/"+ conQuien+".json.acl";
 
         await this.fc.createFile( dir, JSON.stringify({"mensajes": []}))
-        await this.fc.createFile(archivoACL, this.generateACL("personasc1.solidcommunity.net", conQuien+".json"), "text/turtle");
+        await this.fc.createFile(archivoACL, this.generateACL(conQuien, conQuien+".json"), "text/turtle");
     }
 
     async pruebaGeneral(){

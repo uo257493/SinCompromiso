@@ -53,19 +53,30 @@ setInterval(function (){
     manejarSSEnlaces();
 },10000);
 
-function manejarSSEnlaces(){
-    //Leer si hay alguno, ya la peticion redirigira
-    //Si no meter la mask
-    // if(hayAlgo=="false") {
-    //     $.ajax({
-    //         url: "/app/visitaSSE",
-    //         type: "POST",
-    //         success: function (respuesta) {
-    //             console.log("Visitamos el SSE")
-    //         },
-    //         error: function (error) {
-    //             console.log(error)
-    //         }
-    //     });
-    // }
+function manejarSSChat(){
+    var tiempoUltimo  = ultimaRecarga;
+    ultimaRecarga = Date.now();
+    $.ajax({
+        url: "/app/recargaMensajes",
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"momento": tiempoUltimo, "compa":document.getElementsByName("cuadroOtroP")[0].id}),
+
+        success:  function (response) {
+            for(var i = 0; i< response.length; i++){
+                var newMsg = '<div class="container" style="margin-left: 0px !important; padding-right:0px !important">\n' +
+                    '                <div class="receiver">\n' +
+                    '                        <p class="receiverP" style="word-break: break-word">'+ response[i]+'</p>\n' +
+                    '                </div>\n' +
+                    '    </div>'
+                $( "#contenedorDeMensajes" ).append(newMsg);
+            }
+
+        },
+        error: function (request, status, errorThrown) {
+            alert(errorThrown);
+        }
+    });
 }
