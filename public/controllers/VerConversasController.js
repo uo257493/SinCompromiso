@@ -49,26 +49,28 @@ $(document).ready(function () {
     });
    });
 
-setInterval(function (){
-    manejarSSEnlaces();
-},10000);
+setInterval(async function (){
+   await manejarSSChat();
+},5000);
 
-function manejarSSChat(){
+async function manejarSSChat(){
     var tiempoUltimo  = ultimaRecarga;
     ultimaRecarga = Date.now();
     $.ajax({
         url: "/app/recargaMensajes",
-        method: "GET",
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         data: JSON.stringify({"momento": tiempoUltimo, "compa":document.getElementsByName("cuadroOtroP")[0].id}),
 
         success:  function (response) {
+            if(response == null)
+                return;
             for(var i = 0; i< response.length; i++){
                 var newMsg = '<div class="container" style="margin-left: 0px !important; padding-right:0px !important">\n' +
                     '                <div class="receiver">\n' +
-                    '                        <p class="receiverP" style="word-break: break-word">'+ response[i]+'</p>\n' +
+                    '                        <p class="receiverP" style="word-break: break-word">'+ response[i].contenido+'</p>\n' +
                     '                </div>\n' +
                     '    </div>'
                 $( "#contenedorDeMensajes" ).append(newMsg);

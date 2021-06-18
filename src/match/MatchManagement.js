@@ -4,7 +4,13 @@ var cryptox = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = 'bh58lkif';
 
-module.exports = function(app, swig, mongoDao, podDao){
+const {
+    getSessionFromStorage,
+    getSessionIdFromStorageAll,
+    Session
+} = require("@inrupt/solid-client-authn-node");
+
+module.exports = function(app, swig, mongoDao, PODDao, FC){
 
 
 
@@ -19,6 +25,11 @@ module.exports = function(app, swig, mongoDao, podDao){
 
 
     app.get('/app/enlaces', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
 
         var miUltimoMMola;
         var estaRegistrado = await podDao.isRegistered()
@@ -232,6 +243,13 @@ app.post('/app/visitaSSE', function (req, res) {
 
 app.post('/app/paso', async function (req, res) {
     var quien = req.body.paso;
+
+    const session = await getSessionFromStorage(req.session.sessionId)
+    var fc = new FC(session)
+    var podDao = new PODDao();
+    podDao.setFC(fc);
+    podDao.setUserID(await session.info.webId);
+
     mongoDao.getMyself(await podDao.getUserId(), function (yo) {
         mongoDao.paso(yo, mongoDao.createMongoId(quien), function (resp) {
             if(resp != null){
@@ -254,6 +272,11 @@ app.post('/app/paso', async function (req, res) {
     app.post('/app/meMola', async function (req, res) {
         var quien = req.body.meMola;
         var mensaje = req.body.mensaje;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
             mongoDao.gestorMeMola(yo, quien, function (resultado) {
                 if(!resultado){
@@ -288,6 +311,13 @@ app.post('/app/paso', async function (req, res) {
 
     app.post('/app/meGusta', async function (req, res) {
         var quien = req.body.like;
+
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
+
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
            mongoDao.gestorMeGusta(yo, quien , function (resultado) {
                if(resultado) {
@@ -314,6 +344,12 @@ app.post('/app/paso', async function (req, res) {
 
     app.post('/app/bloqueo', async function (req, res) {
         var quien = req.body.bloqueo;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
+
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
             mongoDao.gestorBloqueo(yo, quien , function (resultado) {
                 if(resultado) {
@@ -326,6 +362,13 @@ app.post('/app/paso', async function (req, res) {
     });
 
     app.post('/app/chequeaEnlaces', async function (req, res) {
+
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
+
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
         mongoDao.misEnlaces(yo, async function (enlaces) {
             mongoDao.getFullMatches(enlaces, async function (fullMatches) {

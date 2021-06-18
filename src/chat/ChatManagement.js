@@ -5,18 +5,32 @@ var cryptox = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = 'bh58lkif';
 
+const {
+    getSessionFromStorage,
+    getSessionIdFromStorageAll,
+    Session
+} = require("@inrupt/solid-client-authn-node");
 
-module.exports = function(app, swig, mongoDao, podDao){
+module.exports = function(app, swig, mongoDao, PODDao, FC){
 
 app.put('/app/subeMensaje', async function (req, res) {
     var contenido = req.body.contenido;
     var receptor = req.body.receptor;
-
+    const session = await getSessionFromStorage(req.session.sessionId)
+    var fc = new FC(session)
+    var podDao = new PODDao();
+    podDao.setFC(fc);
+    podDao.setUserID(await session.info.webId);
     await podDao.subeMensaje(contenido, receptor);
     res.end();
 })
 
 app.get('/app/chat', async function (req, res) {
+    const session = await getSessionFromStorage(req.session.sessionId)
+    var fc = new FC(session)
+    var podDao = new PODDao();
+    podDao.setFC(fc);
+    podDao.setUserID(await session.info.webId);
     var estaRegistrado = await podDao.isRegistered()
     var respuesta = null;
     if(!estaRegistrado) {
@@ -49,6 +63,7 @@ app.get('/app/chat', async function (req, res) {
             else{
                 miniatura.edad = getAge(usuario.birth)
                 miniatura.ultimoMensaje = sorted[sorted.length-1].contenido;
+                miniatura.ultimoMensajeTiempo = sorted[sorted.length-1].timestamp;
                 if(miniatura.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
                     miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 25) + "...";
                 if(sorted[sorted.length-1].sender == usuario.userId)
@@ -60,7 +75,9 @@ app.get('/app/chat', async function (req, res) {
             }
 
         }
-
+        conversaciones.abiertas = linq.from(conversaciones.abiertas).orderBy(function (m) {
+            return m.ultimoMensajeTiempo;
+        }).toArray();
         respuesta = swig.renderFile('views/panels/ChatSC.html',{
             conversaciones: conversaciones
         });
@@ -69,19 +86,37 @@ app.get('/app/chat', async function (req, res) {
     res.send(respuesta);
 });
 
-    app.get('/app/recargaMensajes', async function (req, res) {
+    app.post('/app/recargaMensajes', async function (req, res) {
         var momento = parseInt(req.body.momento);
         var compa = req.body.compa;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
         var susMensajes = await podDao.getPartChat(compa, podDao.getUserId());
+        var cumplidor = 0;
+        var mes2 = [];
         var mensajes = susMensajes.mensajes.select(function (t) {
-            if(t.timestamp > momento)
+            if(t.timestamp > momento) {
+                mes2.push(t);
+                cumplidor ++;
                 return t;
+            }
         })
-        
+        if(cumplidor == 0)
+            res.send(null);
+        else
+            res.send(mes2);
     })
 
     app.get('/app/conversacion/:idConversacion', async function (req, res) {
         var partnerID = req.params.idConversacion;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
         var estaRegistrado = await podDao.isRegistered()
         var respuesta = null;
         var usuario = await podDao.leeOtroPod(partnerID);
@@ -120,6 +155,11 @@ app.get('/app/chat', async function (req, res) {
     });
 
     app.get('/app/perfil/:idUsuario', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
         var partnerID = req.params.idUsuario;
         var estaRegistrado = await podDao.isRegistered()
         if (!estaRegistrado) {

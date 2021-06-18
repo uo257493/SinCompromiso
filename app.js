@@ -86,8 +86,8 @@ async function getSession() {
 
 sesManagement(app, swig, myPODDao, FC);
 proManagement(app, swig, myMongoDao, myPODDao, session, FC);
-enlManagement(app, swig, myMongoDao, myPODDao);
-chatManagement(app, swig, myMongoDao, myPODDao);
+enlManagement(app, swig, myMongoDao, PODDao, FC);
+chatManagement(app, swig, myMongoDao, PODDao, FC);
 // https.createServer({
 //     key: fs.readFileSync('certificates/alice.key'),
 //     cert: fs.readFileSync('certificates/alice.crt')

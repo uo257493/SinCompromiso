@@ -25,7 +25,6 @@ module.exports = function(app, swig, podDao, FC){
 
     app.post('/sesion', function (req, res) {
         var parsed = req.body;
-        console.log(req );
         res.send(req.body);
     })
 
@@ -42,7 +41,6 @@ module.exports = function(app, swig, podDao, FC){
             oidcIssuer = "https://inrupt.net"
         const session = await new Session();
         // await session.logout();
-        console.log(await session.info);
         req.session.sessionId = await session.info.sessionId;
 
         await session.login({
@@ -64,9 +62,7 @@ module.exports = function(app, swig, podDao, FC){
         await session.handleIncomingRedirect('http://localhost:8081'+ req.url);
         // 5. `session` now contains an authenticated Session instance.
         if (session.info.isLoggedIn) {
-            console.log(`<p>Logged in with the WebID ${session.info.webId}.</p>`)
             podDao.setUserID(await session.info.webId);
-            console.log(podDao);
             res.redirect("/app/perfil");
         }
         // mySession = new SessionInSolid(req.url, req.session.sessionId);
@@ -77,15 +73,9 @@ module.exports = function(app, swig, podDao, FC){
     app.post('/logout', async function (req, res) {
 
         const sessionN = await getSessionFromStorage(req.session.sessionId)
-        console.log(req.session.sessionId);
         await sessionN.logout();
         res.clearCookie("key1");
         res.send("/signin");
     });
 
-    app.post('/sesion', function (req, res) {
-        var parsed = req.body;
-        console.log(parsed);
-        res.send(req.body);
-    })
 }
