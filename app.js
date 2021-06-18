@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var swig = require('swig');
 var mongo = require('mongodb');
 var crypto = require('crypto');
-//var expressSession = require('express-session');
+var expressSession = require('express-session');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var https = require('https');
@@ -35,23 +35,23 @@ var myPODDao = new PODDao();
 var app = express();
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
-// app.use(expressSession({
-//     secret: 'abcdefg',
-//     resave: true,
-//     saveUninitialized: true
-// }));
+app.use(expressSession({
+    secret: 'abcdefg',
+    resave: true,
+    saveUninitialized: true
+}));
 
-app.use(
-    cookieSession({
-        name: "session",
-        // These keys are required by cookie-session to sign the cookies.
-        keys: [
-            "key1",
-            "key2"
-        ],
-        maxAge: 24 * 60 * 60 * 0, // 24 hours
-    })
-);
+// app.use(
+//     cookieSession({
+//         name: "session",
+//         // These keys are required by cookie-session to sign the cookies.
+//         keys: [
+//             "key1",
+//             "key2"
+//         ],
+//         maxAge: 24 * 60 * 60 * 0, // 24 hours
+//     })
+// );
 app.set('port', 8081);
 var conexiondb = 'mongodb://miSCAdminZZL0L:hjt3iqZXEKbwVMEJ@cluster0-shard-00-00.hputh.mongodb.net:27017,cluster0-shard-00-01.hputh.mongodb.net:27017,cluster0-shard-00-02.hputh.mongodb.net:27017/SinCompromiso?ssl=true&replicaSet=atlas-13f55z-shard-0&authSource=admin&retryWrites=true&w=majority'
 app.set('db',conexiondb);

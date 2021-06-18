@@ -56,14 +56,17 @@ module.exports = function(app, swig, podDao, FC){
     });
 
     var mySession;
-    app.get("/redirect", async (req, res) => {
+    app.get("/redirect", async function(req, res) {
         const session = await getSessionFromStorage(req.session.sessionId);
         var fc = new FC(session)
         podDao.setFC(fc);
+
         await session.handleIncomingRedirect('http://localhost:8081'+ req.url);
         // 5. `session` now contains an authenticated Session instance.
         if (session.info.isLoggedIn) {
+            console.log(`<p>Logged in with the WebID ${session.info.webId}.</p>`)
             podDao.setUserID(await session.info.webId);
+            console.log(podDao);
             res.redirect("/app/perfil");
         }
         // mySession = new SessionInSolid(req.url, req.session.sessionId);
@@ -74,6 +77,7 @@ module.exports = function(app, swig, podDao, FC){
     app.post('/logout', async function (req, res) {
 
         const sessionN = await getSessionFromStorage(req.session.sessionId)
+        console.log(req.session.sessionId);
         await sessionN.logout();
         res.clearCookie("key1");
         res.send("/signin");
@@ -81,6 +85,7 @@ module.exports = function(app, swig, podDao, FC){
 
     app.post('/sesion', function (req, res) {
         var parsed = req.body;
+        console.log(parsed);
         res.send(req.body);
     })
 }

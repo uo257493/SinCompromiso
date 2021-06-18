@@ -6,7 +6,7 @@ const {
 var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = 'bh58lkif';
-
+var PODDao = require('../daos/PODDao');
 function encrypt(text){
     var cipher = crypto.createCipher(algorithm,password)
     var crypted = cipher.update(text+"",'utf8','hex')
@@ -37,16 +37,20 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var gender = req.body.gender;
         var bio = req.body.bio;
         var images = req.body.images;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
 
-
-        mongoDao.addUser(podDao.getUserId(), async function(id) {
+        mongoDao.addUser(pdao.getUserId(), async function(id) {
             if (id == null) {
                 res.status(500);
                 res.json({
                     error : "se ha producido un error"
                 })
             } else {
-                await podDao.createMySCProfile(name, birth, gender, bio, images);
+                await pdao.createMySCProfile(name, birth, gender, bio, images);
                 res.status(200);
 
                 res.send("/app/perfil");
@@ -59,11 +63,15 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.post('/app/preferencias', async function (req, res) {
 
         var preferencias = req.body.preferencias;
-
-        var userA = await podDao.getDatosPerfil();
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        var userA = await pdao.getDatosPerfil();
         preferencias.gender = userA.gender;
 
-        mongoDao.editPreferences(podDao.getUserId(), preferencias, function(resultado) {
+        mongoDao.editPreferences(pdao.getUserId(), preferencias, function(resultado) {
             if (resultado == null) {
                 res.status(500);
                 res.json({
@@ -83,13 +91,18 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var name = req.body.name;
         var bio = req.body.bio;
         var images = req.body.images;
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
 
         var supportList = [];
-        var dataGot = await podDao.getDatosPerfil();
+        var dataGot = await pdao.getDatosPerfil();
         for(var i = 0; i < images.length; i++){
             var indexOfImagen = parseInt(images[i].replace("img","").split(".")[0],10);
             if(dataGot.imagenes[indexOfImagen]!=""){
-                await podDao.deletePic(dataGot.imagenes[indexOfImagen])
+                await pdao.deletePic(dataGot.imagenes[indexOfImagen])
                 dataGot.imagenes[indexOfImagen] = images[i];
             }
             else{
@@ -102,7 +115,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
             }
 
         }
-                await podDao.editPerfil(name, bio, dataGot.imagenes);
+                await pdao.editPerfil(name, bio, dataGot.imagenes);
                 res.status(200);
 
                 res.send(supportList);
@@ -113,9 +126,13 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.post('/app/subeImagen', async function (req, res) {
 
         var image = req.body.image;
-
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
         var thI = Buffer.from(image.content, 'base64');
-        await podDao.uploadImage(thI, image.name);
+        await pdao.uploadImage(thI, image.name);
         res.end();
 
 
@@ -125,17 +142,26 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
         var lat = encrypt(req.body.latitude);
         var long = encrypt(req.body.longitude+"");
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
 
 
-
-            await podDao.geoLocaliza(lat, long);
+            await pdao.geoLocaliza(lat, long);
             res.end();
 
 
     });
 
      app.get('/registro/sinCompromiso', async function (req, res) {
-        if(await podDao.isRegistered())
+         const session = await getSessionFromStorage(req.session.sessionId)
+         var fc = new FC(session)
+         var pdao = new PODDao();
+         pdao.setFC(fc);
+         pdao.setUserID(await session.info.webId);
+        if(await pdao.isRegistered())
             res.redirect("/app/perfil")
         else
             res.send(swig.renderFile('views/panels/registroSC.html'));
@@ -143,8 +169,13 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
 
     app.get('/app/perfil', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
         var estaRegistrado;
-        estaRegistrado = await podDao.isRegistered();
+        estaRegistrado = await pdao.isRegistered();
        //await podDao.eliminaTodasCarpetas();
         var respuesta = null;
         if(!estaRegistrado) {
@@ -152,7 +183,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
             return;
         }
         else{
-            var dataGot = await podDao.getDatosPerfil();
+            var dataGot = await pdao.getDatosPerfil();
 
             var usuario = new Object();
             usuario.nombre = dataGot.name;
@@ -174,14 +205,19 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
 
     app.get('/app/personaliza', async function (req, res) {
-        var estaRegistrado = await podDao.isRegistered();
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        var estaRegistrado = await pdao.isRegistered();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         }
         else{
-            var perfil = await podDao.getDatosPerfil();
+            var perfil = await pdao.getDatosPerfil();
             respuesta = swig.renderFile('views/panels/personalizaPerfilSC.html',{
                 perfil: perfil
             });
@@ -191,14 +227,19 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
      });
 
  app.get('/app/preferencias', async function (req, res) {
-        var estaRegistrado = !false; //dao.estaRegistrado();
+     const session = await getSessionFromStorage(req.session.sessionId)
+     var fc = new FC(session)
+     var pdao = new PODDao();
+     pdao.setFC(fc);
+     pdao.setUserID(await session.info.webId);
+        var estaRegistrado = await pdao.isRegistered();
         var respuesta = null;
         if(!estaRegistrado) {
             res.redirect("/registro/sinCompromiso");
             return;
         }
         else{
-            mongoDao.leePreferencias(podDao.getUserId(), function (pref) {
+            mongoDao.leePreferencias(pdao.getUserId(), function (pref) {
                 var ret;
                 if(pref == null || pref.length == 0){
                     ret = {"distancia": 20,
