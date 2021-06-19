@@ -9,7 +9,7 @@ $(document).ready(function () {
         document.getElementById("containerG").style = "width:99.5%; margin-right:5px !important; margin-left:5px !important; padding-left:0px !important; padding-right:0px !important; height:75%;";
         document.getElementsByClassName("navbar navbar-light")[0].style = "background-color: #f40b51; margin-bottom: 0px !important; height:25%";
         ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        scrollToBottom();
 
     });
     $("[name='cuadroOtroP']").click(function(){
@@ -41,6 +41,7 @@ $(document).ready(function () {
                     '                </div>\n' +
                     '    </div>'
                 $( "#contenedorDeMensajes" ).append(newMsg);
+                scrollToBottom();
             },
             error: function (request, status, errorThrown) {
                 alert(errorThrown);
@@ -58,7 +59,7 @@ async function manejarSSChat(){
     ultimaRecarga = Date.now();
     $.ajax({
         url: "/app/recargaMensajes",
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
@@ -81,4 +82,9 @@ async function manejarSSChat(){
             alert(errorThrown);
         }
     });
+}
+
+function scrollToBottom() {
+    var elemntoAScrollar = document.getElementById("contenedorDeMensajes");
+    elemntoAScrollar.scrollTop = elemntoAScrollar.scrollHeight;
 }

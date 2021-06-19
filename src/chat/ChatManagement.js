@@ -75,6 +75,10 @@ app.get('/app/chat', async function (req, res) {
             }
 
         }
+        conversaciones.abiertas = conversaciones.abiertas.select(function (t) {
+           t.ultimoMensajeTiempo= t.ultimoMensajeTiempo * -1;
+           return t;
+        })
         conversaciones.abiertas = linq.from(conversaciones.abiertas).orderBy(function (m) {
             return m.ultimoMensajeTiempo;
         }).toArray();
@@ -86,7 +90,7 @@ app.get('/app/chat', async function (req, res) {
     res.send(respuesta);
 });
 
-    app.post('/app/recargaMensajes', async function (req, res) {
+    app.put('/app/recargaMensajes', async function (req, res) {
         var momento = parseInt(req.body.momento);
         var compa = req.body.compa;
         const session = await getSessionFromStorage(req.session.sessionId)
@@ -214,6 +218,69 @@ app.get('/app/chat', async function (req, res) {
                 res.redirect("app/chat")
         }
 
+
+    });
+
+
+    app.put('/app/recargaMensajesPrev', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var podDao = new PODDao();
+        podDao.setFC(fc);
+        podDao.setUserID(await session.info.webId);
+        var estaRegistrado = await podDao.isRegistered()
+        if(!estaRegistrado) {
+            res.redirect("/registro/sinCompromiso");
+            return;
+        }
+        else{
+            var enlaces = (await podDao.leeEnlaces()).enlaces;
+            var conversaciones = new Object();
+            conversaciones.pendientes = [];
+            conversaciones.abiertas = [];
+            for(var i = 0; i< enlaces.length; i++){
+                var temC = await podDao.getFullChat(enlaces[i]);
+                var usuario = await podDao.leeOtroPod(enlaces[i]);
+                var sorted = linq.from(temC).orderBy(function (m) {
+                    return m.timestamp;
+                }).toArray();
+
+                var miniatura = new Object();
+                miniatura.nombre = usuario.name;
+                miniatura.userID = usuario.userId;
+                if(usuario.cantidadImagenes >0)
+                    miniatura.imagenPrincipal = usuario.imagenes[0];
+                else
+                    miniatura.imagenPrincipal = "../media/noPic.png"
+
+                if(sorted.length == 0){
+                    conversaciones.pendientes.push(miniatura);
+                }
+                else{
+                    miniatura.edad = getAge(usuario.birth)
+                    miniatura.ultimoMensaje = sorted[sorted.length-1].contenido;
+                    miniatura.ultimoMensajeTiempo = sorted[sorted.length-1].timestamp;
+                    if(miniatura.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
+                        miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 25) + "...";
+                    if(sorted[sorted.length-1].sender == usuario.userId)
+                        miniatura.ultimoMensajeSender = "el"
+                    else
+                        miniatura.ultimoMensajeSender = "yo"
+
+                    conversaciones.abiertas.push(miniatura);
+                }
+
+            }
+            conversaciones.abiertas = conversaciones.abiertas.select(function (t) {
+                t.ultimoMensajeTiempo= t.ultimoMensajeTiempo * -1;
+                return t;
+            })
+            conversaciones.abiertas = linq.from(conversaciones.abiertas).orderBy(function (m) {
+                return m.ultimoMensajeTiempo;
+            }).toArray();
+            res.send(conversaciones)
+
+        }
 
     });
 
