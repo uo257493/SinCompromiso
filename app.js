@@ -59,7 +59,20 @@ app.set('crypto',crypto);
 app.set('clave','abcdefg');
 var myMongoDao = new MongoDAO(app, mongo)
 gestorBD = null;
+var routerUsuarioSession = express.Router();
 
+
+
+routerUsuarioSession.use(function(req, res, next) {
+
+    if ( req.session.sessionId ) {
+        next();
+    } else {
+        res.redirect("/signin");
+    }
+});
+
+app.use("/app/*",routerUsuarioSession);
 app.get('/', async function (req, res) {
     var logged = false; //await auth.currentSession();
 
