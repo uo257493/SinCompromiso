@@ -72,10 +72,9 @@ module.exports = function(app, swig, podDao, FC){
     });
     app.post('/logout', async function (req, res) {
 
-        const sessionN = await getSessionFromStorage(req.session.sessionId)
-        await sessionN.logout();
-        res.clearCookie("key1");
-        res.send("/signin");
+            const sessionN = await getSessionFromStorage(req.session.sessionId)
+            await sessionN.logout();
+            res.send("/signin");
     });
 
 }

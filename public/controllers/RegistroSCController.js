@@ -91,7 +91,8 @@ $(document).ready(function () {
     });
 
     $("[name='fotoR']").on("load" ,function(){
-       checkNude(indiceOrigen);
+        if(indiceOrigen != undefined && indiceOrigen != null)
+                checkNude(indiceOrigen);
     });
 
     $("#imgupload").change(async function(evt) {

@@ -724,7 +724,10 @@ class MongoDao {
                     if (err) {
                         funcionCallback(null);
                     } else {
-                        funcionCallback(enlaces[0].enlaces);
+                        if(enlaces == null || enlaces == undefined || enlaces.length == 0|| enlaces[0].enlaces == undefined || enlaces[0].enlaces == null)
+                            funcionCallback(null)
+                        else
+                            funcionCallback(enlaces[0].enlaces);
 
                     }
                     db.close();

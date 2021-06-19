@@ -368,9 +368,13 @@ app.post('/app/paso', async function (req, res) {
         var podDao = new PODDao();
         podDao.setFC(fc);
         podDao.setUserID(await session.info.webId);
+        var estaRegistrado = await podDao.isRegistered()
+        if(!estaRegistrado){res.send(false); return;}
+
 
         mongoDao.getMyself(await podDao.getUserId(), function (yo) {
         mongoDao.misEnlaces(yo, async function (enlaces) {
+            if(enlaces == null){res.send(false); return;}
             mongoDao.getFullMatches(enlaces, async function (fullMatches) {
                 var lfmids = fullMatches.select(function (t) {
                     return t.userId;
