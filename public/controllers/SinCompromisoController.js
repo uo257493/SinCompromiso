@@ -27,10 +27,9 @@ $(document).ready(function () {
                 location.href = response;
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
-        //console.log(await (await fetch('./views/registroSC.html')).text());
     });
 
     setInterval(obtenPos,90000) //Localiza pasado minuto y medio
@@ -47,7 +46,7 @@ $(document).ready(function () {
                     document.getElementById("abreChat").classList.add("matchMade");
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     }
@@ -67,7 +66,7 @@ $(document).ready(function () {
 
                 },
                 error: function (request, status, errorThrown) {
-                    alert(errorThrown);
+
                 }
             });});
     }

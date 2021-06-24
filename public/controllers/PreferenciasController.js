@@ -31,7 +31,7 @@ $(document).ready(function () {
         misPreferencias.edadMin = edadMin;
         misPreferencias.mostrarDistancia = mostrarDistancia;
 
-        console.log(misPreferencias);
+
 
         $.ajax({
             url: "/app/preferencias",
@@ -45,7 +45,7 @@ $(document).ready(function () {
               location.href = "/app/perfil";
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
 

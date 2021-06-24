@@ -10,18 +10,12 @@ $(window).on("load", function(event) {
 });
 $(document).ready(function () {
 
-    // $("[name='conversaAb']").click(function(){
-    //     var indiceOrigen = $(this).attr('id').replace('#', '');
-    //     console.log(indiceOrigen);
-    //
-    //     location.href = "/app/conversacion/"+indiceOrigen;
-    //
-    // });
+
 
     //Funcion en delegacion de eventos, nos permite disparar eventos en los elementos creados dinamicamente
     $(document).on('click', "[name='conversaAb']", function () {
         var indiceOrigen = $(this).attr('id').replace('#', '');
-        console.log(indiceOrigen);
+
 
         location.href = "/app/conversacion/"+indiceOrigen;})
 
@@ -66,7 +60,7 @@ function manejarSSChatPrev() {
             document.getElementById("conversasAbiertasSC").innerHTML = toAppendAbiertas;
         },
         error: function (request, status, errorThrown) {
-            alert(errorThrown);
+
         }
     });
 }

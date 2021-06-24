@@ -9,13 +9,13 @@ $(document).ready(function () {
     });
     $("#abrePreferencias").click(async () => {
 
-        console.log("Abriendo preferencias");
+
         location.href = "/app/preferencias";
 
     });
     $("#abreEditarPerfil").click(async () => {
 
-        console.log("Abriendo editar perfil");
+
         location.href = "/app/personaliza";
 
     });

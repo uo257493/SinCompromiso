@@ -101,7 +101,7 @@ $(window).ready(function () {
 
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
 
@@ -159,7 +159,7 @@ $(window).ready(function () {
                     location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     });
@@ -179,7 +179,7 @@ $(window).ready(function () {
                     location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     });
@@ -200,7 +200,7 @@ $(window).ready(function () {
                 location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     });
@@ -224,7 +224,7 @@ $(window).ready(function () {
                     location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     });

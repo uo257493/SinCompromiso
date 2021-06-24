@@ -78,10 +78,10 @@ class PODDao {
         await this.createProfileFile(name, birth, gender, bio, images);
     }
 
-    async eliminaTodasCarpetas(){
-        await this.fc.deleteFolder("https://loles.inrupt.net/private/sincompromisochats/");
-        await this.fc.deleteFolder("https://loles.inrupt.net/private/sinCompromisoChats/");
-    }
+    // async eliminaTodasCarpetas(){
+    //     await this.fc.deleteFolder("https://loles.inrupt.net/private/sincompromisochats/");
+    //     await this.fc.deleteFolder("https://loles.inrupt.net/private/sinCompromisoChats/");
+    // }
 
     async uploadImage(theImage, imageName){
         await this.fc.createFile("https://"+this.userId+"/public/sincompromisocard/"+imageName, theImage, "image/png");
@@ -189,18 +189,18 @@ class PODDao {
         await this.fc.createFile(archivoACL, this.generateACL(conQuien, conQuien+".json"), "text/turtle");
     }
 
-    async pruebaGeneral(){
-        var carpeta = "https://" + this.userId +"/sincompromisochats/"
-        var archivo = "https://" + this.userId +"/prueba7g/prueba7.json"
-       var archivoACL = "https://" + this.userId +"/prueba7g/prueba7.json.acl"
-
-        await this.fc.deleteFolder(carpeta);
-        //await this.fc.createFolder(carpeta)
-        // await this.fc.createFile(archivo, JSON.stringify({"enlaces": []}))
-        // await this.fc.createFile(archivoACL, this.generateACL("personasc1.solidcommunity.net", "prueba7.json"), "text/turtle");
-
-
-    }
+    // async pruebaGeneral(){
+    //     var carpeta = "https://" + this.userId +"/sincompromisochats/"
+    //     var archivo = "https://" + this.userId +"/prueba7g/prueba7.json"
+    //    var archivoACL = "https://" + this.userId +"/prueba7g/prueba7.json.acl"
+    //
+    //     await this.fc.deleteFolder(carpeta);
+    //     //await this.fc.createFolder(carpeta)
+    //     // await this.fc.createFile(archivo, JSON.stringify({"enlaces": []}))
+    //     // await this.fc.createFile(archivoACL, this.generateACL("personasc1.solidcommunity.net", "prueba7.json"), "text/turtle");
+    //
+    //
+    // }
 
     generateACL(partnerID, filename) {
         var ACL = "@prefix : <#>.\n" +

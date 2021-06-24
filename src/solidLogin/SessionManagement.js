@@ -53,7 +53,7 @@ module.exports = function(app, swig, podDao, FC){
         });
     });
 
-    var mySession;
+
     app.get("/redirect", async function(req, res) {
         const session = await getSessionFromStorage(req.session.sessionId);
         var fc = new FC(session)
@@ -65,9 +65,7 @@ module.exports = function(app, swig, podDao, FC){
             podDao.setUserID(await session.info.webId);
             res.redirect("/app/perfil");
         }
-        // mySession = new SessionInSolid(req.url, req.session.sessionId);
-        // console.log("Creada mi sesion");
-        // res.redirect(await mySession.sessionRedirection());
+
 
     });
     app.post('/logout', async function (req, res) {

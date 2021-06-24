@@ -1,17 +1,18 @@
 var ultimaRecarga;
-$(document).ready(function () {
-    window.addEventListener("load",  function() {
-        //Indicamos la opcion en que estamos
+$(window).on("load", function(event) {
+    //Indicamos la opcion en que estamos
     ultimaRecarga = Date.now();
-        document.getElementById('abreChat').classList.add("botonColorized");
-        document.getElementById('abrePerfil').classList.remove("botonColorized");
-        document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
-        document.getElementById("containerG").style = "width:99.5%; margin-right:5px !important; margin-left:5px !important; padding-left:0px !important; padding-right:0px !important; height:75%;";
-        document.getElementsByClassName("navbar navbar-light")[0].style = "background-color: #f40b51; margin-bottom: 0px !important; height:25%";
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        scrollToBottom();
+    document.getElementById('abreChat').classList.add("botonColorized");
+    document.getElementById('abrePerfil').classList.remove("botonColorized");
+    document.getElementById("abreSistemaEnlaces").classList.remove("botonColorized");
+    document.getElementById("containerG").style = "width:99.5%; margin-right:5px !important; margin-left:5px !important; padding-left:0px !important; padding-right:0px !important; height:75%;";
+    document.getElementsByClassName("navbar navbar-light")[0].style = "background-color: #f40b51; margin-bottom: 0px !important; height:25%";
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    scrollToBottom();
 
-    });
+});
+$(document).ready(function () {
+
     $("[name='cuadroOtroP']").click(function(){
         var indiceOrigen = $(this).attr('id').replace('#', '');
         console.log(indiceOrigen);
@@ -44,7 +45,7 @@ $(document).ready(function () {
                 scrollToBottom();
             },
             error: function (request, status, errorThrown) {
-                alert(errorThrown);
+
             }
         });
     });
@@ -79,7 +80,7 @@ async function manejarSSChat(){
 
         },
         error: function (request, status, errorThrown) {
-            alert(errorThrown);
+
         }
     });
 }

@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
     $("#abreEditarPerfil").click(async () => {
 
-        console.log("Abriendo editar perfil");
+
         location.href = "/app/personaliza";
 
     });
@@ -122,10 +122,10 @@ $(document).ready(function () {
                             data: JSON.stringify({"image": image}),
 
                             success: function (response) {
-                                console.log("Subida foto");
+
                             },
                             error: function (request, status, errorThrown) {
-                                alert(errorThrown);
+
                             }
                         });
                     })
@@ -133,7 +133,7 @@ $(document).ready(function () {
                     location.href = "/app/perfil";
                 },
                 error: function (request, status, errorThrown) {
-                    alert(errorThrown);
+
                  }
             });
         }
@@ -184,17 +184,9 @@ function ResizeImage() {
                 canvas.height = height;
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, width, height);
-                console.log(width + " " + height)
+
                 dataurl = canvas.toDataURL(file.type);
-                // if(width > height && width <= 400) { // Si es menor a 200 px calculamos ajuste
-                //     var ajuste = 1 /(200 / width)
-                //     document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
-                // }
-                // else if(width <= height && height <= 400) { // Si es menor a 200 px calculamos ajuste
-                //     var ajuste = 1 /(200 / height)
-                //     document.getElementById(indiceOrigen).srcset = dataurl +" "+ ajuste +"x";
-                // } //El ajuste es = 100 / ((maxDimDelHTML / maxDimDeImagen)*100)
-                // else //Reducelo a la mitad
+
                     document.getElementById(indiceOrigen).srcset = dataurl + " 2x";
                 checkNude(indiceOrigen);
             }
@@ -211,7 +203,6 @@ async function checkNude(node) {
     await nude.load(node);
     // Scan it
     await nude.scan(function(result){
-        console.log(result);
         if(result) {
 
             imagesModificadas[queModificamos] = false;

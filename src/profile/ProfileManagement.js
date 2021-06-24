@@ -26,10 +26,6 @@ function decrypt(text){
 
 module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
-    app.post('/app/verPerfil', function (req, res) {
-        res.send("Adeu");
-    });
-
     app.post('/app/registrarse', async function (req, res) {
 
         var name = req.body.name;

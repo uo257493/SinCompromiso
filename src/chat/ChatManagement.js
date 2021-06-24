@@ -1,4 +1,3 @@
-const auth = require('solid-auth-client')
 const linq = require("linq");
 var linqjs = require('linqjs');
 var cryptox = require('crypto'),

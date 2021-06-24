@@ -67,10 +67,10 @@ $(document).ready(function () {
                                     data: JSON.stringify({"image": image}),
 
                                     success: function (response) {
-                                        console.log("Subida foto");
+
                                     },
                                     error: function (request, status, errorThrown) {
-                                        alert(errorThrown);
+
                                     }
                                 });
                             })
@@ -78,7 +78,7 @@ $(document).ready(function () {
                         location.href = response;
                     },
                     error: function (request, status, errorThrown) {
-                        alert(errorThrown);
+
                     }
                 });
         }
