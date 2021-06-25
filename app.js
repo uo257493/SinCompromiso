@@ -11,6 +11,7 @@ var chatManagement = require("./src/chat/ChatManagement");
 const FC   = require('solid-file-client')
 var PODDao = require('./src/daos/PODDao')
 var MongoDAO = require('./src/daos/MongoDAO')
+var testManagement = require('./src/TestManagement')
 
 
 const {
@@ -72,3 +73,4 @@ sesManagement(app, swig, myPODDao, FC);
 proManagement(app, swig, myMongoDao, myPODDao, session, FC);
 enlManagement(app, swig, myMongoDao, PODDao, FC);
 chatManagement(app, swig, myMongoDao, PODDao, FC);
+testManagement(app, swig, myMongoDao, PODDao, FC);

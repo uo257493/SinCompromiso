@@ -450,7 +450,7 @@ class MongoDao {
                 var ti = {userId: userID};
                 var collection = db.collection('usuarios');
                 collection.find({"userId": userID}).toArray(function (err, usuarios) {
-                    if (err) {
+                    if (err || usuarios.length ==0) {
                         funcionCallback(null);
                     } else {
                         funcionCallback(usuarios[0]._id);
@@ -734,6 +734,65 @@ class MongoDao {
                 });
             }
         });
+    }
+
+    // Métodos de apoyo para los test
+    eliminaRastroUsuarioTestUsers(yo){
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (!err) {
+
+                try {
+                    var collection = db.collection('usuarios');
+                    collection.deleteMany({"_id": yo});
+                }
+                catch (e) {
+                    //Not necesary
+                }
+
+            }
+        });
+    }
+
+
+    eliminaRastroUsuarioTestHistorico(yo){
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (!err) {
+
+                try {
+                    var collection = db.collection('historicoEnlaces');
+                    collection.deleteMany({"mongoUserId": yo});
+                }
+                catch (e) {
+                    //Not necesary
+                }
+
+            }
+        });
+    }
+
+    eliminaRastroUsuarioTestPreferencias(yo){
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (!err) {
+
+                try {
+                    var collection = db.collection('preferencias');
+                    collection.deleteMany({"mongoUserId": yo});
+                }
+                catch (e) {
+                    //Not necesary
+                }
+
+            }
+        });
+    }
+
+    async eliminaTodoDelUser(user){
+        var me = this;
+        this.getMyself(user, async function (yo) {
+            await me.eliminaRastroUsuarioTestHistorico(yo);
+           await me.eliminaRastroUsuarioTestPreferencias(yo);
+            await me.eliminaRastroUsuarioTestUsers(yo);
+        })
     }
 }
 module.exports = MongoDao;

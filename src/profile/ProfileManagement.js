@@ -33,6 +33,22 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var gender = req.body.gender;
         var bio = req.body.bio;
         var images = req.body.images;
+        if(name.length > 15 || name.length <3 || name.trim().length < 2){
+            res.send(500);
+            return ;
+        }
+        if(gender != "f" && gender != "m"){
+            res.send(500);
+            return ;
+        }
+        if(bio.length > 500){
+            res.send(500);
+            return ;
+        }
+        if(isNaN(getAge(birth)) || getAge(birth) < 18){
+            res.send(500);
+            return ;
+        }
         const session = await getSessionFromStorage(req.session.sessionId)
         var fc = new FC(session)
         var pdao = new PODDao();
@@ -59,6 +75,30 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
     app.post('/app/preferencias', async function (req, res) {
 
         var preferencias = req.body.preferencias;
+        if(isNaN(preferencias.edadMin) || preferencias.edadMin < 18){
+            res.send(500);
+            return;
+        }
+        if(isNaN(preferencias.edadMax)){
+            res.send(500);
+            return;
+        }
+        if( preferencias.edadMax < preferencias.edadMin){
+            res.send(500);
+            return;
+        }
+        if(isNaN(preferencias.distancia) || preferencias.distancia < 1 || preferencias.distancia > 150){
+            res.send(500);
+            return;
+        }
+        if(preferencias.generoBusqueda != "t" && preferencias.generoBusqueda != "m" && preferencias.generoBusqueda != "f"){
+            res.send(500);
+            return;
+        }
+        if (preferencias.mostrarDistancia != true && preferencias.mostrarDistancia != false){
+            res.send(500);
+            return;
+        }
         const session = await getSessionFromStorage(req.session.sessionId)
         var fc = new FC(session)
         var pdao = new PODDao();
@@ -92,7 +132,14 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
-
+        if(name.length > 15 || name.length <3 || name.trim().length < 2){
+            res.send(500);
+            return ;
+        }
+        if(bio.length > 500){
+            res.send(500);
+            return ;
+        }
         var supportList = [];
         var dataGot = await pdao.getDatosPerfil();
         for(var i = 0; i < images.length; i++){

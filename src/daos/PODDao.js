@@ -253,6 +253,18 @@ class PODDao {
 
         this.fc.postFile( "https://" + mensaje.sender +"/sincompromisochats/"+ receptor+".json", JSON.stringify(miCon) );
     }
+
+    //Metodo creado para pruebas al no haber rollback
+    async utilPruebasEliminador(){
+        var existA = await this.fc.itemExists( "https://"+this.userId + "/public/sincompromisocard" );
+        var existB = await this.fc.itemExists( "https://"+this.userId + "/sincompromisochats/" );
+
+        if(existA)
+            await this.fc.deleteFolder("https://"+this.userId + "/public/sincompromisocard");
+        if(existB)
+            await this.fc.deleteFolder("https://"+ this.userId +"/sincompromisochats/");
+
+    }
 }
 
 
