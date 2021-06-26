@@ -1,9 +1,14 @@
 $(window).on("load", function(event) {
     ejecucionPur(function (ree) {
         ejecucionPup(function (ree) {
-            ejecucionPupp();
+            ejecucionPupp(function (ree) {
+                ejecucionPUE();
+            });
         });
     });
+
+
+
 
 });
 var purNombre = "Pilar"
@@ -37,6 +42,35 @@ function ejecucionPur(cb){
 
 }
 
+//Accion 0-MG 1-MM 2-Nada
+//Criterios 0-MG 1-MM 2-PASO 3-BLOCK 4-ENLACE 5-NADA
+function ejecucionPUE(cb) {
+    PUEP("60d67e6809df6a0015937ede", 1, "PUE1",2, 2, function () {
+        PUEP("60d67e6809df6a0015937ede", 2, "PUE2",2, 5, function () {
+            PUEG("60d67e6809df6a0015937ede", 1, "PUE3",4, 4, function () {
+                PUEG("60d67e6809df6a0015937ede", 0, "PUE4", 4,4, function () {
+                    PUEG("60d67e6809df6a0015937ede", 2, "PUE5", 0,5, function(){
+                        PUEM("60d67e6809df6a0015937ede", 2, textmas500,"PUE6", 1,5, function(){
+                            PUEB("60d67e6809df6a0015937ede", 0, "PUE7", 3,3, function(){
+
+                                PUEM2("60d67e6809df6a0015937ede", 2, "PUE8", 3, 3, function(){
+
+                                    PUEG("CONSTANTINI", 0, "PUE9", 5,5, function() {
+                                        PUEM("60d67e6809df6a0015937ede", 0, "Hola","PUE10", 4,4, function(){
+
+                                        } )
+                                    })
+                                 })
+
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    })
+}
+
 var pupNombre = "Petra"
 var pupBio = "Esta es mi biografia amor"
 function ejecucionPup(cb){
@@ -60,7 +94,9 @@ var puppEmin = 25;
 var puppEmax = 30;
 var puppgen = "m";
 var puppmdist = true;
-function ejecucionPupp(){
+
+
+function ejecucionPupp(cb){
     PUPP(puppdis, puppEmax, 15, puppgen, puppmdist,"PUPP1", 500, false, function (ree) {
     PUPP(puppdis, puppEmax, 35, puppgen, puppmdist, "PUPP2", 500, false, function (ree) {
         PUPP(-1, puppEmax, puppEmin, puppgen, puppmdist, "PUPP3", 500, false, function (ree) {
@@ -71,7 +107,7 @@ function ejecucionPupp(){
                             PUPP(puppdis, puppEmax, "", puppgen, puppmdist, "PUPP8", 500, false, function (ree) {
                                 PUPP(puppdis, "xx", puppEmin, puppgen, puppmdist, "PUPP9", 500, false, function (ree) {
                                     PUPP(puppdis, puppEmax, puppEmin, puppgen, puppmdist, "PUPP10", "/app/perfil", true, function (ree) {
-
+                                            cb(true);
                                     });
                                 });
                             });
@@ -297,6 +333,285 @@ function PUPP(distancia, edadMax, edadMin, generoBusqueda, mostrarDistancia, nom
 
                 }
             });
+        }
+    });
+}
+
+function PUEP(usuario, accion, nombreTest, criterio1, criterio2, cb) {
+
+    $.ajax({
+        url: "/app/testSSE",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"usuario": usuario, "accion": accion}),
+
+        success: function (response, status) {
+            $.ajax({
+                url: "/app/paso",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({"paso": usuario}),
+
+                success: function (response2) {
+                    $.ajax({
+                        url: "/app/testListas",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify({"usuario": usuario}),
+
+                        success: function (response3) {
+                            $( "#mensajesDelTest4" ).append('<p>Se ha ejecutado el test '+ nombreTest +' durante la recarga la correcion se situa en: '+ response +
+                                ' Se ha comprobado las tablas de los usuarios y se situan en  '+ response3.enMiPod + ' y '+ response3.enSuPod+ '</p>')
+                            if(response3.enMiPod == criterio1 && response3.enSuPod == criterio2){
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" SUPERADA</p>")
+                                document.getElementById(nombreTest).style.background = "green";
+                                cb(true)
+                            }
+                            else{
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" FALLIDA</p>")
+                                document.getElementById(nombreTest).style.background = "red";
+                                cb(true)
+                            }
+                        },
+                        error: function (request, status, errorThrown) {
+
+                        }
+                    });
+                },
+                error: function (request, status, errorThrown) {
+
+                }
+            });
+
+
+        },
+        error: function (request, status, errorThrown) {
+        }
+    });
+}
+
+function PUEM(usuario, accion, mensaje, nombreTest, criterio1, criterio2, cb) {
+
+    $.ajax({
+        url: "/app/testSSE",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"usuario": usuario, "accion": accion}),
+
+        success: function (response, status) {
+            $.ajax({
+                url: "/app/meMola",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({"meMola": usuario, "mensaje": mensaje}),
+
+                success: function (response2) {
+                    $.ajax({
+                        url: "/app/testListas",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify({"usuario": usuario}),
+
+                        success: function (response3) {
+                            $( "#mensajesDelTest4" ).append('<p>Se ha ejecutado el test '+ nombreTest +' durante la recarga la correcion se situa en: '+ response +
+                                ' Se ha comprobado las tablas de los usuarios y se situan en  '+ response3.enMiPod + ' y '+ response3.enSuPod+ '</p>')
+                            if(response3.enMiPod == criterio1 && response3.enSuPod == criterio2){
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" SUPERADA</p>")
+                                document.getElementById(nombreTest).style.background = "green";
+                                cb(true)
+                            }
+                            else{
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" FALLIDA</p>")
+                                document.getElementById(nombreTest).style.background = "red";
+                                cb(true)
+                            }
+                        },
+                        error: function (request, status, errorThrown) {
+
+                        }
+                    });
+                },
+                error: function (request, status, errorThrown) {
+
+                }
+            });
+
+
+        },
+        error: function (request, status, errorThrown) {
+        }
+    });
+}
+function PUEM2(usuario, accion, nombreTest, criterio1, criterio2, cb) {
+    $.ajax({
+        url: "/app/meMola",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"meMola": usuario, "mensaje": ""}),
+
+        success: function (response2) {
+            $.ajax({
+                url: "/app/testListas",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({"usuario": usuario}),
+
+                success: function (response3) {
+                    $( "#mensajesDelTest4" ).append('<p>Se ha ejecutado el test '+ nombreTest +' durante la recarga de este test no hay correcion '+
+                        ' Se ha comprobado las tablas de los usuarios y se situan en  '+ response3.enMiPod + ' y '+ response3.enSuPod+ '</p>')
+                    if(response3.enMiPod == criterio1 && response3.enSuPod == criterio2){
+                        $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" SUPERADA</p>")
+                        document.getElementById(nombreTest).style.background = "green";
+                        cb(true)
+                    }
+                    else{
+                        $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" FALLIDA</p>")
+                        document.getElementById(nombreTest).style.background = "red";
+                        cb(true)
+                    }
+                },
+                error: function (request, status, errorThrown) {
+
+                }
+            });
+        },
+        error: function (request, status, errorThrown) {
+
+        }
+    });
+
+
+}
+function PUEG(usuario, accion, nombreTest, criterio1, criterio2, cb) {
+
+    $.ajax({
+        url: "/app/testSSE",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"usuario": usuario, "accion": accion}),
+
+        success: function (response, status) {
+            $.ajax({
+                url: "/app/meGusta",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({"like": usuario}),
+
+                success: function (response2) {
+                    $.ajax({
+                        url: "/app/testListas",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify({"usuario": usuario}),
+
+                        success: function (response3) {
+                            $( "#mensajesDelTest4" ).append('<p>Se ha ejecutado el test '+ nombreTest +' durante la recarga la correcion se situa en: '+ response +
+                                ' Se ha comprobado las tablas de los usuarios y se situan en  '+ response3.enMiPod + ' y '+ response3.enSuPod+ '</p>')
+                            if(response3.enMiPod == criterio1 && response3.enSuPod == criterio2){
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" SUPERADA</p>")
+                                document.getElementById(nombreTest).style.background = "green";
+                                cb(true)
+                            }
+                            else{
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" FALLIDA</p>")
+                                document.getElementById(nombreTest).style.background = "red";
+                                cb(true)
+                            }
+                        },
+                        error: function (request, status, errorThrown) {
+
+                        }
+                    });
+                },
+                error: function (request, status, errorThrown) {
+
+                }
+            });
+
+
+        },
+        error: function (request, status, errorThrown) {
+        }
+    });
+}
+
+function PUEB(usuario, accion, nombreTest, criterio1, criterio2, cb) {
+
+    $.ajax({
+        url: "/app/testSSE",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"usuario": usuario, "accion": accion}),
+
+        success: function (response, status) {
+            $.ajax({
+                url: "/app/bloqueo",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({"bloqueo": usuario}),
+
+                success: function (response2) {
+                    $.ajax({
+                        url: "/app/testListas",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify({"usuario": usuario}),
+
+                        success: function (response3) {
+                            $( "#mensajesDelTest4" ).append('<p>Se ha ejecutado el test '+ nombreTest +' durante la recarga la correcion se situa en: '+ response +
+                                ' Se ha comprobado las tablas de los usuarios y se situan en  '+ response3.enMiPod + ' y '+ response3.enSuPod+ '</p>')
+                            if(response3.enMiPod == criterio1 && response3.enSuPod == criterio2){
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" SUPERADA</p>")
+                                document.getElementById(nombreTest).style.background = "green";
+                                cb(true)
+                            }
+                            else{
+                                $( "#mensajesDelTest4" ).append("<p>Prueba  "+ nombreTest +" FALLIDA</p>")
+                                document.getElementById(nombreTest).style.background = "red";
+                                cb(true)
+                            }
+                        },
+                        error: function (request, status, errorThrown) {
+
+                        }
+                    });
+                },
+                error: function (request, status, errorThrown) {
+
+                }
+            });
+
+
+        },
+        error: function (request, status, errorThrown) {
         }
     });
 }

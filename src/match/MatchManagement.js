@@ -146,23 +146,26 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
                                             milong = parseFloat(decrypt(miLocation.b))
                                         }
                                         for (var i = 0; i < lista2.length; i++) {
-                                            var distancia = await podDao.getLocationOtroPerfil(lista2[i].userId);
-                                            var latitudOtro;
-                                            var longitudOtro
-                                            if (distancia != "") {
-                                                latitudOtro = parseFloat(decrypt(distancia.a));
-                                                longitudOtro = parseFloat(decrypt(distancia.b));
-                                            }
-                                            var diferenciaDist;
-                                            if (distancia == "" || miLocation == "") {
-                                                diferenciaDist = 8000;
-                                            } else
-                                                diferenciaDist = getKilometros(milat, milong, latitudOtro, longitudOtro);
+                                            var elojpn =  await podDao.leeOtroPod(lista2[i].userId)
+                                            if(getAge(elojpn.birth) <= preferenciasLeidas.edadMax && getAge(elojpn.birth) >=preferenciasLeidas.edadMin) {
+                                                var distancia = await podDao.getLocationOtroPerfil(lista2[i].userId);
+                                                var latitudOtro;
+                                                var longitudOtro
+                                                if (distancia != "") {
+                                                    latitudOtro = parseFloat(decrypt(distancia.a));
+                                                    longitudOtro = parseFloat(decrypt(distancia.b));
+                                                }
+                                                var diferenciaDist;
+                                                if (distancia == "" || miLocation == "") {
+                                                    diferenciaDist = 8000;
+                                                } else
+                                                    diferenciaDist = getKilometros(milat, milong, latitudOtro, longitudOtro);
 
-                                            if (parseFloat(preferenciasLeidas.distancia) >= diferenciaDist) {
-                                                listaFinal.push(lista2[i].userId);
-                                                if (listaFinal.length == 1) //Nos quedamos con la del perfil que mostraremos
-                                                    distCandi = diferenciaDist;
+                                                if (parseFloat(preferenciasLeidas.distancia) >= diferenciaDist) {
+                                                    listaFinal.push(lista2[i].userId);
+                                                    if (listaFinal.length == 1) //Nos quedamos con la del perfil que mostraremos
+                                                        distCandi = diferenciaDist;
+                                                }
                                             }
 
                                         }
@@ -272,6 +275,8 @@ app.post('/app/paso', async function (req, res) {
     app.post('/app/meMola', async function (req, res) {
         var quien = req.body.meMola;
         var mensaje = req.body.mensaje;
+        if(mensaje.length > 300)
+            mensaje = mensaje.slice(0,299);
         const session = await getSessionFromStorage(req.session.sessionId)
         var fc = new FC(session)
         var podDao = new PODDao();
@@ -285,8 +290,8 @@ app.post('/app/paso', async function (req, res) {
                     })
                 }
                 else{
-                    mongoDao.actualizaTiempoMeMola(yo, function (res) {
-                        if(res != null){
+                    mongoDao.actualizaTiempoMeMola(yo, function (resa) {
+                        if(resa != null){
                             mongoDao.misEnlaces(yo, async function (enlaces) {
                                     mongoDao.getFullMatches(enlaces, async function (fullMatches) {
                                         var lfmids = fullMatches.select(function (t) {

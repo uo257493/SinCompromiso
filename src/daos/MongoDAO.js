@@ -6,20 +6,27 @@ class MongoDao {
     }
 
     addUser(userID, funcionCallback) {
+        var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
-            } else {
-                var ti = {userId: userID};
-                var collection = db.collection('usuarios');
-                collection.insert(ti, function (err, result) {
-                    if (err) {
-                        funcionCallback(null);
-                    } else {
-                        funcionCallback(result.ops[0]._id);
+            }
+            else {
+                me.getMyself(userID, function (res) {
+                    if(res == null){
+                        var ti = {userId: userID};
+                        var collection = db.collection('usuarios');
+                        collection.insert(ti, function (err, result) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
+                                funcionCallback(result.ops[0]._id);
+                            }
+                            db.close();
+                        });
                     }
-                    db.close();
-                });
+                })
+
             }
         });
     }
@@ -256,8 +263,20 @@ class MongoDao {
                     if (err) {
                         funcionCallback(null);
                     } else {
-
-                        funcionCallback(historico[0]);
+                        if(historico.length == 0){
+                            var ti = {
+                                mongoUserId: "",
+                                meGusta: [],
+                                meMola: [],
+                                paso: [],
+                                bloqueos: [],
+                                enlaces: [],
+                                ultimoMeMola: 0
+                            }
+                            funcionCallback(ti);
+                        }
+                        else
+                            funcionCallback(historico[0]);
 
                     }
                     db.close();
@@ -313,21 +332,30 @@ class MongoDao {
     }
 
     paso(yo, mongouserId, funcionCallback) {
+        var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
-                var collection = db.collection('historicoEnlaces');
-                collection.update({"mongoUserId": yo}, {$push: {"paso": mongouserId}}, function (err, resultado) {
-                    if (err) {
-                        funcionCallback(null);
-                    } else {
 
-                        funcionCallback(true);
+                me.checkSePuedeInteraccionarUsuario(mongouserId, yo, function (res) {
+                    if(res){
+                        var collection = db.collection('historicoEnlaces');
+                        collection.update({"mongoUserId": yo}, {$push: {"paso": mongouserId}}, function (err, resultado) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
 
+                                funcionCallback(true);
+
+                            }
+                            db.close();
+                        });
                     }
-                    db.close();
-                });
+                    else
+                        funcionCallback(true);
+                })
+
             }
         });
     }
@@ -354,22 +382,30 @@ class MongoDao {
     }
 
     meGusta(yo, mongouserId, funcionCallback) {
+        var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
-                var collection = db.collection('historicoEnlaces');
-                collection.update({"mongoUserId": yo}, {$push: {"meGusta": mongouserId}}, function (err, resultado) {
-                    if (err) {
-                        funcionCallback(null);
-                    } else {
+                me.checkSePuedeInteraccionarUsuario(mongouserId, yo, function (res) {
+                    if(res){
+                        var collection = db.collection('historicoEnlaces');
+                        collection.update({"mongoUserId": yo}, {$push: {"meGusta": mongouserId}}, function (err, resultado) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
 
-                        funcionCallback(true);
+                                funcionCallback(true);
+
+                            }
+                            db.close();
+                        });
 
                     }
-                    db.close();
-                });
-            }
+                    else
+                        funcionCallback(true);
+                })
+           }
         });
     }
 
@@ -380,21 +416,29 @@ class MongoDao {
             "fecha": Date.now(),
             "mensajeMeMola": mensaje
         }
+        var me = this;
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
-                var collection = db.collection('historicoEnlaces');
-                collection.update({"mongoUserId": yo}, {$set: {"ultimoMeMola": Date.now()}, $push: {"meMola": meMolaO}}, function (err, resultado) {
-                    if (err) {
-                        funcionCallback(null);
-                    } else {
+                me.checkSePuedeInteraccionarUsuario(mongouserId, yo, function (res) {
+                    if(res){
+                        var collection = db.collection('historicoEnlaces');
+                        collection.update({"mongoUserId": yo}, {$set: {"ultimoMeMola": Date.now()}, $push: {"meMola": meMolaO}}, function (err, resultado) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
 
-                        funcionCallback(true);
+                                funcionCallback(true);
+
+                            }
+                            db.close();
+                        });
 
                     }
-                    db.close();
-                });
+                    else
+                        funcionCallback(true);
+                })
             }
         });
     }
@@ -460,6 +504,23 @@ class MongoDao {
         })
     }
 
+    checkExistsId(userID, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var ti = {userId: userID};
+                var collection = db.collection('usuarios');
+                collection.find({"_id": userID}).toArray(function (err, usuarios) {
+                    if (err || usuarios.length ==0) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                })
+            }
+        })
+    }
 
     mueveAPaso(mongoUserId, yo, funcionCallback){
         var me = this;
@@ -536,7 +597,13 @@ class MongoDao {
 
 
     createMongoId(cadena){
-        return this.mongo.ObjectID(cadena);
+        try{
+            return this.mongo.ObjectID(cadena);
+        }
+        catch (e) {
+            return "";
+        }
+
     }
 
 
@@ -660,12 +727,14 @@ class MongoDao {
                         if (err) {
                             funcionCallback(null);
                         } else {
-
+                        me.pullFromEveryWhere(mongoUserId, yo , function () {
                             me.bloqueo(yo, mongoUserId, function (res) {
                                 me.bloqueo(mongoUserId, yo, function (res) {
                                     funcionCallback(true);
                                 })
                             })
+                        })
+
 
                         }
                         db.close();
@@ -705,6 +774,8 @@ class MongoDao {
                     if (err) {
                         funcionCallback(null);
                     }
+                    else
+                        funcionCallback(true);
                     db.close();
                 });
             }
@@ -734,6 +805,43 @@ class MongoDao {
                 });
             }
         });
+    }
+
+    checkSePuedeInteraccionarUsuario(usuario, yo, cb){
+        var me = this;
+        me.checkExistsId(usuario, function (res) {
+            if(res == null)
+                cb(false);
+            else{
+                me.getMyLists(yo, function (listasDelUsuario) {
+                    listasDelUsuario.meGusta = listasDelUsuario.meGusta.select(function (t) {
+                        return t.toString()
+                    })
+
+                    listasDelUsuario.paso = listasDelUsuario.paso.select(function (t) {
+                        return t.toString()
+                    })
+                    listasDelUsuario.bloqueos = listasDelUsuario.bloqueos.select(function (t) {
+                        return t.toString()
+                    })
+                    listasDelUsuario.enlaces = listasDelUsuario.enlaces.select(function (t) {
+                        return t.toString()
+                    })
+                    var ra = listasDelUsuario.meGusta.contains(usuario.toString()) == false;
+                    var re = listasDelUsuario.paso.contains(usuario.toString()) == false;
+                    var ri = listasDelUsuario.bloqueos.contains(usuario.toString()) == false
+                    var ro = listasDelUsuario.enlaces.contains(usuario.toString()) == false;
+                    var ru = true;
+                    for(var i = 0; i < listasDelUsuario.meMola.length; i++){
+                        if(listasDelUsuario.meMola[i].mongoUserId.toString() == usuario.toString())
+                            ru = false;
+                    }
+                    var rests = ra && re && ri && ro && ru;
+                    cb(rests); //Devuelve true si no hay interaccion con el
+                })
+            }
+
+        })
     }
 
     // Métodos de apoyo para los test
@@ -794,5 +902,176 @@ class MongoDao {
             await me.eliminaRastroUsuarioTestUsers(yo);
         })
     }
+
+
+    pullFromEnlaces(yo, userToPull, funcionCallback){
+       var mongoUserId = userToPull;
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            }
+            else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": yo}, {
+                    $pull: {"enlaces": mongoUserId}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
+    pullFromMG(yo, userToPull, funcionCallback){
+        var mongoUserId = userToPull;
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": yo}, {
+                    $pull: {"meGusta": mongoUserId}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
+    pullFromPaso(yo, userToPull, funcionCallback){
+        var mongoUserId = userToPull;
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": yo}, {
+                    $pull: {"paso": mongoUserId}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
+
+    pullFromBloqueo(yo, userToPull, funcionCallback){
+        var mongoUserId = userToPull;
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": yo}, {
+                    $pull: {"bloqueos": mongoUserId}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
+    pullFromMeMola(yo, userToPull, funcionCallback){
+        var mongoUserId = userToPull;
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.update({"mongoUserId": yo}, {
+                    $pull: {"meMola": {"mongoUserId": mongoUserId}}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
+
+    pullFromEveryWhere(yo, otro, funcionCallback){
+        var me = this;
+
+        me.pullFromBloqueo(yo,otro, function (res) {
+            me.pullFromEnlaces(yo, otro, function (res) {
+                me.pullFromMeMola(yo, otro, function (res) {
+                    me.pullFromMG(yo, otro, function (res) {
+                        me.pullFromPaso(yo, otro, function () {
+                            funcionCallback(true);
+
+                        })
+                    })
+                })
+            })
+        })
+    }
+
+    reiniciaTiempoMeMola(user, funcionCallback){
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('historicoEnlaces');
+                collection.update({"mongoUserId": user}, {$set: {"ultimoMeMola": 0}}, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+
+                        funcionCallback(true);
+
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+
+    managePullsTest(yo, otro, cb){
+        var me = this;
+        me.pullFromEveryWhere(yo, otro, function (res) {
+            me.pullFromEveryWhere(otro, yo, function (res) {
+                me.reiniciaTiempoMeMola(otro, function (res) {
+                    me.reiniciaTiempoMeMola(yo, function (res) {
+                        cb(true);
+                    })
+                })
+            })
+        })
+    }
+
+
 }
 module.exports = MongoDao;

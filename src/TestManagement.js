@@ -4,6 +4,8 @@ const {
     Session
 } = require("@inrupt/solid-client-authn-node");
 
+var linqjs = require('linqjs');
+
 module.exports = function(app, swig, mongoDao, PODDao, FC){
 
  app.get('/app/test', async function (req, res) {
@@ -72,4 +74,227 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
 
     });
 
+    app.post('/app/testSSE', async function (req, res) {
+        var usuario=mongoDao.createMongoId(req.body.usuario);
+        var accion = parseInt(req.body.accion);
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        mongoDao.getMyself(await pdao.getUserId(), function (yo) {
+            mongoDao.managePullsTest(yo, usuario, function (resp) {
+                if(accion == 0){
+                    mongoDao.meGusta( usuario, yo, function (resp) {
+                        mongoDao.getMyLists(usuario, function (listasDelUsuario) {
+                            mongoDao.getMyLists(yo, function (listasMias) {
+                                listasMias.meGusta = listasMias.meGusta.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasMias.paso = listasMias.paso.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasMias.bloqueos = listasMias.bloqueos.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasMias.enlaces = listasMias.enlaces.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasDelUsuario.meGusta = listasDelUsuario.meGusta.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasDelUsuario.paso = listasDelUsuario.paso.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasDelUsuario.bloqueos = listasDelUsuario.bloqueos.select(function (t) {
+                                    return t.toString();
+                                })
+                                listasDelUsuario.enlaces = listasDelUsuario.enlaces.select(function (t) {
+                                    return t.toString();
+                                })
+                                yo = yo.toString();
+                                usuario = usuario.toString();
+                                var ra = listasDelUsuario.meGusta.contains(yo) == true;
+                                var re = listasDelUsuario.paso.contains(yo) == false;
+                                var ri = listasDelUsuario.bloqueos.contains(yo) == false
+                                var ro = listasDelUsuario.enlaces.contains(yo) == false;
+                                var ru = true;
+                                for(var i = 0; i < listasDelUsuario.meMola.length; i++){
+                                    if(listasDelUsuario.meMola[i].mongoUserId.toString() == yo.toString())
+                                        ru = false;
+                                }
+                                var pa = listasMias.meGusta.contains(usuario) == false;
+                                var pe = listasMias.paso.contains(usuario) == false;
+                                var pi = listasMias.bloqueos.contains(usuario) == false
+                                var po = listasMias.enlaces.contains(usuario) == false;
+                                var pu = true;
+                                for(var i = 0; i < listasMias.meMola.length; i++){
+                                    if(listasMias.meMola[i].mongoUserId.toString() == usuario.toString())
+                                        pu = false;
+                                }
+                                res.send(ra && re && ri && ro && ru && pa && pe && pi && po && pu);
+                            })
+                        })
+                    })
+                }
+                else if (accion == 1){
+                    mongoDao.meMola(usuario, yo, "", function (resp) {
+                        mongoDao.getMyLists(usuario, function (listasDelUsuario) {
+                            mongoDao.getMyLists(yo, function (listasMias) {
+                                var ra = listasDelUsuario.meGusta.contains(yo) == false;
+                                var re = listasDelUsuario.paso.contains(yo) == false;
+                                var ri = listasDelUsuario.bloqueos.contains(yo) == false
+                                var ro = listasDelUsuario.enlaces.contains(yo) == false;
+                                var ru = false;
+                                for(var i = 0; i < listasDelUsuario.meMola.length; i++){
+                                    if(listasDelUsuario.meMola[i].mongoUserId.toString() == yo.toString())
+                                        ru = true;
+                                }
+                                var pa = listasMias.meGusta.contains(usuario) == false;
+                                var pe = listasMias.paso.contains(usuario) == false;
+                                var pi = listasMias.bloqueos.contains(usuario) == false
+                                var po = listasMias.enlaces.contains(usuario) == false;
+                                var pu = true;
+                                for(var i = 0; i < listasMias.meMola.length; i++){
+                                    if(listasMias.meMola[i].mongoUserId.toString() == usuario.toString())
+                                        pu = false;
+                                }
+                                res.send(ra && re && ri && ro && ru && pa && pe && pi && po && pu);
+                            })
+                        })
+                    })
+                }else {
+
+                        mongoDao.getMyLists(usuario, function (listasDelUsuario) {
+                            mongoDao.getMyLists(yo, function (listasMias) {
+                                var ra = listasDelUsuario.meGusta.contains(yo) == false;
+                                var re = listasDelUsuario.paso.contains(yo) == false;
+                                var ri = listasDelUsuario.bloqueos.contains(yo) == false
+                                var ro = listasDelUsuario.enlaces.contains(yo) == false;
+                                var ru = true;
+                                for(var i = 0; i < listasDelUsuario.meMola.length; i++){
+                                    if(listasDelUsuario.meMola[i].mongoUserId.toString() == yo.toString())
+                                        ru = false;
+                                }
+                                var pa = listasMias.meGusta.contains(usuario) == false;
+                                var pe = listasMias.paso.contains(usuario) == false;
+                                var pi = listasMias.bloqueos.contains(usuario) == false
+                                var po = listasMias.enlaces.contains(usuario) == false;
+                                var pu = true;
+                                for(var i = 0; i < listasMias.meMola.length; i++){
+                                    if(listasMias.meMola[i].mongoUserId.toString() == usuario.toString())
+                                        pu = false;
+                                }
+                                res.send(ra && re && ri && ro && ru && pa && pe && pi && po && pu);
+                            })
+                        })
+                }
+
+            })
+        })
+
+    });
+
+    app.post('/app/testListas', async function (req, res) {
+        var usuario=mongoDao.createMongoId(req.body.usuario);
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        mongoDao.getMyself(await pdao.getUserId(), function (yo) {
+            mongoDao.getMyLists(usuario, function (listasDelUsuario) {
+                mongoDao.getMyLists(yo, function (listasMias) {
+                    var rst= 5;
+                    var count = 0;
+                    yo = yo.toString();
+                    listasDelUsuario.meGusta = listasDelUsuario.meGusta.select(function (t) {
+                        return t.toString();
+                    })
+                    listasDelUsuario.paso = listasDelUsuario.paso.select(function (t) {
+                        return t.toString();
+                    })
+                    listasDelUsuario.bloqueos = listasDelUsuario.bloqueos.select(function (t) {
+                        return t.toString();
+                    })
+                    listasDelUsuario.enlaces = listasDelUsuario.enlaces.select(function (t) {
+                        return t.toString();
+                    })
+                    if(listasDelUsuario.meGusta.contains(yo)){
+                        rst = 0;
+                        count++;
+                    }
+
+                    if( listasDelUsuario.paso.contains(yo)){
+                        rst = 2;
+                        count ++;
+                    }
+
+                    if(listasDelUsuario.bloqueos.contains(yo)){
+                        rst = 3;
+                        count++;
+                    }
+                    if( listasDelUsuario.enlaces.contains(yo)){
+                        rst = 4;
+                        count++;
+                    }
+                    for(var i = 0; i < listasDelUsuario.meMola.length; i++){
+                        if(listasDelUsuario.meMola[i].mongoUserId.toString() == yo.toString()){
+                            rst = 1;
+                            count++;
+                        }
+                    }
+                    var count2 = 0;
+                    var rst2 = 5;
+                    listasMias.meGusta = listasMias.meGusta.select(function (t) {
+                        return t.toString();
+                    })
+                    listasMias.paso = listasMias.paso.select(function (t) {
+                        return t.toString();
+                    })
+                    listasMias.bloqueos = listasMias.bloqueos.select(function (t) {
+                        return t.toString();
+                    })
+                    listasMias.enlaces = listasMias.enlaces.select(function (t) {
+                        return t.toString();
+                    })
+                    usuario = usuario.toString();
+                    if(listasMias.meGusta.contains(usuario)){
+                        rst2 = 0;
+                        count2++;
+                    }
+                    if(listasMias.paso.contains(usuario)){
+                        rst2 = 2;
+                        count2++;
+                    }
+                    if(listasMias.bloqueos.contains(usuario)){
+                        rst2 = 3;
+                        count2++;
+                    }
+                    if(listasMias.enlaces.contains(usuario)){
+                        rst2 = 4;
+                        count2 ++;
+                    }
+                    for(var i = 0; i < listasMias.meMola.length; i++){
+                        if(listasMias.meMola[i].mongoUserId.toString() == usuario.toString() && listasMias.meMola[i].mensajeMeMola.length <=300){
+                            rst2 = 1;
+                            count2 ++;
+                        }
+                    }
+                    if(count > 1){
+                        rst = -1;
+                    }
+                    if(count2 > 1){
+                        rst2 = -1;
+                    }
+
+                    var tr = new Object();
+                    tr.enMiPod = rst2;
+                    tr.enSuPod = rst;
+                    res.send(tr);
+                })
+            })
+        })
+
+    });
 }
