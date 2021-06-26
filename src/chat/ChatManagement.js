@@ -14,6 +14,8 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
 
 app.put('/app/subeMensaje', async function (req, res) {
     var contenido = req.body.contenido;
+    if(contenido.length > 500)
+        contenido = contenido.slice(0,499);
     var receptor = req.body.receptor;
     const session = await getSessionFromStorage(req.session.sessionId)
     var fc = new FC(session)

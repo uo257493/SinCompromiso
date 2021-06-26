@@ -2,7 +2,11 @@ $(window).on("load", function(event) {
     ejecucionPur(function (ree) {
         ejecucionPup(function (ree) {
             ejecucionPupp(function (ree) {
-                ejecucionPUE();
+                ejecucionPUE(function (ree) {
+                    ejecucionPUC(function (ree) {
+                        PUR(purNombre, purBio, purfecha, purGenero, "PUX1", 500, true, function (ree) {})
+                    });
+                });
             });
         });
     });
@@ -10,7 +14,20 @@ $(window).on("load", function(event) {
 
 
 
+
 });
+
+function  ejecucionPUC(cb){
+    PUC1(function (ree) {
+        PUC2(function (ree) {
+            PUCC("PUC3", "rosita.solidweb.org", "Hola caracola",["Hola caracola"],function (ree) {
+                PUCC("PUC4", "rosita.solidweb.org", textmas500,["Hola caracola", textmas500.slice(0,499)],function (ree) {
+                        cb(true);
+                } )
+            } )
+        })
+    })
+}
 var purNombre = "Pilar"
 var purBio = "Esta es mi biografía"
 var purfecha = "1998-03-15"
@@ -57,7 +74,7 @@ function ejecucionPUE(cb) {
 
                                     PUEG("CONSTANTINI", 0, "PUE9", 5,5, function() {
                                         PUEM("60d67e6809df6a0015937ede", 0, "Hola","PUE10", 4,4, function(){
-
+                                                cb(true);
                                         } )
                                     })
                                  })
@@ -614,6 +631,104 @@ function PUEB(usuario, accion, nombreTest, criterio1, criterio2, cb) {
         error: function (request, status, errorThrown) {
         }
     });
+}
+
+function PUC1(cb) {
+    $.ajax({
+        url: "/app/comparaEnlaces",
+        method: "POST",
+
+
+        success: function (response) {
+            $( "#mensajesDelTest5" ).append('<p>Se ha ejecutado el test PUC1 el numero de enlaces es completo: '+ response + '</p>')
+            if(response){
+                $( "#mensajesDelTest5" ).append("<p>Prueba  PUC1 SUPERADA</p>")
+                document.getElementById("PUC1").style.background = "green";
+                cb(true)
+            }
+            else{
+                $( "#mensajesDelTest5" ).append("<p>Prueba  PUC1 FALLIDA</p>")
+                document.getElementById("PUC1").style.background = "red";
+                cb(true)
+            }
+
+        },
+        error: function (request, status, errorThrown) {
+
+        }
+    });
+}
+
+function PUC2(cb) {
+    $.ajax({
+        url: "/app/lecturaChat",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"misMensajes": []}),
+
+        success: function (response) {
+            $( "#mensajesDelTest5" ).append('<p>Se ha ejecutado el test PUC2 Se comprueba concordancia de mensajes  '+ response+ '</p>')
+            if(response){
+                $( "#mensajesDelTest5" ).append("<p>Prueba  PUC2 SUPERADA</p>")
+                document.getElementById("PUC2").style.background = "green";
+                cb(true)
+            }
+            else{
+                $( "#mensajesDelTest5" ).append("<p>Prueba  PUC2 FALLIDA</p>")
+                document.getElementById("PUC2").style.background = "red";
+                cb(true)
+            }
+
+        },
+        error: function (request, status, errorThrown) {
+
+        }
+    });
+}
+
+
+function PUCC(testName, otroUser, mensaje, mensajes ,cb) {
+    $.ajax({
+        url: "/app/subeMensaje",
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"contenido": mensaje, "receptor":otroUser}),
+
+        success:  function (responseA) {$.ajax({
+            url: "/app/lecturaChat",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"misMensajes": mensajes}),
+
+            success: function (response) {
+                $( "#mensajesDelTest5" ).append('<p>Se ha ejecutado el test '+testName+' Se comprueba concordancia de mensajes  '+ response+ '</p>')
+                if(response){
+                    $( "#mensajesDelTest5" ).append("<p>Prueba  "+testName+" SUPERADA</p>")
+                    document.getElementById(testName).style.background = "green";
+                    cb(true)
+                }
+                else{
+                    $( "#mensajesDelTest5" ).append("<p>Prueba  "+testName+" FALLIDA</p>")
+                    document.getElementById(testName).style.background = "red";
+                    cb(true)
+                }
+
+            },
+            error: function (request, status, errorThrown) {
+
+            }
+        });},
+        error: function (request, status, errorThrown) {
+
+        }
+    });
+
 }
 
 var textmas500 = "Tonto el que no entienda\n" +

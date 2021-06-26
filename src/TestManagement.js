@@ -3,7 +3,7 @@ const {
     getSessionIdFromStorageAll,
     Session
 } = require("@inrupt/solid-client-authn-node");
-
+const linq = require("linq");
 var linqjs = require('linqjs');
 
 module.exports = function(app, swig, mongoDao, PODDao, FC){
@@ -19,8 +19,8 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
          return;
      }
      else{
-        await pdao.utilPruebasEliminador();
-       await mongoDao.eliminaTodoDelUser(pdao.getUserId());
+       //  await pdao.utilPruebasEliminador();
+       // await mongoDao.eliminaTodoDelUser(pdao.getUserId());
          res.send(swig.renderFile('views/panels/test.html'));
      }
 
@@ -35,6 +35,55 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         pdao.setUserID(await session.info.webId);
         var isReg = await pdao.isRegistered();
         res.send(isReg);
+
+    });
+
+
+    app.post('/app/comparaEnlaces', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        mongoDao.getMyself(await pdao.getUserId(), function (yo) {
+            mongoDao.getMyLists(yo, function (listasMias) {
+                mongoDao.getPods(listasMias.enlaces, async function (losPods) {
+                    losPods = losPods.select(function (t) {
+                        return t.userId
+                    })
+                    var listEnPod = await pdao.leeEnlaces();
+                    var resTR = listEnPod.enlaces.except(losPods);
+                    res.send(resTR.length == 0);
+                })
+            })
+        })
+
+    });
+
+    app.post('/app/lecturaChat', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var misMensajes = req.body.misMensajes
+        var fc = new FC(session)
+        var userId = "rosita.solidweb.org"
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+        var conversa = await pdao.getFullChat(userId)
+        conversa = conversa.select(function (t) {
+            t.timestamp= t.timestamp * -1;
+            return t;
+        })
+        conversa = linq.from(conversa).orderBy(function (m) {
+            return m.timestamp;
+        }).toArray();
+        conversa = conversa.select(function (t) {
+            return t.contenido
+        })
+
+        var sol = ["Hola que tal", "Muy buenas", "Encantado de conocerte soy pablo"];
+        sol = sol.concat(misMensajes);
+        var rtr = (sol.except(conversa).length == 0);
+        res.send(rtr);
 
     });
 

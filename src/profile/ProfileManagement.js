@@ -57,7 +57,7 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
 
         mongoDao.addUser(pdao.getUserId(), async function(id) {
             if (id == null) {
-                res.status(500);
+                res.send(500);
                 res.json({
                     error : "se ha producido un error"
                 })

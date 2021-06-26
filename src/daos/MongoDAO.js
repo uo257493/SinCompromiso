@@ -25,6 +25,8 @@ class MongoDao {
                             db.close();
                         });
                     }
+                    else
+                        funcionCallback(null);
                 })
 
             }
@@ -897,9 +899,12 @@ class MongoDao {
     async eliminaTodoDelUser(user){
         var me = this;
         this.getMyself(user, async function (yo) {
-            await me.eliminaRastroUsuarioTestHistorico(yo);
-           await me.eliminaRastroUsuarioTestPreferencias(yo);
-            await me.eliminaRastroUsuarioTestUsers(yo);
+            me.pullFromEveryWhere(yo, user, async function () {
+                await me.eliminaRastroUsuarioTestHistorico(yo);
+                await me.eliminaRastroUsuarioTestPreferencias(yo);
+                await me.eliminaRastroUsuarioTestUsers(yo);
+
+            })
         })
     }
 
