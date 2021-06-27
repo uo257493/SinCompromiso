@@ -69,7 +69,7 @@ class PODDao {
             "imagenes":  imagenes ,
              "cantidadImagenes": iniCatImages };
 
-        console.log(myProfile);
+
         await this.fc.createFile(route, JSON.stringify(myProfile));
     }
 

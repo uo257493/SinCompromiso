@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     $("[name='cuadroOtroP']").click(function(){
         var indiceOrigen = $(this).attr('id').replace('#', '');
-        console.log(indiceOrigen);
+
 
         location.href = "/app/perfil/"+indiceOrigen;
     });

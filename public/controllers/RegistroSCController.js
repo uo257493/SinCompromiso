@@ -182,7 +182,6 @@ function ResizeImage() {
                 canvas.height = height;
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, width, height);
-                console.log(width + " " + height)
                 dataurl = canvas.toDataURL(file.type);
                 // if(width > height && width <= 400) { // Si es menor a 200 px calculamos ajuste
                 //     var ajuste = 1 /(200 / width)
@@ -210,7 +209,7 @@ async function checkNude(node) {
    await nude.load(node);
     // Scan it
     var result = await nude.scan(function(result){
-        console.log(result);
+
         if(result) {
             document.getElementById(node).srcset = "../../media/addPic.png 2x"
 
