@@ -250,8 +250,8 @@ class PODDao {
         var miCon = await this.getPartChat(mensaje.sender, receptor);
 
         miCon.mensajes.push(mensaje);
-
-        this.fc.postFile( "https://" + mensaje.sender +"/sincompromisochats/"+ receptor+".json", JSON.stringify(miCon) );
+        if(await this.canRead("https://" + mensaje.sender +"/sincompromisochats/"+ receptor+".json"))
+            this.fc.postFile( "https://" + mensaje.sender +"/sincompromisochats/"+ receptor+".json", JSON.stringify(miCon) );
     }
 
     //Metodo creado para pruebas al no haber rollback

@@ -34,13 +34,35 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
 
 
     app.post('/app/testSeCreaAlgo', async function (req, res) {
+
         const session = await getSessionFromStorage(req.session.sessionId)
         var fc = new FC(session)
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         var isReg = await pdao.isRegistered();
         res.send(isReg);
+
+    });
+
+    app.post('/app/testExisteSolidFile', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        var receptor = req.body.receptor;
+        pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
+        var existe = await pdao.canRead("https://" + pdao.getUserId() +"/sincompromisochats/"+ receptor+".json")
+
+        res.send(existe);
 
     });
 
@@ -51,6 +73,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         mongoDao.getMyself(await pdao.getUserId(), function (yo) {
             mongoDao.getMyLists(yo, function (listasMias) {
                 mongoDao.getPods(listasMias.enlaces, async function (losPods) {
@@ -74,6 +100,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         var conversa = await pdao.getFullChat(userId)
         conversa = conversa.select(function (t) {
             t.timestamp= t.timestamp * -1;
@@ -101,6 +131,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         var perfil = await pdao.getDatosPerfil();
         sol = (name == perfil.name && bio == perfil.bio);
         res.send(sol);
@@ -114,6 +148,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         mongoDao.leePreferencias(pdao.getUserId(), function (preferencias) {
             if(preferencias.length == 0)
                 res.send(false)
@@ -137,6 +175,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         mongoDao.getMyself(await pdao.getUserId(), function (yo) {
             mongoDao.managePullsTest(yo, usuario, function (resp) {
                 if(accion == 0){
@@ -257,6 +299,10 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
         var pdao = new PODDao();
         pdao.setFC(fc);
         pdao.setUserID(await session.info.webId);
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
         mongoDao.getMyself(await pdao.getUserId(), function (yo) {
             mongoDao.getMyLists(usuario, function (listasDelUsuario) {
                 mongoDao.getMyLists(yo, function (listasMias) {

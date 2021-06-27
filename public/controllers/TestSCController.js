@@ -6,7 +6,9 @@ $(window).on("load", function(event) {
                     ejecucionPUC(function (ree) {
                         PUR(purNombre, purBio, purfecha, purGenero, "PUX1", 500, true, function (ree) {
                             PUEM2("60d67e6809df6a0015937ede", 2, "PUX2", 4, 4, function (ree) {
+                                PUX3("PUX3", "jarabito", "Hola jarabito", function () {
 
+                                })
                             })
                         })
                     });
@@ -713,6 +715,47 @@ function PUCC(testName, otroUser, mensaje, mensajes ,cb) {
             success: function (response) {
                 $( "#mensajesDelTest5" ).append('<p>Se ha ejecutado el test '+testName+' Se comprueba concordancia de mensajes  '+ response+ '</p>')
                 if(response){
+                    $( "#mensajesDelTest5" ).append("<p>Prueba  "+testName+" SUPERADA</p>")
+                    document.getElementById(testName).style.background = "green";
+                    cb(true)
+                }
+                else{
+                    $( "#mensajesDelTest5" ).append("<p>Prueba  "+testName+" FALLIDA</p>")
+                    document.getElementById(testName).style.background = "red";
+                    cb(true)
+                }
+
+            },
+            error: function (request, status, errorThrown) {
+
+            }
+        });},
+        error: function (request, status, errorThrown) {
+
+        }
+    });
+
+}
+
+function PUX3(testName, otroUser, mensaje,cb) {
+    $.ajax({
+        url: "/app/subeMensaje",
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({"contenido": mensaje, "receptor":otroUser}),
+
+        success:  function (responseA) {$.ajax({
+            url: "/app/testExisteSolidFile",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({"receptor":otroUser}),
+             success: function (response) {
+                $( "#mensajesDelTest5" ).append('<p>Se ha ejecutado el test '+testName+' Se comprueba la existencia del archivo (esperado false)  '+ response+ '</p>')
+                if(!response){
                     $( "#mensajesDelTest5" ).append("<p>Prueba  "+testName+" SUPERADA</p>")
                     document.getElementById(testName).style.background = "green";
                     cb(true)
