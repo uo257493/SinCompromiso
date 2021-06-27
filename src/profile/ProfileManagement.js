@@ -58,9 +58,6 @@ module.exports = function(app, swig, mongoDao, podDao, session, FC){
         mongoDao.addUser(pdao.getUserId(), async function(id) {
             if (id == null) {
                 res.send(500);
-                res.json({
-                    error : "se ha producido un error"
-                })
             } else {
                 await pdao.createMySCProfile(name, birth, gender, bio, images);
                 res.status(200);

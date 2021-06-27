@@ -4,7 +4,11 @@ $(window).on("load", function(event) {
             ejecucionPupp(function (ree) {
                 ejecucionPUE(function (ree) {
                     ejecucionPUC(function (ree) {
-                        PUR(purNombre, purBio, purfecha, purGenero, "PUX1", 500, true, function (ree) {})
+                        PUR(purNombre, purBio, purfecha, purGenero, "PUX1", 500, true, function (ree) {
+                            PUEM2("60d67e6809df6a0015937ede", 2, "PUX2", 4, 4, function (ree) {
+
+                            })
+                        })
                     });
                 });
             });

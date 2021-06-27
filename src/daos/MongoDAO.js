@@ -419,30 +419,38 @@ class MongoDao {
             "mensajeMeMola": mensaje
         }
         var me = this;
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                funcionCallback(null);
-            } else {
-                me.checkSePuedeInteraccionarUsuario(mongouserId, yo, function (res) {
-                    if(res){
-                        var collection = db.collection('historicoEnlaces');
-                        collection.update({"mongoUserId": yo}, {$set: {"ultimoMeMola": Date.now()}, $push: {"meMola": meMolaO}}, function (err, resultado) {
-                            if (err) {
-                                funcionCallback(null);
-                            } else {
+        me.getMyLists(yo, function (his) {
+            if(his.ultimoMeMola > Date.now()-86400000){
+                funcionCallback(true);
+            }
+            else{
+                me.mongo.MongoClient.connect(me.app.get('db'), function (err, db) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        me.checkSePuedeInteraccionarUsuario(mongouserId, yo, function (res) {
+                            if(res){
+                                var collection = db.collection('historicoEnlaces');
+                                collection.update({"mongoUserId": yo}, {$set: {"ultimoMeMola": Date.now()}, $push: {"meMola": meMolaO}}, function (err, resultado) {
+                                    if (err) {
+                                        funcionCallback(null);
+                                    } else {
 
-                                funcionCallback(true);
+                                        funcionCallback(true);
+
+                                    }
+                                    db.close();
+                                });
 
                             }
-                            db.close();
-                        });
-
+                            else
+                                funcionCallback(true);
+                        })
                     }
-                    else
-                        funcionCallback(true);
-                })
+                });
             }
-        });
+        })
+
     }
 
 

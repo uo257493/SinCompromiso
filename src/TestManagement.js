@@ -14,14 +14,20 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
      var pdao = new PODDao();
      pdao.setFC(fc);
      pdao.setUserID(await session.info.webId);
+
      if(pdao.getUserId() != "fulgentes.solidcommunity.net" ) {
          res.redirect("/app/perfil")
          return;
      }
      else{
-       //  await pdao.utilPruebasEliminador();
-       // await mongoDao.eliminaTodoDelUser(pdao.getUserId());
-         res.send(swig.renderFile('views/panels/test.html'));
+         mongoDao.getMyself(await pdao.getUserId(), async function (yo) {
+         mongoDao.managePullsTest(yo, mongoDao.createMongoId("60d67e6809df6a0015937ede"), async function (resttr) {
+             await pdao.utilPruebasEliminador();
+             await mongoDao.eliminaTodoDelUser(pdao.getUserId());
+             res.send(swig.renderFile('views/panels/test.html'));
+         } )
+     })
+
      }
 
  });
