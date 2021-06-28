@@ -18,7 +18,10 @@ $(document).ready(function () {
     $("#abreChat").click(function () {
         location.href="/app/chat";
     });
-
+    $("#spanModalPEnlace2").click(function() {
+        var modal = document.getElementById("modalAvisoEnlace2");
+        modal.style.display = "none";
+    });
     $("#hazmeLogout").click(async () => {
        $.ajax({
             type: "POST",
@@ -42,8 +45,10 @@ $(document).ready(function () {
             url: "/app/chequeaEnlaces",
 
             success: function (response) {
-                if(response)
+                if(response){
                     document.getElementById("abreChat").classList.add("matchMade");
+                    showModalEnlaceBis("Tienes un nuevo enlace!!!");
+                }
             },
             error: function (request, status, errorThrown) {
 
@@ -71,3 +76,9 @@ $(document).ready(function () {
             });});
     }
 });
+
+
+function showModalEnlaceBis(msg) {
+    document.getElementById("modalAvisoEnlace2").style.display = "block";
+    document.getElementById("modalMsgEnlace2").innerHTML= msg;
+}

@@ -104,9 +104,14 @@ $(window).ready(function () {
 
             }
         });
-
+        document.getElementById("motivoDenunciaSSE").value = "";
+        document.getElementById("seeMoreB").click();
     });
-
+    $("#spanModalPEnlace").click(function() {
+        var modal = document.getElementById("modalAvisoEnlace");
+        modal.style.display = "none";
+        location.href = "/app/enlaces"
+    });
     var conmutadorDenuncias;
     $("#denunciarPerfilSSE").click(function(){
         if(conmutadorDenuncias == undefined)
@@ -196,8 +201,10 @@ $(window).ready(function () {
             success: function (response) {
                 if(response){
                     document.getElementById("abreChat").classList.add("matchMade");
+                    showModalEnlace("Tienes un nuevo enlace!!!")
                 }
-                location.href = "/app/enlaces"
+                else
+                    location.href = "/app/enlaces"
             },
             error: function (request, status, errorThrown) {
 
@@ -235,5 +242,11 @@ setInterval(function (){
 },45000);
 
 function manejarSSEnlaces(){
-    location.reload();
+    if(hayAlgo != "true")
+        document.getElementById("abreSistemaEnlaces").click();
+}
+
+function showModalEnlace(msg) {
+    document.getElementById("modalAvisoEnlace").style.display = "block";
+    document.getElementById("modalMsgEnlace").innerHTML= msg;
 }

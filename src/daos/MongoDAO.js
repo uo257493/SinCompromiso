@@ -1011,6 +1011,29 @@ class MongoDao {
         })
     }
 
+    pullIntegracion(yo, funcionCallback){
+
+        var me = this;
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection("historicoEnlaces");
+                collection.updateMany({"mongoUserId": {$ne: 0}}, {
+                    $pull: {"bloqueos": yo}
+                }, function (err, resultado) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(true);
+                    }
+                    db.close();
+                });
+            }
+
+        })
+    }
+
     pullFromMeMola(yo, userToPull, funcionCallback){
         var mongoUserId = userToPull;
         var me = this;

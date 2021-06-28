@@ -1,5 +1,6 @@
 var indiceOrigen;
 var imagesModificadas;
+var apoyo;
 var queModificamos;
 $(document).ready(function () {
     $(window).on("load", function(event) {
@@ -13,7 +14,7 @@ $(document).ready(function () {
     $("img").click(async function(){
         indiceOrigen = $(this).attr('id').replace('#', '');
        await $('#imgupload').trigger('click');
-       checkNude(indiceOrigen);
+      // checkNude(indiceOrigen);
     });
     $("#abreEditarPerfil").click(async () => {
 
@@ -83,7 +84,7 @@ $(document).ready(function () {
                 fullImage.name = imageName;
                 images.push(fullImage);
                 nameImgs.push(imageName);
-                checkNude("img"+i+"P");
+               // checkNude("img"+i+"P");
                 if(document.getElementById("img"+i+"P").srcset == "../../media/addPic.png 2x")
                     return;
             }
@@ -149,6 +150,8 @@ function ResizeImage() {
         if(!file.type.includes("image")){
             document.getElementById(indiceOrigen).srcset = "../../media/addPic.png 2x"
             showModal("Tipo de formato invalido");
+            imagesModificadas[queModificamos] = false;
+            apoyo = true;
             return;
         }
         if (file) {
@@ -188,7 +191,7 @@ function ResizeImage() {
                 dataurl = canvas.toDataURL(file.type);
 
                     document.getElementById(indiceOrigen).srcset = dataurl + " 2x";
-                checkNude(indiceOrigen);
+               // checkNude(indiceOrigen);
             }
             reader.readAsDataURL(file);
 
@@ -200,16 +203,22 @@ function ResizeImage() {
 }
 
 async function checkNude(node) {
-    await nude.load(node);
-    // Scan it
-    await nude.scan(function(result){
-        if(result) {
+    if(apoyo){
+        apoyo = false;
+        return ;
+    }
+    else {
+        await nude.load(node);
+        // Scan it
+        await nude.scan(function (result) {
+            if (result) {
 
-            imagesModificadas[queModificamos] = false;
-            document.getElementById(node).srcset = "../../media/addPic.png 2x"
-            showModal("No se permiten desnudos");
-        }
-    });
+                imagesModificadas[queModificamos] = false;
+                document.getElementById(node).srcset = "../../media/addPic.png 2x"
+                showModal("No se permiten desnudos");
+            }
+        });
+    }
 }
 
 function showModal(msg) {

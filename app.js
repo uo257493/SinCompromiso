@@ -57,6 +57,7 @@ routerUsuarioSession.use(function(req, res, next) {
 
 app.use("/app/*",routerUsuarioSession);
 app.use("/registro/*",routerUsuarioSession);
+app.use("/logout",routerUsuarioSession);
 app.get('/', async function (req, res) {
 
         res.redirect("/signin");

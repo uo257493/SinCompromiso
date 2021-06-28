@@ -171,14 +171,16 @@ module.exports = function(app, swig, mongoDao, PODDao, FC){
                                         }
 
                                         var perfilAMostrar = null;
-                                        if (arrSol.length <= 7 && listaFinal.length > 0)
-                                            perfilAMostrar = listaFinal[0];
+                                        if (arrSol.length <= 7 && listaFinal.length > 0){
+                                            var aleatorio = Math.floor(Math.random() * (listaFinal.length-1))
+                                            perfilAMostrar = listaFinal[aleatorio];}
                                         else {
                                             if (listaFinal.length > 0) { //Si no eres nuevo y te puedo dar alguno sorteamos una cantidad que si esta entre el % de candidatos de da uno
                                                 var cantidadAceptable = (listaFinal.length / (limitador.length)) * 100;
                                                 var aleat = Math.random() * (101 - 1) + 1;
                                                 if (aleat <= cantidadAceptable)
-                                                    perfilAMostrar = listaFinal[0];
+                                                    perfilAMostrar = listaFinal[Math.floor(Math.random() * (listaFinal.length-1))];
+
                                             }
                                         }
 

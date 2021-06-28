@@ -8,6 +8,38 @@ var linqjs = require('linqjs');
 
 module.exports = function(app, swig, mongoDao, PODDao, FC){
 
+
+    app.get('/app/testIS', async function (req, res) {
+        const session = await getSessionFromStorage(req.session.sessionId)
+        var fc = new FC(session)
+        var pdao = new PODDao();
+        pdao.setFC(fc);
+        pdao.setUserID(await session.info.webId);
+
+        if(pdao.getUserId() != "fulgentes.solidcommunity.net" && pdao.getUserId() != "fulgentes.inrupt.net" && pdao.getUserId() != "fulgentes.solidweb.org" ) {
+            res.redirect("/app/perfil")
+            return;
+        }
+        else if(pdao.getUserId()== "rosita.solidweb.org"){
+            mongoDao.getMyself(await pdao.getUserId(), async function (yo) {
+                mongoDao.reiniciaTiempoMeMola(yo, function (retr) {
+                    res.redirect("/app/perfil")
+                })
+            })
+        }
+        else{
+            mongoDao.getMyself(await pdao.getUserId(), async function (yo) {
+                mongoDao.pullIntegracion(yo, async function (resttr) {
+                    await pdao.utilPruebasEliminador();
+                    await mongoDao.eliminaTodoDelUser(pdao.getUserId());
+                    res.redirect("/app/perfil")
+                } )
+            })
+
+        }
+
+    });
+
  app.get('/app/test', async function (req, res) {
      const session = await getSessionFromStorage(req.session.sessionId)
      var fc = new FC(session)

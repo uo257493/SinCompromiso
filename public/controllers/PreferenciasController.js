@@ -42,7 +42,24 @@ $(document).ready(function () {
             data: JSON.stringify({"preferencias": misPreferencias}),
 
             success:  function (response) {
-              location.href = "/app/perfil";
+                navigator.geolocation.getCurrentPosition(function(res){
+                    var ts = {"latitude": res.coords.latitude,
+                        "longitude": res.coords.longitude}
+                    $.ajax({
+                        type: "POST",
+                        url: "/app/localiza",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify(ts),
+                        success: function (response) {
+                            location.href = "/app/perfil";
+                        },
+                        error: function (request, status, errorThrown) {
+
+                        }
+                    });});
+
             },
             error: function (request, status, errorThrown) {
 

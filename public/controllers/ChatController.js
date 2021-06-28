@@ -53,9 +53,9 @@ function manejarSSChatPrev() {
                     toAppendAbiertas+= '<h3 style="text-align: left; padding-top: 15%">'+abierta.ultimoMensaje +'</h3>'
                 }
 
-
+                toAppendAbiertas += ' </div>';
             }
-            toAppendAbiertas += ' </div>';
+
 
             document.getElementById("conversasAbiertasSC").innerHTML = toAppendAbiertas;
         },
