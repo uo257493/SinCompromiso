@@ -3,7 +3,7 @@ const {
     getSessionIdFromStorageAll,
     Session
 } = require("@inrupt/solid-client-authn-node");
-
+var dirMiApp = "https://sincompromiso.herokuapp.com";
 const clientApplicationName = "Sin compromiso";
 module.exports = function(app, swig, podDao, FC){
     app.get('/signIn', function (req, res) {
@@ -44,7 +44,7 @@ module.exports = function(app, swig, podDao, FC){
         req.session.sessionId = await session.info.sessionId;
 
         await session.login({
-            redirectUrl: "http://localhost:8081/redirect",
+            redirectUrl: dirMiApp+"/redirect",
             oidcIssuer,
             clientName: clientApplicationName,
             handleRedirect: (data) => {
@@ -59,7 +59,7 @@ module.exports = function(app, swig, podDao, FC){
         var fc = new FC(session)
         podDao.setFC(fc);
 
-        await session.handleIncomingRedirect('http://localhost:8081'+ req.url);
+        await session.handleIncomingRedirect(dirMiApp+ req.url);
         // 5. `session` now contains an authenticated Session instance.
         if (session.info.isLoggedIn) {
             podDao.setUserID(await session.info.webId);
