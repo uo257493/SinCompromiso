@@ -50,10 +50,7 @@ $(window).ready(function () {
             document.getElementById('seeMoreAi').classList.remove("fa-chevron-up");
             document.getElementById('seeMoreAi').classList.add("fa-chevron-down");
 
-            var elementosDenuncia = document.getElementsByName("cuadroDenunciaSSE");
-            var i;
-            for(i = 0; i< elementosDenuncia.length; i++)
-                elementosDenuncia[i].style.display='none';
+
         }
 
     });

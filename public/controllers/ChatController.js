@@ -37,7 +37,7 @@ function manejarSSChatPrev() {
             var toAppendPendientes = ""
             for(var i = 0; i< response.pendientes.length; i++){
                 var pendiente = response.pendientes[i];
-                toAppendPendientes += '<img name="conversaAb" id="' +pendiente.userID+'" class="roundedImagexxs" srcset="'+pendiente.imagenPrincipal +' 5x" style="margin-right: 10px"/>\n';
+                toAppendPendientes += '<img alt="Imagen principal del enlace" name="conversaAb" id="' +pendiente.userID+'" class="roundedImagexxs" srcset="'+pendiente.imagenPrincipal +' 5x" style="margin-right: 10px"/>\n';
             }
             toAppendPendientes += '<p style="border-bottom: 10px"></p>'
             document.getElementById( "conversasNoAbiertasSC" ).innerHTML = toAppendPendientes;
@@ -45,7 +45,7 @@ function manejarSSChatPrev() {
             for(var i = 0; i< response.abiertas.length; i++){
                 var abierta = response.abiertas[i];
                 toAppendAbiertas+= ' <div name="conversaAb" id="'+abierta.userID+'" style="border-bottom: 2px solid lightgrey; display:grid; grid-template-columns: 180px 300px 300px; margin-top: 10px; height: 180px">\n' +
-                    '        <img  class="roundedImages" srcset="'+abierta.imagenPrincipal +' 2.5x" style="margin-left:20px; margin-right: 20px"/>\n' +
+                    '        <img  alt="Imagen principal del enlace" class="roundedImages" srcset="'+abierta.imagenPrincipal +' 2.5x" style="margin-left:20px; margin-right: 20px"/>\n' +
                     '        <h3 style="text-align: center;padding-top: 15%"><b>'+abierta.nombre +','+ abierta.edad +' </b></h3>'
                 if (abierta.ultimoMensajeSender == "yo"){
                     toAppendAbiertas += '<h3 style="text-align: left; padding-top: 15%">▶ '+abierta.ultimoMensaje+'</h3>'

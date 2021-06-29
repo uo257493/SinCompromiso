@@ -10,16 +10,16 @@
       {% for foto in perfil.imagenes %}
       {% set fotoId = "img"+ind+"P"%}
         {% if foto.toString().trim() == "" && ind!=4 %}
-              <img srcset="../../media/addPic.png 2x" name="fotoP" id="{{fotoId}}"style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
+              <img srcset="../../media/addPic.png 2x" name="fotoP" alt="Imagen de tu perfil" id="{{fotoId}}"style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
         {% endif%}
         {% if foto.toString().trim() == "" && ind==4 %}
-              <img srcset="../../media/addPic.png 2x" name="fotoP" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
+              <img srcset="../../media/addPic.png 2x" alt="Imagen de tu perfil" name="fotoP" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
         {% endif%}
       {% if foto.toString().trim() != "" && ind!=4 %}
-              <img srcset="{{foto}} 2x" name="fotoP" id="{{fotoId}}"  style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
+              <img srcset="{{foto}} 2x" name="fotoP" alt="Imagen de tu perfil" id="{{fotoId}}"  style="margin-right: min(3%, 10px); background-size:contain;background-repeat: no-repeat; ">
       {% endif%}
       {% if foto.toString().trim() != "" && ind==4 %}
-               <img srcset="{{foto}} 2x" name="fotoP" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
+               <img srcset="{{foto}} 2x" name="fotoP" alt="Imagen de tu perfil" id="{{fotoId}}" style="background-size:contain;background-repeat: no-repeat;">
       {% endif%}
       {% set ind = ind+1 %}
       {% endfor %}

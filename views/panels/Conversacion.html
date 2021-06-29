@@ -4,7 +4,7 @@
 {% endblock %}
 {% block contenido_principal %}
 <div name="cuadroOtroP" id="{{enlace.userID}}" style="background-color: aliceblue; display:grid; grid-template-columns: 45px 20% 85%; margin-bottom: 10px; height: auto">
-    <img class="roundedImagexxs" srcset="{{enlace.imagenPrincipal}} 5x" style="margin-right: 10px"/>
+    <img alt="Imagen principal del usuario" class="roundedImagexxs" srcset="{{enlace.imagenPrincipal}} 5x" style="margin-right: 10px"/>
 
     <h3 style="text-align: center; margin-left: 15%"><b>{{enlace.nombre}}, {{enlace.edad}} </b></h3>
 
@@ -37,7 +37,7 @@
     </div>
     <div class="contenido text-left" style="margin-top: 3px!important; height: fit-content">
 
-        <button class="btn-circle btn-lg" id="enviaElMsgC" style="padding-right: 2px !important; padding-left: 0px !important; margin-top: 0px; background-color: dodgerblue">
+        <button title="Enviar mensaje" class="btn-circle btn-lg" id="enviaElMsgC" style="padding-right: 2px !important; padding-left: 0px !important; margin-top: 0px; background-color: dodgerblue">
             <i class="fas fa-location-arrow" style="font-size: 1.1em !important; transform: rotate(45deg)"></i>
         </button>
     </div>

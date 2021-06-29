@@ -20,12 +20,12 @@
       {% endfor %}
         </tr>
       </table>
-      <button class="btn-circle btn-xl" id="enlacePicAnterior">
+      <button title="Imagen anterior" class="btn-circle btn-xl" id="enlacePicAnterior">
         <i class="fas fa-chevron-left" style="color:white; font-size: 1.75em !important;"></i>
       </button>
-              <img src="" id="fotoDisplayE" width="400" height="400" style="object-fit: none;">
+              <img alt= "Imagen del usuario" src="" id="fotoDisplayE" width="400" height="400" style="object-fit: none;">
 
-      <button class="btn-circle btn-xl" id="enlacePicSiguiente">
+      <button title="Imagen siguiente" class="btn-circle btn-xl" id="enlacePicSiguiente">
         <i class="fas fa-chevron-right" style="color:white;font-size: 1.75em  !important;"></i>
       </button>
     </div>
@@ -39,17 +39,17 @@
 
     {%endif%}
   <div style="text-align: center">
-      <button class="btn-circle btn-xxl" id="pasoB">
+      <button title="Paso" class="btn-circle btn-xxl" id="pasoB">
         <i class="fas fa-times" style=" color: red; font-size: 2em !important;"></i>
       </button>
 
       {% if enlace.puedoDarMeMola%}
-      <button class="btn-circle btn-xxl" id="meMolaB">
+      <button title="Me Mola" class="btn-circle btn-xxl" id="meMolaB">
         <i class="fas fa-grin-hearts" style="color: yellow; font-size: 2em !important;"></i></button>
       {%endif%}
 
 
-      <button class="btn-circle btn-xxl" id="meGustaB">
+      <button title="Me gusta" class="btn-circle btn-xxl" id="meGustaB">
         <i class="fas fa-thumbs-up" style="color: gold; font-size: 2em !important;"></i></button>
 
       <br>
@@ -73,7 +73,7 @@
 
 
         <button id="bloquearPerfilSSE" class="eleganceM" style="display:none; margin-right: 45%;  margin-left: 45%" >Bloquear</button><br>
-    <button id="seeMoreB" class="btn-semi-rounded btn-xxl">
+    <button title="Ver mas" id="seeMoreB" class="btn-semi-rounded btn-xxl">
       <i id="seeMoreAi" class="fas fa-chevron-down" style="font-size: 2em !important;"></i></button>
   </div>
 {% else %}
