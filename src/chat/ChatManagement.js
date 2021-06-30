@@ -65,8 +65,8 @@ app.get('/app/chat', async function (req, res) {
                 miniatura.edad = getAge(usuario.birth)
                 miniatura.ultimoMensaje = sorted[sorted.length-1].contenido;
                 miniatura.ultimoMensajeTiempo = sorted[sorted.length-1].timestamp;
-                if(miniatura.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
-                    miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 25) + "...";
+                if(miniatura.ultimoMensaje.length > 20) //Lo cortamos a los 23 caracteres
+                    miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 20) + "...";
                 if(sorted[sorted.length-1].sender == usuario.userId)
                     miniatura.ultimoMensajeSender = "el"
                 else
@@ -261,8 +261,8 @@ app.get('/app/chat', async function (req, res) {
                     miniatura.edad = getAge(usuario.birth)
                     miniatura.ultimoMensaje = sorted[sorted.length-1].contenido;
                     miniatura.ultimoMensajeTiempo = sorted[sorted.length-1].timestamp;
-                    if(miniatura.ultimoMensaje.length > 28) //Lo cortamos a los 28 caracteres
-                        miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 25) + "...";
+                    if(miniatura.ultimoMensaje.length > 20) //Lo cortamos a los 23 caracteres
+                        miniatura.ultimoMensaje = miniatura.ultimoMensaje.slice(0, 20) + "...";
                     if(sorted[sorted.length-1].sender == usuario.userId)
                         miniatura.ultimoMensajeSender = "el"
                     else

@@ -3,7 +3,8 @@ const {
     getSessionIdFromStorageAll,
     Session
 } = require("@inrupt/solid-client-authn-node");
-var dirMiApp = "https://sincompromiso.herokuapp.com";
+//var dirMiApp = "https://sincompromiso.herokuapp.com";
+var dirMiApp = "http://localhost:8081";
 const clientApplicationName = "Sin compromiso";
 module.exports = function(app, swig, podDao, FC){
     app.get('/signIn', function (req, res) {

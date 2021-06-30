@@ -12,7 +12,6 @@ const FC   = require('solid-file-client')
 var PODDao = require('./src/daos/PODDao')
 var MongoDAO = require('./src/daos/MongoDAO')
 var testManagement = require('./src/TestManagement')
-var sslRedirect = require('heroku-ssl-redirect').default;
 
 
 
@@ -36,10 +35,8 @@ app.use(expressSession({
     resave: true,
     saveUninitialized: true
 }));
-app.use(sslRedirect());
 
-//app.set('port', 8081);
-port = process.env.PORT || 8081;
+app.set('port', 8081);
 var conexiondb = 'mongodb://miSCAdminZZL0L:hjt3iqZXEKbwVMEJ@cluster0-shard-00-00.hputh.mongodb.net:27017,cluster0-shard-00-01.hputh.mongodb.net:27017,cluster0-shard-00-02.hputh.mongodb.net:27017/SinCompromiso?ssl=true&replicaSet=atlas-13f55z-shard-0&authSource=admin&retryWrites=true&w=majority'
 app.set('db',conexiondb);
 app.set('crypto',crypto);
@@ -67,13 +64,12 @@ app.get('/', async function (req, res) {
         res.redirect("/signin");
 })
 
-// app.listen(app.get('port'), function() {
-//     console.log("Servidor activo en el puerto 8081");
-// });
-
-app.listen(port, function() {
-    console.log("Servidor activo en el puerto "+ port);
+app.listen(app.get('port'), function() {
+    console.log("Servidor activo en el puerto 8081");
 });
+
+
+
 
 sesManagement(app, swig, myPODDao, FC);
 proManagement(app, swig, myMongoDao, myPODDao, session, FC);
