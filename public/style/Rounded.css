@@ -85,6 +85,16 @@ button[disabled]{
     background-color: transparent;
     object-fit: none;
 }
+.roundedImages2 {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid lightblue;
+    background-size: 160px 160px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    object-fit: none;
+}
 .botonColorized{
     background: #ffde00;
 }

@@ -34,14 +34,14 @@ function manejarSSChatPrev() {
         success:  function (response) {
             if(response == null)
                 return;
-            var toAppendPendientes = ""
+            var toAppendPendientes = "<p><b>Sin abrir:</b></p>"
             for(var i = 0; i< response.pendientes.length; i++){
                 var pendiente = response.pendientes[i];
-                toAppendPendientes += '<img alt="Imagen principal del enlace" name="conversaAb" id="' +pendiente.userID+'" class="roundedImagexxs" srcset="'+pendiente.imagenPrincipal +' 5x" style="margin-right: 10px"/>\n';
+                toAppendPendientes += '<img alt="Imagen principal del enlace" name="conversaAb" id="' +pendiente.userID+'" class="roundedImages2" srcset="'+pendiente.imagenPrincipal +' 2.5x" style="margin-right: 10px"/>\n';
             }
             toAppendPendientes += '<p style="border-bottom: 10px"></p>'
             document.getElementById( "conversasNoAbiertasSC" ).innerHTML = toAppendPendientes;
-            var toAppendAbiertas = "";
+            var toAppendAbiertas = "<p><b>Chats abiertos:</b></p>";
             for(var i = 0; i< response.abiertas.length; i++){
                 var abierta = response.abiertas[i];
                 toAppendAbiertas+= ' <div name="conversaAb" id="'+abierta.userID+'" style="border-bottom: 2px solid lightgrey; display:grid; grid-template-columns: 180px 300px 300px; margin-top: 10px; height: 180px">\n' +
