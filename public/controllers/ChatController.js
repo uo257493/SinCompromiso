@@ -41,7 +41,7 @@ function manejarSSChatPrev() {
             }
             toAppendPendientes += '<p style="border-bottom: 10px"></p>'
             document.getElementById( "conversasNoAbiertasSC" ).innerHTML = toAppendPendientes;
-            var toAppendAbiertas = "<p><b>Chats abiertos:</b></p>";
+            var toAppendAbiertas = "";
             for(var i = 0; i< response.abiertas.length; i++){
                 var abierta = response.abiertas[i];
                 toAppendAbiertas+= ' <div name="conversaAb" id="'+abierta.userID+'" style="border-bottom: 2px solid lightgrey; display:grid; grid-template-columns: 180px 300px 300px; margin-top: 10px; height: 180px">\n' +

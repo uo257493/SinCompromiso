@@ -4,9 +4,9 @@
 {% endblock %}
 {% block contenido_principal %}
 
+<p><b>Sin abrir:</b></p>
+<div class="text-left" style="display:grid; grid-template-columns: repeat({{conversaciones.pendientes.length}}, 180px); border-bottom: 2px solid lightgrey; overflow-x: auto;" id="conversasNoAbiertasSC">
 
-<div class="text-left" style="display:grid; grid-template-columns: repeat({{conversaciones.pendientes.length}}, 90px); border-bottom: 2px solid lightgrey; overflow-x: auto;" id="conversasNoAbiertasSC">
-    <p><b>Sin abrir:</b></p>
     {% for pendiente in conversaciones.pendientes %}
             <img alt="Imagen principal del enlace" name="conversaAb" id="{{pendiente.userID}}" class="roundedImages2" srcset="{{pendiente.imagenPrincipal}} 2.5x" style="margin-right: 10px"/>
       {% endfor %}

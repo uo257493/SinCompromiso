@@ -47,16 +47,16 @@ $(window).ready(function () {
             document.getElementById('verBioSSE').style.display='block';
             document.getElementById('denunciarPerfilSSE').style.display='block';
             document.getElementById('bloquearPerfilSSE').style.display='block';
-            document.getElementById('seeMoreAi').classList.remove("fa-chevron-down");
-            document.getElementById('seeMoreAi').classList.add("fa-chevron-up");
+            // document.getElementById('seeMoreAi').classList.remove("fa-chevron-down");
+            // document.getElementById('seeMoreAi').classList.add("fa-chevron-up");
         }
         else{
             conmutador = 1;
             document.getElementById('verBioSSE').style.display='none';
             document.getElementById('denunciarPerfilSSE').style.display='none';
             document.getElementById('bloquearPerfilSSE').style.display='none';
-            document.getElementById('seeMoreAi').classList.remove("fa-chevron-up");
-            document.getElementById('seeMoreAi').classList.add("fa-chevron-down");
+            // document.getElementById('seeMoreAi').classList.remove("fa-chevron-up");
+            // document.getElementById('seeMoreAi').classList.add("fa-chevron-down");
 
             var elementosDenuncia = document.getElementsByName("cuadroDenunciaSSE");
             var i;

@@ -8,6 +8,9 @@ $(document).ready(function () {
     $("#abrePerfil").click(async () => {
         location.href = "/app/perfil";
     });
+    $("#dameManual").click(async () => {
+        window.open("/media/Manualusuario.pdf")
+    });
 
 
     $("#abreSistemaEnlaces").click(function () {
