@@ -127,7 +127,8 @@ class PODDao {
     }
 
     async deletePic(picName){
-        await this.fc.deleteFile(picName);
+        if(await this.canRead(picName))
+             await this.fc.deleteFile(picName);
     }
 
     async selectNewImageToCreate(){

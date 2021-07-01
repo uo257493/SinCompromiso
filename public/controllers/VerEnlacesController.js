@@ -47,16 +47,14 @@ $(window).ready(function () {
             document.getElementById('verBioSSE').style.display='block';
             document.getElementById('denunciarPerfilSSE').style.display='block';
             document.getElementById('bloquearPerfilSSE').style.display='block';
-            // document.getElementById('seeMoreAi').classList.remove("fa-chevron-down");
-            // document.getElementById('seeMoreAi').classList.add("fa-chevron-up");
+             document.getElementById('seeMoreB').innerHTML = "VER MENOS";
         }
         else{
             conmutador = 1;
             document.getElementById('verBioSSE').style.display='none';
             document.getElementById('denunciarPerfilSSE').style.display='none';
             document.getElementById('bloquearPerfilSSE').style.display='none';
-            // document.getElementById('seeMoreAi').classList.remove("fa-chevron-up");
-            // document.getElementById('seeMoreAi').classList.add("fa-chevron-down");
+            document.getElementById('seeMoreB').innerHTML = "VER MAS";
 
             var elementosDenuncia = document.getElementsByName("cuadroDenunciaSSE");
             var i;
@@ -106,6 +104,7 @@ $(window).ready(function () {
         });
         document.getElementById("motivoDenunciaSSE").value = "";
         document.getElementById("seeMoreB").click();
+        showModalEnlaceBis("Se ha denunciado al usuario");
     });
     $("#spanModalPEnlace").click(function() {
         var modal = document.getElementById("modalAvisoEnlace");
@@ -249,4 +248,9 @@ function manejarSSEnlaces(){
 function showModalEnlace(msg) {
     document.getElementById("modalAvisoEnlace").style.display = "block";
     document.getElementById("modalMsgEnlace").innerHTML= msg;
+}
+
+function showModalEnlaceBis(msg) {
+    document.getElementById("modalAvisoEnlace2").style.display = "block";
+    document.getElementById("modalMsgEnlace2").innerHTML= msg;
 }

@@ -34,7 +34,7 @@ function manejarSSChatPrev() {
         success:  function (response) {
             if(response == null)
                 return;
-            var toAppendPendientes = "<p><b>Sin abrir:</b></p>"
+            toAppendPendientes = ""
             for(var i = 0; i< response.pendientes.length; i++){
                 var pendiente = response.pendientes[i];
                 toAppendPendientes += '<img alt="Imagen principal del enlace" name="conversaAb" id="' +pendiente.userID+'" class="roundedImages2" srcset="'+pendiente.imagenPrincipal +' 2.5x" style="margin-right: 10px"/>\n';
