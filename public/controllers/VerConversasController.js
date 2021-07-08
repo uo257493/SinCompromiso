@@ -41,8 +41,10 @@ $(document).ready(function () {
                     '                        <p class="senderP" style="word-break: break-word">'+ mensaje+'</p>\n' +
                     '                </div>\n' +
                     '    </div>'
-                $( "#contenedorDeMensajes" ).append(newMsg);
-                scrollToBottom();
+                $( "#contenedorDeMensajes" ).append(newMsg).ready(function () {
+                    scrollToBottom();
+                });
+
             },
             error: function (request, status, errorThrown) {
 
@@ -50,7 +52,6 @@ $(document).ready(function () {
         });
     });
    });
-
 setInterval(async function (){
    await manejarSSChat();
 },5000);
@@ -58,6 +59,7 @@ setInterval(async function (){
 async function manejarSSChat(){
     var tiempoUltimo  = ultimaRecarga;
     ultimaRecarga = Date.now();
+    tiempoUltimo ++;
     $.ajax({
         url: "/app/recargaMensajes",
         method: "PUT",
@@ -75,7 +77,9 @@ async function manejarSSChat(){
                     '                        <p class="receiverP" style="word-break: break-word">'+ response[i].contenido+'</p>\n' +
                     '                </div>\n' +
                     '    </div>'
-                $( "#contenedorDeMensajes" ).append(newMsg);
+                $( "#contenedorDeMensajes" ).append(newMsg).ready(function () {
+                    scrollToBottom()
+                });
             }
 
         },
